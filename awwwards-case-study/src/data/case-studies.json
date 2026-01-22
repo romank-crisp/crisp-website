@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1",
+    "slug": "centrogreen",
+    "title": "CentroGreen",
+    "intro": "A sustainable approach to urban gardening and smart green solutions.",
+    "coverImage": "https://crisp-studio.com/images/branding/cg/cg-image-02.jpg",
+    "meta": {
+      "year": "2025",
+      "client": {
+        "name": "CentroGreen",
+        "location": "UAE",
+        "website": "https://centrogreen.ae"
+      },
+      "industry": ["eCommerce", "Manufacturing"],
+      "deliverables": ["Branding", "Website", "Visual Assets"],
+      "aiAssistedWorkflows": ["Messaging", "Product Visuals"]
+    },
+    "sections": [
+      {
+        "id": "section-1",
+        "title": "Problem",
+        "body": "Urban areas lack accessible green spaces, leading to increased heat islands and reduced well-being.",
+        "variant": "default",
+        "highlight": true
+      },
+      {
+        "id": "section-2",
+        "title": "Solution and Deliverables",
+        "body": "We developed a modular greening system that integrates seamlessly into modern architecture.",
+        "variant": "default",
+        "highlight": false
+      }
+    ],
+    "createdAt": "2026-01-20T15:00:00Z",
+    "updatedAt": "2026-01-20T15:00:00Z"
+  }
+]
