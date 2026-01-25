@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Crisp Website - Awwwards Case Study Rebuild
 
-## Getting Started
+A high-performance, design-driven website built with Next.js, TypeScript, and Tailwind CSS. This project focuses on premium aesthetics, smooth animations (GSAP), and a flexible content architecture without a heavy CMS.
 
-First, run the development server:
+## Project Structure
+
+The project is organized to separate content, presentation, and logic:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+src/
+├── app/                  # Next.js App Router (Thin wrappers)
+│   ├── works/            # Case study routes
+│   │   └── [slug]/       # e.g., centrogreen/page.tsx
+│   └── page.tsx          # Homepage
+├── components/
+│   ├── ui/               # Atomic UI (Button, Input, Dropdown)
+│   ├── blocks/           # Reusable Content Blocks (Hero, Stats, Details)
+│   └── layouts/          # Global Layouts (Navbar, SmoothScroll)
+├── content/              # Single source of truth for page content
+│   └── case-studies/     # Content definition files (e.g., centrogreen.ts)
+├── templates/            # Page Composition Templates
+│   └── case-study/       # CaseStudyPage.tsx (Renders blocks based on content)
+└── types/                # Shared TypeScript Definitions
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Content Workflow
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+We use a "Code-as-Content" approach for case studies. Content is defined in typed TypeScript files, ensuring strict type safety and easy refactoring while maintaining flexibility.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### How to add a new Case Study
+1.  **Duplicate a Content File**: Copy `src/content/case-studies/centrogreen.ts` to `new-project.ts`.
+2.  **Edit Content**: Update text, images, and add/remove blocks in the `blocks` array.
+3.  **Create Route**: Create `src/app/works/new-project/page.tsx` and import the template:
+    ```tsx
+    import { CaseStudyPage } from "@/templates/case-study/CaseStudyPage";
+    import { caseStudyNew } from "@/content/case-studies/new-project";
 
-## Learn More
+    export default function NewProjectPage() {
+      return <CaseStudyPage content={caseStudyNew} />;
+    }
+    ```
 
-To learn more about Next.js, take a look at the following resources:
+See [src/content/case-studies/README.md](src/content/case-studies/README.md) for detailed block types.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Component Architecture
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+-   **UI (`@/components/ui`)**: Small, functional components. Pure UI, no business logic.
+-   **Blocks (`@/components/blocks`)**: Larger assembly units. These accept specific data props (e.g., `HeroVideoProps`) and handle their own internal animations.
+-   **Templates (`@/templates`)**: Page-level compositions that map "Content Objects" to "Block Components".
 
-## Deploy on Vercel
+## Styling & Animations
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+-   **Tailwind CSS**: Utility-first styling with custom tokens in `tailwind.config.ts`.
+-   **GSAP**: Used for complex animations (SmoothScroll, TextReveals, ScrollTriggers).
+-   **Fonts**: `Staatliches` (Headings) and `DM Sans` (Body).

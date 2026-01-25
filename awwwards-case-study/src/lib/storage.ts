@@ -1,6 +1,12 @@
 import fs from 'fs';
 import path from 'path';
-import { CaseStudy } from '@/types/case-study';
+import { CaseStudyContent } from '@/types/case-study';
+
+export type CaseStudy = CaseStudyContent & {
+    id: string;
+    createdAt?: string;
+    updatedAt?: string;
+};
 
 const DATA_FILE = path.join(process.cwd(), 'src/data/case-studies.json');
 

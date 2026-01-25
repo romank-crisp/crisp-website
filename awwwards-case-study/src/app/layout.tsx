@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Staatliches, DM_Sans } from "next/font/google";
 import "./globals.css";
-import { SmoothScroll } from "@/components/SmoothScroll";
-import { CustomCursor } from "@/components/CustomCursor";
+import { SmoothScroll } from "@/components/layouts/SmoothScroll";
+import { CustomCursor } from "@/components/ui/CustomCursor";
+import { Footer } from "@/components/layouts/Footer";
 
 const staatliches = Staatliches({
   weight: "400",
@@ -27,12 +28,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${staatliches.variable} ${dmSans.variable}`}>
       <body
-        className={`${staatliches.variable} ${dmSans.variable} antialiased bg-white text-black`}
+        className="antialiased bg-white text-black"
       >
         <CustomCursor />
-        <SmoothScroll>{children}</SmoothScroll>
+        <SmoothScroll>
+          {children}
+          <Footer />
+        </SmoothScroll>
       </body>
     </html>
   );

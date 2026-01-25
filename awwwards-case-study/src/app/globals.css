@@ -1,56 +1,109 @@
 @import "tailwindcss";
+@config "../../tailwind.config.ts";
 
-@theme {
-  --font-display: var(--font-staatliches);
-  --font-body: var(--font-dm-sans);
-  --color-accent: #E0032B;
-  --color-grey: #B8B8B8;
-  --color-crisp-red: #E00C33;
-  --container-max-width: 1600px;
+@layer base {
+  :root {
+    /* --- BRANDING: CRISP (Default) --- */
+    --brand-name: "Crisp";
 
-  /* Typography Scales */
-  --text-hero: 240px;
-  --text-large: 40px;
-  --text-subheader: 20px;
-  --text-label: 16px;
-}
+    /* Fonts */
+    --font-mega: var(--font-staatliches), system-ui, sans-serif;
+    --font-heading: var(--font-dm-sans), system-ui, sans-serif;
+    --font-text: var(--font-dm-sans), system-ui, sans-serif;
 
-.container {
-  max-width: var(--container-max-width);
-  margin-left: auto;
-  margin-right: auto;
-}
+    /* Colors */
+    --color-brand: 224 12 51;
+    /* rgb values for alpha usage */
+    --color-text: 18 12 42;
+    --color-white: 255 255 255;
 
-.font-display {
-  font-family: var(--font-staatliches), cursive;
-}
+    /* Typography Settings */
+    --lh-mega: 0.88;
+    --lh-text: 1.14;
+    --ls-mega: 0.03em;
 
-/* Base styles */
-* {
-  cursor: none !important;
-}
+    /* --- RESPONSIVE: MOBILE (Default) --- */
+    /* Spacing (px) */
+    --space-4: 4px;
+    --space-8: 8px;
+    --space-12: 12px;
+    --space-16: 16px;
+    --space-20: 20px;
+    --space-24: 24px;
+    --space-32: 32px;
+    --space-48: 48px;
+    --space-64: 64px;
 
-:root {
-  --background: #ffffff;
-  --foreground: #000000;
-}
+    /* Font Sizes (px) */
+    --fs-mega-h1: 120px;
+    --fs-mega-h2: 70px;
+    --fs-h1: 36px;
+    --fs-h2: 26px;
+    --fs-h3: 20px;
+    --fs-h4: 16px;
+    --fs-text-lg: 26px;
+    --fs-text-md: 20px;
+    --fs-text-sm: 16px;
+  }
 
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-body);
-  @apply antialiased;
-}
+  /* --- RESPONSIVE: DESKTOP Overrides --- */
+  @media (min-width: 768px) {
+    :root {
+      /* Spacing (Desktop - same layout but scalable if needed) */
+      /* Note: Requirements listed same spacing for desktop, but we define them here to allow future divergence */
+      --space-4: 4px;
+      --space-8: 8px;
+      --space-12: 12px;
+      --space-16: 16px;
+      --space-20: 20px;
+      --space-24: 24px;
+      --space-32: 32px;
+      --space-48: 48px;
+      --space-64: 64px;
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-display);
-  font-weight: 400;
-  /* Staatliches is 400 only */
+      /* Font Sizes (Desktop) */
+      --fs-mega-h1: 250px;
+      --fs-mega-h2: 150px;
+      --fs-h1: 48px;
+      --fs-h2: 32px;
+      --fs-h3: 24px;
+      --fs-h4: 16px;
+      --fs-text-lg: 32px;
+      --fs-text-md: 24px;
+      --fs-text-sm: 16px;
+    }
+  }
+
+  /* --- BRANDING: CAPPTOO (Brand A) Overrides --- */
+  [data-brand="brand-a"] {
+    --brand-name: "Capptoo";
+
+    /* Fonts (Fallback only, no imports) */
+    --font-mega: "Plus Jakarta", system-ui, sans-serif;
+    --font-heading: "Plus Jakarta", system-ui, sans-serif;
+    --font-text: "Plus Jakarta", system-ui, sans-serif;
+
+    /* Colors */
+    --color-brand: 151 71 255;
+    --color-text: 18 12 42;
+    /* White stays white */
+  }
+
+  body {
+    @apply font-text text-text text-text-md antialiased bg-white;
+    color: rgb(var(--color-text));
+    background-color: rgb(var(--color-white));
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-heading font-bold;
+  }
+
+  h4 {
+    @apply font-heading font-normal;
+  }
 }
 
 /* Lenis recommended styles */
@@ -67,38 +120,10 @@ html.lenis body {
   overscroll-behavior: contain;
 }
 
-w .lenis.lenis-stopped {
+.lenis.lenis-stopped {
   overflow: hidden;
 }
 
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
-}
-
-/* Typography Utilities */
-.text-hero {
-  font-size: var(--text-hero);
-  line-height: 1.3;
-  font-family: var(--font-display);
-  text-transform: uppercase;
-}
-
-.text-large {
-  font-size: var(--text-large);
-  line-height: 1.35;
-  font-weight: 300;
-}
-
-.text-subheader {
-  font-size: var(--text-subheader);
-  line-height: 1.35;
-  font-weight: 300;
-  letter-spacing: 0.05em;
-}
-
-.text-label {
-  font-size: var(--text-label);
-  line-height: 1.4;
-  font-weight: 300;
-  letter-spacing: 0.1em;
 }
