@@ -131,7 +131,7 @@ export function VideoScrollingCTA() {
 
                     <div
                         ref={ctasRef}
-                        className="mt-16 flex flex-wrap justify-center gap-12 md:gap-16 pointer-events-auto"
+                        className="mt-32 md:mt-48 flex flex-wrap justify-center gap-12 md:gap-16 pointer-events-auto"
                     >
                         <Button
                             variant="filled"

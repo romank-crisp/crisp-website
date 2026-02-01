@@ -34,6 +34,8 @@ export function CentrogreenDesignCode() {
     // Data State
     const [lettersData, setLettersData] = useState<unknown>(null);
     const [typographyData, setTypographyData] = useState<unknown>(null);
+    const [isLettersReady, setIsLettersReady] = useState(false);
+    const [isTypographyReady, setIsTypographyReady] = useState(false);
 
     const row1Ref = useRef<HTMLDivElement>(null);
     const row2Ref = useRef<HTMLDivElement>(null);
@@ -52,18 +54,17 @@ export function CentrogreenDesignCode() {
     }, []);
 
     useGSAP(() => {
-        if (!lettersData || !typographyData || !lettersRef.current || !typographyRef.current) return;
+        if (!lettersData || !typographyData || !lettersRef.current || !typographyRef.current || !isLettersReady || !isTypographyReady) return;
 
         // Helper to safely play animation
-        const safePlay = (ref: any) => {
+        const safePlay = (ref: React.RefObject<LottieRefCurrentProps | null>) => {
             if (ref.current) {
-                // Force go to frame 0 and play
                 ref.current.goToAndPlay(0, true);
             }
         };
 
         // Letters Trigger
-        ScrollTrigger.create({
+        const st1 = ScrollTrigger.create({
             trigger: row1Ref.current,
             start: "top 85%",
             onEnter: () => safePlay(lettersRef),
@@ -71,16 +72,15 @@ export function CentrogreenDesignCode() {
         });
 
         // Typography Trigger
-        ScrollTrigger.create({
+        const st2 = ScrollTrigger.create({
             trigger: row2Ref.current,
             start: "top 85%",
             onEnter: () => safePlay(typographyRef),
             onEnterBack: () => safePlay(typographyRef),
         });
 
-        // Check if elements are already in view on load and play them
-        // This handles cases where user refreshes the page while scrolled down
-        setTimeout(() => {
+        // Robust initial check
+        const timeout = setTimeout(() => {
             if (row1Ref.current && ScrollTrigger.isInViewport(row1Ref.current)) {
                 safePlay(lettersRef);
             }
@@ -90,7 +90,12 @@ export function CentrogreenDesignCode() {
             ScrollTrigger.refresh();
         }, 500);
 
-    }, [lettersData, typographyData]);
+        return () => {
+            st1.kill();
+            st2.kill();
+            clearTimeout(timeout);
+        };
+    }, [lettersData, typographyData, isLettersReady, isTypographyReady]);
 
     return (
         <section ref={containerRef} className="w-full bg-white py-24 md:py-32 flex justify-center">
@@ -154,6 +159,7 @@ export function CentrogreenDesignCode() {
                                     animationData={lettersData}
                                     loop={false}
                                     autoplay={false}
+                                    onDOMLoaded={() => setIsLettersReady(true)}
                                     className="w-full h-full"
                                 />
                             ) : (
@@ -176,6 +182,7 @@ export function CentrogreenDesignCode() {
                                 animationData={typographyData}
                                 loop={false}
                                 autoplay={false}
+                                onDOMLoaded={() => setIsTypographyReady(true)}
                                 className="w-full h-full"
                             />
                         ) : (

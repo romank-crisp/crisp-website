@@ -16,6 +16,7 @@ import { LogoAnimation } from "@/components/blocks/LogoAnimation";
 import { CentrogreenDesignCode } from "@/components/blocks/CentrogreenDesignCode";
 import { TheyTalkInfluencerBlock } from "@/components/blocks/TheyTalkInfluencerBlock";
 import { TheyTalkDesignSystem } from "@/components/blocks/TheyTalkDesignSystem";
+import { FolkeuniversitetDesignSystem } from "@/components/blocks/FolkeuniversitetDesignSystem";
 import { LottieBlock } from "@/components/blocks/LottieBlock";
 import { VideoScrollingCTA } from "@/components/blocks/VideoScrollingCTA";
 
@@ -61,8 +62,8 @@ export function CaseStudyPage({ content }: CaseStudyPageProps) {
                             return (
                                 <div key={block.id} className="max-w-[1475px] mx-auto">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-32">
-                                        <ScrollRevealImage {...block.props.left} mode="cover" />
-                                        <ScrollRevealImage {...block.props.right} mode="cover" />
+                                        <ScrollRevealImage {...block.props.left} mode="intrinsic" className="h-full" />
+                                        <ScrollRevealImage {...block.props.right} mode="intrinsic" className="h-full" />
                                     </div>
                                 </div>
                             );
@@ -71,7 +72,7 @@ export function CaseStudyPage({ content }: CaseStudyPageProps) {
                                 <div key={block.id} className="max-w-[1475px] mx-auto">
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-32">
                                         {block.props.items.map((item, idx) => (
-                                            <ScrollRevealImage key={idx} {...item} mode="cover" />
+                                            <ScrollRevealImage key={idx} {...item} mode="intrinsic" className="h-full" />
                                         ))}
                                     </div>
                                 </div>
@@ -110,6 +111,12 @@ export function CaseStudyPage({ content }: CaseStudyPageProps) {
                             return (
                                 <div key={block.id} className="max-w-[1475px] mx-auto">
                                     <TheyTalkDesignSystem />
+                                </div>
+                            );
+                        case "folkeuniversitet-design-system":
+                            return (
+                                <div key={block.id} className="max-w-[1475px] mx-auto">
+                                    <FolkeuniversitetDesignSystem />
                                 </div>
                             );
                         case "lottie":

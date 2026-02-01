@@ -77,6 +77,7 @@ export type CaseStudyBlock =
     | { type: 'theytalk-influencer'; id: string; props: TheyTalkInfluencerBlockProps }
     | { type: 'theytalk-design-system'; id: string; props: BaseBlockProps }
     | { type: 'centrogreen-designcode'; id: string; props: BaseBlockProps }
+    | { type: 'folkeuniversitet-design-system'; id: string; props: BaseBlockProps }
     | { type: 'lottie'; id: string; props: LottieBlockProps };
 
 // --- New Block Props ---

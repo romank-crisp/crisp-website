@@ -144,7 +144,7 @@ export function HeroVideo({
             <div className={`absolute inset-0 bg-black/30 transition-opacity duration-1000 ${isFullExperience ? 'opacity-0' : 'opacity-100'}`} />
 
             {/* Content */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 pointer-events-none">
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 pointer-events-none px-16">
                 <div ref={textRef} className="space-y-4 max-w-[1475px] mx-auto w-full">
                     <div className="flex items-center justify-center gap-4 text-sm md:text-base uppercase tracking-widest font-medium opacity-90">
                         {tags.map((tag, index) => (
@@ -158,7 +158,7 @@ export function HeroVideo({
                     </div>
 
                     <h1
-                        className="text-mega-h1 leading-none uppercase font-mega text-white"
+                        className="text-mega-h1 leading-[0.9] uppercase font-mega text-white w-full break-words"
                         style={{
                             WebkitTextStrokeWidth: '4px',
                             WebkitTextStrokeColor: 'currentColor',
@@ -167,11 +167,10 @@ export function HeroVideo({
                         {title}
                     </h1>
 
-                    <p className="font-text text-md font-light max-w-xxl mx-auto opacity-90">
+                    <p className="font-text text-text-md font-light max-w-xxl mx-auto opacity-90">
                         {subtitle}
                     </p>
                 </div>
-
             </div>
 
             {/* Controls */}

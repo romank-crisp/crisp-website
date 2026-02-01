@@ -23,7 +23,7 @@ export function CaseStudyDetails({ intro, sections, sidebar }: CaseStudyDetailsP
                                 {sections.map((section, index) => (
                                     <section key={index} className="space-y-8">
                                         <h3 className="font-heading text-sm font-bold text-brand uppercase tracking-wider">{section.title}</h3>
-                                        <div className="font-text text-md text-text leading-relaxed">
+                                        <div className="font-text text-text-md text-text">
                                             {section.content}
                                         </div>
                                     </section>
@@ -39,7 +39,7 @@ export function CaseStudyDetails({ intro, sections, sidebar }: CaseStudyDetailsP
                                 <h4 className="font-heading text-sm font-bold uppercase tracking-wider text-brand">
                                     {item.label}
                                 </h4>
-                                <div className="font-text text-md text-text">
+                                <div className="font-text text-text-md text-text">
                                     {item.value}
                                 </div>
                             </div>

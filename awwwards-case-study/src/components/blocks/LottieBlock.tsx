@@ -52,13 +52,13 @@ export function LottieBlock({
             onEnterBack: () => play(),
         });
 
-        // Trigger refresh and initial check
+        // Trigger refresh and robust initial check
         const timeout = setTimeout(() => {
             if (containerRef.current && ScrollTrigger.isInViewport(containerRef.current)) {
                 play();
             }
             ScrollTrigger.refresh();
-        }, 300);
+        }, 500);
 
         return () => {
             st.kill();

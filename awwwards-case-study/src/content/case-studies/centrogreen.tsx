@@ -291,14 +291,14 @@ export const caseStudyCentrogreen: CaseStudyContent = {
                     <div className="flex flex-col">
                         {deliverables.map((item, index) => (
                             <div key={index} className="flex gap-10 items-start py-20 border-t border-text/10 first:border-t-0">
-                                <p className="font-heading text-[32px] font-bold leading-tight w-[60px] md:w-[80px] shrink-0">
+                                <p className="font-heading text-h2 font-bold leading-none w-[60px] md:w-[80px] shrink-0">
                                     {String(index + 1).padStart(2, '0')}
                                 </p>
                                 <div className="flex flex-col gap-[10px]">
-                                    <h3 className="font-heading text-[24px] font-bold leading-tight">
+                                    <h3 className="font-heading text-h3 font-bold leading-tight">
                                         {item.title}
                                     </h3>
-                                    <p className="font-text text-[20px] font-medium leading-[1.35] text-text/80">
+                                    <p className="font-text text-text-md text-text/80">
                                         {item.text}
                                     </p>
                                 </div>
