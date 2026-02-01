@@ -2,13 +2,15 @@
 
 import { clsx } from "clsx";
 import Image from "next/image";
-import { useState, useRef } from "react";
-import Logo from "@/app/img/crisp-logo.svg";
+import { useState, useRef, useEffect } from "react";
+// Removed: import Logo from "@/app/img/crisp-logo.svg";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
+import { Menu, ArrowRight } from "lucide-react";
+import { useContactForm } from "@/context/ContactFormContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -23,154 +25,122 @@ const menuItems = [
     { label: "Services", path: "/services" }
 ];
 
-export function NavbarDesktop({ isHidden }: NavbarDesktopProps) {
+export function NavbarDesktop() {
+    const { openContactForm, isNavHidden } = useContactForm();
     const [isMenuHovered, setIsMenuHovered] = useState(false);
     const navbarRef = useRef<HTMLElement>(null);
-    const innerRef = useRef<HTMLDivElement>(null);
     const menuItemsRef = useRef<HTMLDivElement>(null);
-    const menuButtonRef = useRef<HTMLDivElement>(null);
-    const hasMounted = useRef(false);
+    const menuTriggerRef = useRef<HTMLDivElement>(null);
+    const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
-    // 1. Scroll-based animation (shrunk state)
+    // 1. Scroll-based resizing with "Return on Stop" logic
     useGSAP(() => {
-        if (!innerRef.current) return;
+        if (!navbarRef.current) return;
 
-        ScrollTrigger.create({
-            trigger: document.body,
-            start: "top -20",
-            onToggle: (self) => {
-                const isScrolled = self.isActive;
-                gsap.to(innerRef.current, {
-                    paddingTop: isScrolled ? "0.5rem" : "0.75rem",
-                    paddingBottom: isScrolled ? "0.5rem" : "0.75rem",
-                    // Lock px-4 (1rem = 16px) padding
-                    paddingLeft: "1rem",
-                    paddingRight: "1rem",
-                    duration: 0.5,
-                    ease: "power2.out",
+        const handleScroll = () => {
+            // Shrink on scroll
+            gsap.to(navbarRef.current, {
+                scale: 0.8,
+                y: -10,
+                duration: 0.4,
+                ease: "power2.out",
+                overwrite: "auto"
+            });
+
+            // Reset timeout to detect stop
+            if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+            scrollTimeout.current = setTimeout(() => {
+                gsap.to(navbarRef.current, {
+                    scale: 1,
+                    y: 0,
+                    duration: 0.6,
+                    ease: "power3.out",
                     overwrite: "auto"
                 });
+            }, 150);
+        };
 
-                if (!isMenuHovered) {
-                    gsap.to(navbarRef.current, {
-                        xPercent: -50,
-                        left: "50%",
-                        scale: isScrolled ? 0.75 : 1,
-                        boxShadow: isScrolled
-                            ? "0 20px 60px rgba(0,0,0,0.12)"
-                            : "0 8px 32px rgba(0,0,0,0.04)",
-                        duration: 0.7,
-                        ease: "power3.out",
-                        overwrite: "auto"
-                    });
-                }
-            }
-        });
-    }, { dependencies: [isMenuHovered], scope: navbarRef });
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+        };
+    }, { scope: navbarRef });
 
-    // 2. Desktop Menu Hover Animation
+    // 2. Menu Expansion Animation via GSAP (Fixes CSS max-width bounce/contraction)
     useGSAP(() => {
-        if (isMenuHovered) {
-            const tl = gsap.timeline({ overwrite: "auto" });
+        if (!menuItemsRef.current || !menuTriggerRef.current) return;
 
-            tl.to(navbarRef.current, {
-                xPercent: -50,
-                left: "50%",
-                maxWidth: "1000px",
-                scale: 1,
-                boxShadow: "0 30px 90px rgba(0,0,0,0.15)",
-                duration: 0.7,
-                ease: "power4.out"
-            }, 0);
-
-            tl.to(menuButtonRef.current, {
-                opacity: 0,
-                x: 20,
-                duration: 0.3,
-                ease: "power2.out"
-            }, 0);
-
-            tl.fromTo(".menu-desktop-item",
-                { x: -30, opacity: 0 },
-                { x: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: "power4.out" },
-                "-=0.4"
-            );
-        } else if (hasMounted.current) {
-            const isScrolled = window.scrollY > 20;
-            const duration = 0.7;
-
-            const tl = gsap.timeline({ overwrite: "auto" });
-
-            tl.to(navbarRef.current, {
-                xPercent: -50,
-                left: "50%",
-                maxWidth: "714px",
-                scale: isScrolled ? 0.75 : 1,
-                boxShadow: isScrolled ? "0 20px 60px rgba(0,0,0,0.12)" : "0 8px 32px rgba(0,0,0,0.04)",
-                duration: duration,
-                ease: "power3.out"
-            }, 0);
-
-            tl.to(".menu-desktop-item", {
-                x: -20,
-                opacity: 0,
-                duration: 0.3,
-                stagger: { each: 0.05, from: "end" },
-                ease: "power2.inOut"
-            }, 0);
-
-            tl.to(menuButtonRef.current, {
-                opacity: 1,
-                x: 0,
-                duration: duration,
-                ease: "power3.out",
-                delay: 0.2
-            }, 0);
-        }
-
-        if (!hasMounted.current) hasMounted.current = true;
-    }, { dependencies: [isMenuHovered], scope: navbarRef });
-
-    // 3. Visibility Logic (Hidden by Hero)
-    useGSAP(() => {
-        gsap.to(navbarRef.current, {
-            opacity: isHidden ? 0 : 1,
-            y: isHidden ? -160 : 0,
-            duration: 0.7,
-            ease: "power3.inOut",
+        // Animate Menu Items (Expand)
+        gsap.to(menuItemsRef.current, {
+            maxWidth: isMenuHovered ? 600 : 0,
+            opacity: isMenuHovered ? 1 : 0,
+            paddingRight: isMenuHovered ? 50 : 0,
+            duration: 0.8,
+            ease: "power2.inOut",
             overwrite: "auto"
         });
-    }, [isHidden]);
+
+        // Animate Menu Trigger (Collapse)
+        gsap.to(menuTriggerRef.current, {
+            maxWidth: isMenuHovered ? 0 : 200,
+            opacity: isMenuHovered ? 0 : 1,
+            paddingRight: isMenuHovered ? 0 : 24,
+            duration: 0.8,
+            ease: "power2.inOut",
+            overwrite: "auto"
+        });
+    }, [isMenuHovered]);
+
+    // 3. Menu Visibility
+    useGSAP(() => {
+        gsap.to(navbarRef.current, {
+            opacity: isNavHidden ? 0 : 1,
+            pointerEvents: isNavHidden ? "none" : "auto",
+            duration: 0.5,
+            ease: "power2.inOut",
+            overwrite: "auto"
+        });
+    }, [isNavHidden]);
 
     return (
         <header
             ref={navbarRef}
-            className="fixed z-50 left-1/2 -translate-x-1/2 hidden lg:block bg-white border border-black/[0.03] shadow-[0_8px_32px_rgba(0,0,0,0.04)] rounded-3xl pointer-events-auto"
-            style={{ top: "32px", width: "calc(100% - 48px)", maxWidth: "714px" }}
+            className="fixed z-50 top-32 left-1/2 -translate-x-1/2 hidden lg:block bg-white border border-black/[0.03] shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-full pointer-events-auto origin-top"
         >
-            <div
-                ref={innerRef}
-                className="flex flex-col w-full relative p-3 px-4"
+            <nav
+                className="flex items-center h-[96px] px-32 relative"
                 onMouseEnter={() => setIsMenuHovered(true)}
                 onMouseLeave={() => setIsMenuHovered(false)}
             >
-                <div className="flex items-center w-full h-[54px] shrink-0">
-                    <div className="flex-1 flex justify-start items-center">
-                        <Link href="/" className="flex items-center">
-                            <Image src={Logo} alt="Crisp Logo" priority className="h-9 w-auto" />
-                        </Link>
-                    </div>
+                {/* Logo Section */}
+                <div className="flex items-center shrink-0 pr-[50px]">
+                    <Link href="/" className="flex items-center">
+                        <Image
+                            src="/img/crisp-logo.svg"
+                            alt="Crisp Logo"
+                            width={100}
+                            height={33}
+                            priority
+                            className="w-auto h-[33px]"
+                        />
+                    </Link>
+                </div>
 
-                    <div className={clsx(
-                        "flex items-center justify-center transition-all duration-500 overflow-hidden",
-                        isMenuHovered ? "max-w-xl opacity-100" : "max-w-0 opacity-0"
-                    )}>
-                        <div className="flex items-center gap-[36px] px-8">
+                {/* Dynamic Center Section: Items vs Trigger */}
+                <div className="flex items-center relative">
+                    {/* Menu Items (Expansion) */}
+                    <div
+                        ref={menuItemsRef}
+                        className="flex items-center overflow-hidden opacity-0"
+                        style={{ maxWidth: 0 }}
+                    >
+                        <div className="flex items-center gap-32">
                             {menuItems.map((item) => (
                                 <Link
                                     key={item.label}
                                     href={item.path}
-                                    className="menu-desktop-item text-h3 font-bold whitespace-nowrap text-text/40 hover:text-brand transition-colors"
+                                    className="text-h3 font-bold whitespace-nowrap text-text/40 hover:text-brand transition-colors duration-500"
                                 >
                                     {item.label}
                                 </Link>
@@ -178,26 +148,31 @@ export function NavbarDesktop({ isHidden }: NavbarDesktopProps) {
                         </div>
                     </div>
 
-                    <div className="flex-1 flex items-center justify-end gap-4 shrink-0">
-                        <div
-                            ref={menuButtonRef}
-                            className="flex items-center gap-4 px-6 py-3 rounded-lg cursor-pointer text-text transition-all duration-300 hover:bg-black/[0.03]"
-                        >
-                            <div className="flex flex-col gap-1.5 pointer-events-none">
-                                <div className="w-5 h-[2px] bg-current"></div>
-                                <div className="w-5 h-[2px] bg-current"></div>
-                            </div>
+                    {/* Menu Trigger (Counterpart) */}
+                    <div
+                        ref={menuTriggerRef}
+                        className="flex items-center overflow-hidden"
+                    >
+                        <div className="flex items-center gap-8 text-text whitespace-nowrap">
+                            <Menu size={20} />
                             <span className="text-h3 font-bold">Menu</span>
-                        </div>
-
-                        <div className="shrink-0">
-                            <Button variant="filled" size="medium" showLeftIcon={false} showRightIcon={false}>
-                                Discuss a project
-                            </Button>
                         </div>
                     </div>
                 </div>
-            </div>
+
+                {/* CTA Button */}
+                <div className="flex items-center shrink-0">
+                    <Button
+                        variant="filled"
+                        size="medium"
+                        rightIcon={ArrowRight}
+                        onClick={openContactForm}
+                        className="text-h3 font-bold px-32 h-[56px]"
+                    >
+                        Discuss a project
+                    </Button>
+                </div>
+            </nav>
         </header>
     );
 }

@@ -8,14 +8,16 @@ import Image from "next/image";
 
 import { HeroVideoProps } from "@/types/case-study";
 
+import { useContactForm } from "@/context/ContactFormContext";
+
 export function HeroVideo({
     title,
     subtitle,
     videoPath,
     posterPath,
-    tags,
-    onPlayChange
-}: HeroVideoProps) {
+    tags
+}: Omit<HeroVideoProps, "onPlayChange">) {
+    const { setIsNavHidden } = useContactForm();
     const [isFullExperience, setIsFullExperience] = useState(false);
     const [isMuted, setIsMuted] = useState(true);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -55,7 +57,7 @@ export function HeroVideo({
 
     const handleStartExperience = () => {
         setIsFullExperience(true);
-        onPlayChange?.(true);
+        setIsNavHidden(true);
         setIsMuted(false);
         if (videoRef.current) {
             videoRef.current.currentTime = 0;
@@ -76,7 +78,7 @@ export function HeroVideo({
     const handleCloseExperience = (e: React.MouseEvent) => {
         e.stopPropagation();
         setIsFullExperience(false);
-        onPlayChange?.(false);
+        setIsNavHidden(false);
         setIsMuted(true);
         if (videoRef.current) {
             videoRef.current.muted = true;
@@ -101,10 +103,26 @@ export function HeroVideo({
         }
     };
 
+    const [isCursorInActiveZone, setIsCursorInActiveZone] = useState(false);
+
+    useGSAP(() => {
+        const handleMouseMove = (e: MouseEvent) => {
+            const yOffset = e.clientY / window.innerHeight;
+            if (yOffset > 0.2 && yOffset < 0.8) {
+                if (!isCursorInActiveZone) setIsCursorInActiveZone(true);
+            } else {
+                if (isCursorInActiveZone) setIsCursorInActiveZone(false);
+            }
+        };
+
+        window.addEventListener("mousemove", handleMouseMove);
+        return () => window.removeEventListener("mousemove", handleMouseMove);
+    }, [isCursorInActiveZone]);
+
     return (
         <section
             ref={containerRef}
-            data-cursor={isFullExperience ? "playing" : "video"}
+            data-cursor={isFullExperience ? "playing" : (isCursorInActiveZone ? "video" : null)}
             className="relative h-screen w-full overflow-hidden bg-black text-white cursor-none"
             onClick={!isFullExperience ? handleStartExperience : undefined}
         >
@@ -126,8 +144,8 @@ export function HeroVideo({
             <div className={`absolute inset-0 bg-black/30 transition-opacity duration-1000 ${isFullExperience ? 'opacity-0' : 'opacity-100'}`} />
 
             {/* Content */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 z-10 pointer-events-none">
-                <div ref={textRef} className="space-y-4 max-w-[1600px] mx-auto w-full">
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 pointer-events-none">
+                <div ref={textRef} className="space-y-4 max-w-[1475px] mx-auto w-full">
                     <div className="flex items-center justify-center gap-4 text-sm md:text-base uppercase tracking-widest font-medium opacity-90">
                         {tags.map((tag, index) => (
                             <React.Fragment key={tag}>
@@ -140,7 +158,7 @@ export function HeroVideo({
                     </div>
 
                     <h1
-                        className="text-[12vw] md:text-mega-h1 leading-none uppercase font-mega text-white"
+                        className="text-mega-h1 leading-none uppercase font-mega text-white"
                         style={{
                             WebkitTextStrokeWidth: '4px',
                             WebkitTextStrokeColor: 'currentColor',
@@ -154,54 +172,47 @@ export function HeroVideo({
                     </p>
                 </div>
 
-                <button
-                    ref={playRef}
-                    className="mt-12 group flex items-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-md rounded-full border border-white/20 transition-all duration-300"
-                >
-                    <span className="relative flex items-center justify-center w-10 h-10 bg-accent rounded-full text-white">
-                        <Play size={16} fill="currentColor" className="ml-0.5" />
-                    </span>
-                    <span className="text-sm uppercase tracking-wider font-bold">Watch Reel</span>
-                </button>
             </div>
 
             {/* Controls */}
-            {isFullExperience && (
-                <div className="absolute bottom-12 left-0 right-0 z-20 flex justify-between px-12 pointer-events-none">
-                    <div className="flex items-center gap-4 mx-auto pointer-events-auto">
+            {
+                isFullExperience && (
+                    <div className="absolute bottom-48 left-0 right-0 z-20 flex justify-between px-24 md:px-48 pointer-events-none">
+                        <div className="flex items-center mx-auto pointer-events-auto">
+                            <button
+                                onClick={handleCloseExperience}
+                                className="w-64 h-64 flex items-center justify-center bg-black border border-white/10 rounded-full hover:scale-110 hover:bg-neutral-900 transition-all duration-500 group shadow-2xl"
+                            >
+                                <Image
+                                    src="/img/icons/cross.svg"
+                                    alt="Close"
+                                    width={20}
+                                    height={20}
+                                    className="group-hover:rotate-90 transition-transform duration-500"
+                                />
+                            </button>
+                        </div>
+
                         <button
-                            onClick={handleCloseExperience}
-                            className="w-16 h-16 flex items-center justify-center bg-black border border-white/10 rounded-full hover:scale-110 hover:bg-whiteGroup transition-all duration-500 group"
+                            onClick={toggleMute}
+                            className="absolute right-24 md:right-48 bottom-0 w-64 h-64 flex items-center justify-center bg-black border border-white/10 rounded-full hover:scale-110 hover:bg-neutral-900 transition-all duration-500 pointer-events-auto group shadow-2xl"
                         >
                             <Image
-                                src="/img/icons/cross.svg"
-                                alt="Close"
+                                src={isMuted ? "/img/icons/volume-off.svg" : "/img/icons/volume.svg"}
+                                alt="Toggle Sound"
                                 width={24}
                                 height={24}
-                                className="group-hover:rotate-90 transition-transform duration-500"
                             />
                         </button>
                     </div>
-
-                    <button
-                        onClick={toggleMute}
-                        className="absolute right-12 bottom-0 w-16 h-16 flex items-center justify-center bg-black border border-white/10 rounded-full hover:scale-110 transition-all duration-500 pointer-events-auto group"
-                    >
-                        <Image
-                            src={isMuted ? "/img/icons/volume-off.svg" : "/img/icons/volume.svg"}
-                            alt="Toggle Sound"
-                            width={24}
-                            height={24}
-                        />
-                    </button>
-                </div>
-            )}
+                )
+            }
 
             {/* Scroll Indicator */}
             <div ref={scrollRef} className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce opacity-50">
                 <div className="w-[1px] h-12 bg-white/50 mx-auto" />
                 <p className="text-[10px] uppercase tracking-widest mt-2">Scroll</p>
             </div>
-        </section>
+        </section >
     );
 }

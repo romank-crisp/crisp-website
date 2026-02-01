@@ -22,6 +22,10 @@ export const metadata: Metadata = {
   description: "Brand identity, Website and Product Visualization",
 };
 
+import { ContactFormProvider } from "@/context/ContactFormContext";
+import { ContactOverlay } from "@/components/forms/ContactOverlay";
+import { Navbar } from "@/components/layouts/Navbar";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -32,11 +36,15 @@ export default function RootLayout({
       <body
         className="antialiased bg-white text-black"
       >
-        <CustomCursor />
-        <SmoothScroll>
-          {children}
-          <Footer />
-        </SmoothScroll>
+        <ContactFormProvider>
+          <CustomCursor />
+          <ContactOverlay />
+          <Navbar />
+          <SmoothScroll>
+            {children}
+            <Footer />
+          </SmoothScroll>
+        </ContactFormProvider>
       </body>
     </html>
   );

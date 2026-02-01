@@ -19,7 +19,7 @@
 
     /* Typography Settings */
     --lh-mega: 0.88;
-    --lh-text: 1.14;
+    --lh-text: 1.45;
     --ls-mega: 0.03em;
 
     /* --- RESPONSIVE: MOBILE (Default) --- */
@@ -44,6 +44,11 @@
     --fs-text-lg: 26px;
     --fs-text-md: 20px;
     --fs-text-sm: 16px;
+
+    /* Corner Radius (px) */
+    --corner-small: 8px;
+    --corner-medium: 12px;
+    --corner-large: 16px;
   }
 
   /* --- RESPONSIVE: DESKTOP Overrides --- */
@@ -89,8 +94,13 @@
     /* White stays white */
   }
 
+  *,
   body {
-    @apply font-text text-text text-text-md antialiased bg-white;
+    @apply antialiased;
+  }
+
+  body {
+    @apply font-text text-text text-text-md bg-white;
     color: rgb(var(--color-text));
     background-color: rgb(var(--color-white));
   }
@@ -126,4 +136,16 @@ html.lenis body {
 
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
+}
+
+/* Global Cursor Hider - Force system cursor off site-wide */
+*,
+*::before,
+*::after {
+  cursor: none !important;
+}
+
+html,
+body {
+  cursor: none !important;
 }

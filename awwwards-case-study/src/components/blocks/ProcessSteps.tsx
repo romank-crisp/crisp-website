@@ -40,12 +40,12 @@ export function ProcessSteps({ title, description, steps }: ProcessStepsProps) {
     return (
         <div className="bg-[#F5F5F5] py-24 md:py-32">
             {(title || description) && (
-                <div className="container mx-auto px-4 md:px-8 mb-20 text-center">
+                <div className="max-w-[1475px] mx-auto mb-20 text-center px-16 md:px-0">
                     {title && <h2 className="text-4xl md:text-6xl font-medium mb-6">{title}</h2>}
                     {description && <p className="text-black/60 max-w-2xl mx-auto">{description}</p>}
                 </div>
             )}
-            <div className="container mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="max-w-[1475px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {steps.map((step, i) => (
                     <ProcessBlock key={i} step={step.stepLabel} title={step.title} description={step.description} />
                 ))}

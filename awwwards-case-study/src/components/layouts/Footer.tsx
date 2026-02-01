@@ -1,8 +1,14 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function Footer() {
     const currentYear = new Date().getFullYear();
+    const pathname = usePathname();
+
+    if (pathname === "/contact") return null;
 
     return (
         <footer className="relative bg-[#07070F] text-white pt-32 md:pt-64 pb-8 overflow-hidden">
@@ -36,12 +42,27 @@ export function Footer() {
 
                 {/* Bottom Row */}
                 <div className="flex flex-col md:flex-row justify-between items-end md:items-center mt-auto pt-32 pb-8 gap-8 md:gap-0 opacity-40 text-xs uppercase tracking-wider">
-                    <div className="flex gap-6">
-                        <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-                        <Link href="/design-system" className="hover:text-white transition-colors">Design System</Link>
-                        <Link href="#" className="hover:text-white transition-colors">LinkedIn</Link>
-                        <Link href="#" className="hover:text-white transition-colors">Instagram</Link>
-                        <Link href="#" className="hover:text-white transition-colors">Twitter</Link>
+                    <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+                        {[
+                            { href: "/", label: "Home" },
+                            { href: "/about", label: "About" },
+                            { href: "/services", label: "Services" },
+                            { href: "/contact", label: "Contact" },
+                            { href: "/typography", label: "Typography" },
+                            { href: "/works/centrogreen", label: "Centrogreen" },
+                            { href: "/works/content-engine", label: "Content Engine" },
+                            { href: "/works/folkeuniversitetet", label: "Folke" },
+                            { href: "/works/theytalk", label: "TheyTalk" },
+                            { href: "/design-system", label: "Design System" },
+                            { href: "/privacy-policy", label: "Privacy" },
+                        ].map((link, i, arr) => (
+                            <React.Fragment key={link.href}>
+                                <Link href={link.href} className="hover:text-white transition-colors">
+                                    {link.label}
+                                </Link>
+                                {i < arr.length - 1 && <span>•</span>}
+                            </React.Fragment>
+                        ))}
                     </div>
                     <div>
                         ©{currentYear} Crisp Studio. All rights reserved.

@@ -5,7 +5,7 @@ import React, { InputHTMLAttributes } from "react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     variant?: "default" | "error";
-    sizeVariant?: "small" | "medium";
+    sizeVariant?: "small" | "medium" | "large";
     label?: string;
 }
 
@@ -16,16 +16,17 @@ export function Input({
     className,
     ...props
 }: InputProps) {
-    const baseStyles = "w-full border-b border-text/20 focus:border-text transition-all duration-300 outline-none bg-transparent font-heading";
+    const baseStyles = "w-full bg-slate-100 transition-all duration-300 outline-none font-heading placeholder:opacity-60";
 
     const variants = {
-        default: "border-text/20 focus:border-text",
-        error: "border-brand text-brand placeholder:text-brand/50",
+        default: "focus:bg-slate-200",
+        error: "bg-red-50 text-brand placeholder:text-brand/60",
     };
 
     const sizes = {
-        small: "h-[42px] text-h4 pl-4 pr-12 py-12",
-        medium: "h-[50px] text-h3 pl-8 pr-16 py-12",
+        small: "h-[42px] text-h4 px-12 py-12 rounded-[var(--corner-small)]",
+        medium: "h-[50px] text-h4 px-16 py-12 rounded-[var(--corner-small)]",
+        large: "h-[70px] text-h3 px-16 py-12 rounded-[var(--corner-small)]",
     };
 
     return (

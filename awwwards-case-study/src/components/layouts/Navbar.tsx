@@ -12,11 +12,11 @@ interface NavbarProps {
  * It delegates to NavbarDesktop for large screens (lg)
  * and NavbarMobile for smaller devices.
  */
-export function Navbar({ isHidden }: NavbarProps) {
+export function Navbar() {
     return (
         <>
-            <NavbarDesktop isHidden={isHidden} />
-            <NavbarMobile isHidden={isHidden} />
+            <NavbarDesktop />
+            <NavbarMobile />
         </>
     );
 }

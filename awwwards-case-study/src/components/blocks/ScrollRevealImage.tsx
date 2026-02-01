@@ -11,17 +11,27 @@ gsap.registerPlugin(ScrollTrigger);
 
 interface ScrollRevealImageProps {
     src: string;
+    videoSrc?: string;
     alt: string;
     className?: string;
     aspectRatio?: string;
+    mode?: "intrinsic" | "cover";
 }
 
-export function ScrollRevealImage({ src, alt, className, aspectRatio = "aspect-[16/9]" }: ScrollRevealImageProps) {
+export function ScrollRevealImage({
+    src,
+    videoSrc,
+    alt,
+    className,
+    aspectRatio = "aspect-[16/9]",
+    mode = "intrinsic"
+}: ScrollRevealImageProps) {
     const containerRef = useRef<HTMLDivElement>(null);
-    const imgRef = useRef<HTMLImageElement>(null);
+    const mediaRef = useRef<HTMLDivElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
 
     useGSAP(() => {
-        if (!containerRef.current || !imgRef.current) return;
+        if (!containerRef.current || !mediaRef.current) return;
 
         const tl = gsap.timeline({
             scrollTrigger: {
@@ -39,7 +49,7 @@ export function ScrollRevealImage({ src, alt, className, aspectRatio = "aspect-[
                 ease: "power2.inOut",
                 overwrite: "auto"
             }
-        ).fromTo(imgRef.current,
+        ).fromTo(mediaRef.current,
             { scale: 1.15 },
             {
                 scale: 1,
@@ -47,22 +57,59 @@ export function ScrollRevealImage({ src, alt, className, aspectRatio = "aspect-[
                 ease: "power2.out",
                 overwrite: "auto"
             },
-            0 // Start at same time as parent tween
+            0
         );
+
+        if (videoRef.current) {
+            ScrollTrigger.create({
+                trigger: containerRef.current,
+                start: "top 60%",
+                once: true,
+                onEnter: () => videoRef.current?.play()
+            });
+        }
+
     }, { scope: containerRef });
+
+    const isCover = mode === "cover";
 
     return (
         <div
             ref={containerRef}
-            className={clsx("relative w-full overflow-hidden bg-gray-100 will-change-[clip-path]", aspectRatio, className)}
+            className={clsx(
+                "relative w-full overflow-hidden bg-gray-100 will-change-[clip-path]",
+                isCover ? aspectRatio : "",
+                className
+            )}
         >
-            <Image
-                ref={imgRef}
-                src={src}
-                alt={alt}
-                fill
-                className="object-cover will-change-transform"
-            />
+            <div ref={mediaRef} className={clsx("w-full will-change-transform", isCover ? "h-full" : "")}>
+                {videoSrc ? (
+                    <video
+                        ref={videoRef}
+                        src={videoSrc}
+                        poster={src}
+                        muted
+                        playsInline
+                        className={clsx("w-full block cursor-pointer", isCover ? "h-full object-cover" : "h-auto")}
+                        onClick={() => {
+                            if (videoRef.current) {
+                                videoRef.current.currentTime = 0;
+                                videoRef.current.play();
+                            }
+                        }}
+                    />
+                ) : (
+                    <Image
+                        src={src}
+                        alt={alt}
+                        width={isCover ? undefined : 0}
+                        height={isCover ? undefined : 0}
+                        sizes="100vw"
+                        fill={isCover}
+                        className={clsx("block", isCover ? "object-cover" : "w-full h-auto")}
+                    />
+                )}
+            </div>
         </div>
     );
 }

@@ -6,11 +6,8 @@ import { TextReveal } from "@/components/blocks/TextReveal";
 import Link from "next/link";
 
 export default function Home() {
-  const [isHeroPlaying, setIsHeroPlaying] = useState(false);
-
   return (
     <main className="min-h-screen bg-white">
-      <Navbar isHidden={isHeroPlaying} />
 
       {/* Simple Home Hero */}
       <section className="h-screen flex flex-col items-center justify-center text-center p-6 bg-black text-white">

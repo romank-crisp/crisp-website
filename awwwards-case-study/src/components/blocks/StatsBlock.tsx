@@ -26,7 +26,7 @@ export function StatsBlock({ stats }: StatsBlockProps) {
 
     return (
         <div ref={containerRef} className="w-full mt-[5vh] mb-[10vh] border-y border-black/10 py-20 md:py-32 will-change-transform">
-            <div className="max-w-[1280px] mx-auto px-6 md:px-12">
+            <div className="max-w-[1475px] mx-auto">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
                     {stats.map((stat, i) => (
                         <div key={i} className="stat-item flex flex-col items-start text-left min-w-0 md:border-l border-text/10 md:first:border-l-0 pl-0 md:pl-12">

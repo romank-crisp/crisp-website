@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { Navbar } from "@/components/layouts/Navbar";
 import { Input } from "@/components/ui/Input";
 import { Dropdown } from "@/components/ui/Dropdown";
+import { ArrowRight, Mail, Plus } from "lucide-react";
 
 const ComponentBlock = ({ children, label }: { children: React.ReactNode; label: string }) => (
     <div className="flex flex-col items-center gap-12 group">
@@ -128,16 +129,16 @@ export default function DesignSystemPage() {
                             <h3 className="font-heading text-h4 opacity-50 uppercase">Filled (Brand)</h3>
                             <div className="flex flex-wrap items-end gap-24">
                                 <ComponentBlock label="Filled / Large">
-                                    <Button size="large">Discuss a project</Button>
+                                    <Button size="large" rightIcon={ArrowRight}>Discuss a project</Button>
                                 </ComponentBlock>
                                 <ComponentBlock label="Filled / Medium">
-                                    <Button size="medium">Discuss a project</Button>
+                                    <Button size="medium" rightIcon={ArrowRight}>Discuss a project</Button>
                                 </ComponentBlock>
                                 <ComponentBlock label="Filled / Small">
-                                    <Button size="small">Discuss a project</Button>
+                                    <Button size="small" rightIcon={ArrowRight}>Discuss a project</Button>
                                 </ComponentBlock>
-                                <ComponentBlock label="Filled / No Icons">
-                                    <Button size="medium" showLeftIcon={false} showRightIcon={false}>Discuss a project</Button>
+                                <ComponentBlock label="Filled / Custom Icon">
+                                    <Button size="medium" leftIcon={Mail}>Send Email</Button>
                                 </ComponentBlock>
                             </div>
                         </div>
@@ -146,30 +147,27 @@ export default function DesignSystemPage() {
                         <div className="space-y-16">
                             <h3 className="font-heading text-h4 opacity-50 uppercase">Outline</h3>
                             <div className="flex flex-wrap items-end gap-24">
-                                <ComponentBlock label="Outline / Large">
-                                    <Button variant="outline" size="large">Discuss a project</Button>
-                                </ComponentBlock>
                                 <ComponentBlock label="Outline / Medium">
-                                    <Button variant="outline" size="medium">Discuss a project</Button>
+                                    <Button variant="outline" size="medium" leftIcon={Plus}>Add Item</Button>
                                 </ComponentBlock>
                                 <ComponentBlock label="Outline / Small">
-                                    <Button variant="outline" size="small">Discuss a project</Button>
+                                    <Button variant="outline" size="small">No Icon</Button>
                                 </ComponentBlock>
                             </div>
                         </div>
 
-                        {/* Variant: Transparent */}
+                        {/* Variant: Disabled States */}
                         <div className="space-y-16">
-                            <h3 className="font-heading text-h4 opacity-50 uppercase">Transparent</h3>
+                            <h3 className="font-heading text-h4 opacity-50 uppercase">Disabled States</h3>
                             <div className="flex flex-wrap items-end gap-24">
-                                <ComponentBlock label="Transparent / Large">
-                                    <Button variant="transparent" size="large">Discuss a project</Button>
+                                <ComponentBlock label="Filled / Disabled">
+                                    <Button size="medium" disabled rightIcon={ArrowRight}>Button Locked</Button>
                                 </ComponentBlock>
-                                <ComponentBlock label="Transparent / Medium">
-                                    <Button variant="transparent" size="medium">Discuss a project</Button>
+                                <ComponentBlock label="Outline / Disabled">
+                                    <Button variant="outline" size="medium" disabled>Outline Locked</Button>
                                 </ComponentBlock>
-                                <ComponentBlock label="Transparent / Small + Right Icon">
-                                    <Button variant="transparent" size="small" showLeftIcon={false}>Discuss a project</Button>
+                                <ComponentBlock label="Transparent / Disabled">
+                                    <Button variant="transparent" size="medium" disabled>Hidden State</Button>
                                 </ComponentBlock>
                             </div>
                         </div>
@@ -186,6 +184,9 @@ export default function DesignSystemPage() {
                             <h3 className="font-heading text-h4 opacity-50 uppercase border-b border-text/10 pb-16">Text Inputs</h3>
 
                             <div className="grid gap-32">
+                                <ComponentBlock label="Large / Filled">
+                                    <Input label="Company Name" placeholder="Enter company name..." sizeVariant="large" className="w-full" />
+                                </ComponentBlock>
                                 <ComponentBlock label="Default / Medium">
                                     <Input label="Project Name" placeholder="Enter project name..." sizeVariant="medium" className="w-full" />
                                 </ComponentBlock>
@@ -209,6 +210,19 @@ export default function DesignSystemPage() {
                             <h3 className="font-heading text-h4 opacity-50 uppercase border-b border-text/10 pb-16">Dropdowns</h3>
 
                             <div className="grid gap-32">
+                                <ComponentBlock label="Large / Filled">
+                                    <Dropdown
+                                        label="Industry"
+                                        placeholder="Select industry"
+                                        sizeVariant="large"
+                                        className="w-full"
+                                        options={[
+                                            { label: "Technology", value: "tech" },
+                                            { label: "Healthcare", value: "health" },
+                                            { label: "Finance", value: "finance" },
+                                        ]}
+                                    />
+                                </ComponentBlock>
                                 <ComponentBlock label="Dropdown / Medium">
                                     <Dropdown
                                         label="Service Type"

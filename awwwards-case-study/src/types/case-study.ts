@@ -15,6 +15,7 @@ export interface TextRevealProps extends BaseBlockProps {
 
 export interface ScrollRevealImageProps extends BaseBlockProps {
     src: string;
+    videoSrc?: string;
     alt: string;
     aspectRatio?: string; // e.g. "aspect-video", "aspect-square"
 }
@@ -71,11 +72,37 @@ export type CaseStudyBlock =
     | { type: 'feature-grid'; id: string; props: FeatureGridProps }
     | { type: 'process-steps'; id: string; props: ProcessStepsProps }
     | { type: 'pricing-table'; id: string; props: PricingTableProps }
-    | { type: 'pricing-table'; id: string; props: PricingTableProps }
     | { type: 'content-split'; id: string; props: ContentSplitProps }
-    | { type: 'logo-animation'; id: string; props: BaseBlockProps };
+    | { type: 'logo-animation'; id: string; props: BaseBlockProps }
+    | { type: 'theytalk-influencer'; id: string; props: TheyTalkInfluencerBlockProps }
+    | { type: 'theytalk-design-system'; id: string; props: BaseBlockProps }
+    | { type: 'centrogreen-designcode'; id: string; props: BaseBlockProps }
+    | { type: 'lottie'; id: string; props: LottieBlockProps };
 
 // --- New Block Props ---
+
+export interface LottieBlockProps extends BaseBlockProps {
+    animationPath: string;
+    loop?: boolean;
+    autoplay?: boolean;
+    aspectRatio?: string;
+}
+
+export interface TheyTalkInfluencerBlockProps extends BaseBlockProps {
+    videoSrc: string;
+    overlayImageSrc: string;
+    logoSrc: string;
+    aspectRatio?: string;
+}
+
+export interface ColorPaletteItem {
+    id: string;
+    name: string;
+    color: string;
+    textColor: string;
+    rgb: string;
+    cmyk: string;
+}
 
 export interface FeatureItem {
     title: string;

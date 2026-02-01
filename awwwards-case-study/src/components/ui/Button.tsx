@@ -3,6 +3,7 @@
 import { clsx } from "clsx";
 import Link from "next/link";
 import React from "react";
+import { LucideIcon } from "lucide-react";
 
 interface ButtonProps {
     children: React.ReactNode;
@@ -11,28 +12,11 @@ interface ButtonProps {
     href?: string;
     className?: string;
     onClick?: () => void;
-    showLeftIcon?: boolean;
-    showRightIcon?: boolean;
+    leftIcon?: LucideIcon;
+    rightIcon?: LucideIcon;
+    disabled?: boolean;
+    type?: "button" | "submit" | "reset";
 }
-
-const Icon = ({ size = 32 }: { size?: number }) => (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-        <rect
-            x={size * 0.1875}
-            y={size * 0.375}
-            width={size * 0.625}
-            height={size * 0.0625}
-            fill="currentColor"
-        />
-        <rect
-            x={size * 0.1875}
-            y={size * 0.5625}
-            width={size * 0.625}
-            height={size * 0.0625}
-            fill="currentColor"
-        />
-    </svg>
-);
 
 export function Button({
     children,
@@ -41,10 +25,14 @@ export function Button({
     href,
     className,
     onClick,
-    showLeftIcon = true,
-    showRightIcon = true,
+    leftIcon: LeftIcon,
+    rightIcon: RightIcon,
+    disabled = false,
+    type = "button",
 }: ButtonProps) {
-    const baseStyles = "inline-flex items-center justify-center gap-8 rounded-full font-heading font-bold transition-all duration-300 hover:scale-105 active:scale-95 whitespace-nowrap overflow-hidden";
+    const baseStyles = "inline-flex items-center justify-center gap-8 rounded-full font-heading font-bold transition-all duration-300 whitespace-nowrap overflow-hidden";
+
+    const activeStyles = !disabled ? "hover:scale-105 active:scale-95 cursor-pointer" : "cursor-not-allowed opacity-50 grayscale";
 
     const variants = {
         filled: "bg-brand text-white border-2 border-brand hover:brightness-110",
@@ -58,25 +46,26 @@ export function Button({
         large: "h-[70px] px-16 text-h3",
     };
 
-    const iconSize = size === "small" ? 24 : 32;
+    const iconSize = size === "small" ? 18 : 24;
 
     const content = (
         <>
-            {showLeftIcon && <Icon size={iconSize} />}
+            {LeftIcon && <LeftIcon size={iconSize} className="shrink-0" />}
             <span className="inline-flex items-center gap-12 leading-none">{children}</span>
-            {showRightIcon && <Icon size={iconSize} />}
+            {RightIcon && <RightIcon size={iconSize} className="shrink-0" />}
         </>
     );
 
     const combinedClassName = clsx(
         baseStyles,
+        activeStyles,
         variants[variant],
         sizes[size],
         size === "small" && (variant === "filled" || variant === "outline") && "mt-[2px]",
         className
     );
 
-    if (href) {
+    if (href && !disabled) {
         return (
             <Link href={href} className={combinedClassName}>
                 {content}
@@ -85,7 +74,12 @@ export function Button({
     }
 
     return (
-        <button onClick={onClick} className={combinedClassName}>
+        <button
+            type={type}
+            onClick={!disabled ? onClick : undefined}
+            className={combinedClassName}
+            disabled={disabled}
+        >
             {content}
         </button>
     );
