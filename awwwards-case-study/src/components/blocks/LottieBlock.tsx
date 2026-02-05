@@ -13,7 +13,6 @@ gsap.registerPlugin(ScrollTrigger);
 export function LottieBlock({
     animationPath,
     loop = false,
-    autoplay = false,
     aspectRatio = "aspect-[16/9]",
     className
 }: LottieBlockProps) {
@@ -78,7 +77,7 @@ export function LottieBlock({
                         lottieRef={lottieRef}
                         animationData={animationData}
                         loop={loop}
-                        autoplay={autoplay}
+                        autoplay={false}
                         onDOMLoaded={() => setIsReady(true)}
                         className="w-full h-full pointer-events-none"
                     />

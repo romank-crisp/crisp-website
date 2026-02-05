@@ -73,7 +73,6 @@ export const caseStudyFolkeuniversitetet: CaseStudyContent = {
             props: {
                 animationPath: "/img/imgcases/folkeuniversitetet/fu-typo.json",
                 loop: true,
-                autoplay: true,
                 aspectRatio: "aspect-[16/9]"
             }
         },
@@ -124,7 +123,6 @@ export const caseStudyFolkeuniversitetet: CaseStudyContent = {
             props: {
                 animationPath: "/img/imgcases/folkeuniversitetet/fu-font.json",
                 loop: true,
-                autoplay: true,
                 aspectRatio: "aspect-[16/9]"
             }
         },

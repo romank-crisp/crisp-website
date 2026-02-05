@@ -20,7 +20,7 @@ interface NavbarDesktopProps {
 
 const menuItems = [
     { label: "Home", path: "/" },
-    { label: "Works", path: "/works/centrogreen" },
+    { label: "Works", path: "/works" },
     { label: "About", path: "/about" },
     { label: "Services", path: "/services" }
 ];
@@ -73,7 +73,7 @@ export function NavbarDesktop() {
 
         // Animate Menu Items (Expand)
         gsap.to(menuItemsRef.current, {
-            maxWidth: isMenuHovered ? 600 : 0,
+            maxWidth: isMenuHovered ? 490 : 0,
             opacity: isMenuHovered ? 1 : 0,
             paddingRight: isMenuHovered ? 50 : 0,
             duration: 0.8,
@@ -106,10 +106,10 @@ export function NavbarDesktop() {
     return (
         <header
             ref={navbarRef}
-            className="fixed z-50 top-32 left-1/2 -translate-x-1/2 hidden lg:block bg-white border border-black/[0.03] shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-full pointer-events-auto origin-top"
+            className="fixed z-50 top-32 left-1/2 -translate-x-1/2 hidden lg:block bg-white border border-black/[0.03] shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-full pointer-events-auto origin-top overflow-hidden max-w-[970px]"
         >
             <nav
-                className="flex items-center h-[96px] px-32 relative"
+                className="flex items-center h-[96px] px-[32px] relative"
                 onMouseEnter={() => setIsMenuHovered(true)}
                 onMouseLeave={() => setIsMenuHovered(false)}
             >
@@ -135,7 +135,7 @@ export function NavbarDesktop() {
                         className="flex items-center overflow-hidden opacity-0"
                         style={{ maxWidth: 0 }}
                     >
-                        <div className="flex items-center gap-32">
+                        <div className="flex items-center gap-[32px]">
                             {menuItems.map((item) => (
                                 <Link
                                     key={item.label}
@@ -167,7 +167,7 @@ export function NavbarDesktop() {
                         size="medium"
                         rightIcon={ArrowRight}
                         onClick={openContactForm}
-                        className="text-h3 font-bold px-32 h-[56px]"
+                        className="text-h3 font-bold px-[32px] h-[56px]"
                     >
                         Discuss a project
                     </Button>

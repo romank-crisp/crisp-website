@@ -1,7 +1,2 @@
-import { CaseStudyPage } from "@/templates/case-study/CaseStudyPage";
-import { caseStudyFolkeuniversitetet } from "@/content/case-studies/folkeuniversitetet";
-
-export default function FolkeuniversitetetPage() {
-    return <CaseStudyPage content={caseStudyFolkeuniversitetet} />;
-}
-
+export * from './folkeuniversitetet-page';
+export { default } from './folkeuniversitetet-page';

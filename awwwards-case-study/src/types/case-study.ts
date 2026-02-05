@@ -85,7 +85,6 @@ export type CaseStudyBlock =
 export interface LottieBlockProps extends BaseBlockProps {
     animationPath: string;
     loop?: boolean;
-    autoplay?: boolean;
     aspectRatio?: string;
 }
 

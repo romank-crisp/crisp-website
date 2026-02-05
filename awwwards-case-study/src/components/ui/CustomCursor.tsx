@@ -6,6 +6,7 @@ import gsap from "gsap";
 export function CustomCursor() {
     const cursorRef = useRef<HTMLDivElement>(null);
     const textRef = useRef<HTMLDivElement>(null);
+    const arrowRef = useRef<HTMLDivElement>(null);
     const mouse = useRef({ x: -100, y: -100 });
     const delayedMouse = useRef({ x: -100, y: -100 });
     const [cursorType, setCursorType] = useState<string | null>(null);
@@ -34,9 +35,6 @@ export function CustomCursor() {
             const customText = interactiveEl?.getAttribute('data-cursor-text');
             if (textRef.current && customText) {
                 // Simple split by newline or just replace content. 
-                // Let's assume passed text is simple or uses <br> logic if we needed it, 
-                // but for now let's just replace the innerHTML or textContent.
-                // The current component uses two spans. Let's make it flexible.
                 textRef.current.innerHTML = customText.replace(/\\n/g, "<br/>");
             } else if (textRef.current && type === "video" && !customText) {
                 // Fallback to default if video type but no text specified (backward compatibility)
@@ -104,7 +102,7 @@ export function CustomCursor() {
 
     // Use GSAP directly for visual states to avoid rapid React re-renders competing with DOM
     useEffect(() => {
-        if (!cursorRef.current || !textRef.current) return;
+        if (!cursorRef.current || !textRef.current || !arrowRef.current) return;
 
         if (isBigState) {
             gsap.to(cursorRef.current, {
@@ -117,6 +115,25 @@ export function CustomCursor() {
                 ease: "power3.out",
             });
             gsap.to(textRef.current, {
+                opacity: 1,
+                scale: 1,
+                duration: 0.4,
+                delay: 0.1,
+                overwrite: "auto"
+            });
+            gsap.to(arrowRef.current, { opacity: 0, scale: 0, duration: 0.2 });
+        } else if (cursorType === "arrow") {
+            gsap.to(cursorRef.current, {
+                width: 80,
+                height: 80,
+                backgroundColor: "white", // Arrow background should be white
+                mixBlendMode: "normal",
+                duration: 0.4,
+                overwrite: "auto",
+                ease: "power3.out",
+            });
+            gsap.to(textRef.current, { opacity: 0, scale: 0, duration: 0.2 });
+            gsap.to(arrowRef.current, {
                 opacity: 1,
                 scale: 1,
                 duration: 0.4,
@@ -140,8 +157,9 @@ export function CustomCursor() {
                 duration: 0.2,
                 overwrite: "auto"
             });
+            gsap.to(arrowRef.current, { opacity: 0, scale: 0, duration: 0.2 });
         }
-    }, [isIdle, isBigState]);
+    }, [isIdle, isBigState, cursorType]);
 
     return (
         <div
@@ -150,10 +168,18 @@ export function CustomCursor() {
         >
             <div
                 ref={textRef}
-                className="text-[10px] font-bold uppercase tracking-[0.2em] text-black opacity-0 scale-50 text-center leading-[1.2] flex flex-col items-center justify-center"
+                className="absolute inset-0 flex flex-col items-center justify-center text-[10px] font-bold uppercase tracking-[0.2em] text-black opacity-0 scale-50 text-center leading-[1.2]"
             >
                 <span>Play</span>
                 <span>Showreel</span>
+            </div>
+            <div
+                ref={arrowRef}
+                className="absolute inset-0 flex items-center justify-center opacity-0 scale-0"
+            >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 17L17 7M17 7H7M17 7V17" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
             </div>
         </div>
     );

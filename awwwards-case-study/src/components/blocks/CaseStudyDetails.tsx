@@ -36,7 +36,7 @@ export function CaseStudyDetails({ intro, sections, sidebar }: CaseStudyDetailsP
                     <div className="w-full md:w-1/3 space-y-48 md:sticky md:top-32 self-start mt-24 md:mt-0 border-t md:border-t-0 md:border-l border-text/10 pt-32 md:pt-0 md:pl-24 lg:pl-32">
                         {sidebar.map((item, index) => (
                             <div key={index} className="space-y-8">
-                                <h4 className="font-heading text-sm font-bold uppercase tracking-wider text-brand">
+                                <h4 className="font-heading text-sm font-bold uppercase tracking-wider text-black">
                                     {item.label}
                                 </h4>
                                 <div className="font-text text-text-md text-text">

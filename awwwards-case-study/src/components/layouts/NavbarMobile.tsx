@@ -16,7 +16,7 @@ interface NavbarMobileProps {
 
 const menuItems = [
     { label: "Home", path: "/" },
-    { label: "Works", path: "/works/centrogreen" },
+    { label: "Works", path: "/works" },
     { label: "About", path: "/about" },
     { label: "Services", path: "/services" }
 ];

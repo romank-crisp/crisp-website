@@ -89,7 +89,6 @@ export const caseStudyTheyTalk: CaseStudyContent = {
             props: {
                 animationPath: "/img/imgcases/theytalk/they-talk-typo1.json",
                 loop: false,
-                autoplay: false,
                 aspectRatio: "aspect-[16/9]"
             }
         },
@@ -99,7 +98,6 @@ export const caseStudyTheyTalk: CaseStudyContent = {
             props: {
                 animationPath: "/img/imgcases/theytalk/they-talk-typo2.json",
                 loop: false,
-                autoplay: false,
                 aspectRatio: "aspect-[16/9]"
             }
         },
