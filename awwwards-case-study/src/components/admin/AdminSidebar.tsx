@@ -21,6 +21,7 @@ const MENU_GROUPS = [
                     { id: "locations", label: "Locations" },
                     { id: "services", label: "Services" },
                     { id: "clients", label: "Clients" },
+                    { id: "team", label: "Team" },
                 ]
             }
         ]

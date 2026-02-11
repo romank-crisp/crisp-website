@@ -60,6 +60,19 @@ export function JsonEditor({ filename, title, liveUrl, initialData, onSave }: Js
         }
     };
 
+    // Keyboard shortcut for Cmd+S / Ctrl+S
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+                e.preventDefault();
+                handleSave();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [data]); // Depend on data to ensure latest state is saved
+
     const [activeTab, setActiveTab] = useState<"json" | "ai">("json");
     const [prompt, setPrompt] = useState("");
     const [aiLoading, setAiLoading] = useState(false);

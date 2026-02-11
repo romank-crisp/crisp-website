@@ -176,7 +176,7 @@ export function TeamAccordion({ data }: { data: TeamMember[] }) {
                 </h2>
 
                 <div className="space-y-0">
-                    {data.map((member, index) => {
+                    {data.filter(member => member.visible).map((member, index) => {
                         const isOpen = openId === member.id;
                         const panelId = `panel-${member.id}`;
 

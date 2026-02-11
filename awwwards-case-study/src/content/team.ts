@@ -5,4 +5,5 @@ export interface TeamMember {
     photo: string;
     bio: string;
     tags: string[];
+    visible: boolean;
 }
