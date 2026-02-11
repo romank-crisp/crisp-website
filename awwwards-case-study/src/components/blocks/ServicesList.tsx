@@ -5,10 +5,9 @@ import Image from "next/image";
 import { clsx } from "clsx";
 import { motion, AnimatePresence } from "framer-motion";
 import { Tag } from "@/components/ui/Tag";
+import { Service } from "@/content/services";
 
-import { services as SERVICES } from "@/content/services";
-
-export function ServicesList() {
+export function ServicesList({ data }: { data: Service[] }) {
     const [activeIndex, setActiveIndex] = useState(0);
 
     return (
@@ -24,7 +23,7 @@ export function ServicesList() {
 
                     {/* Left Column: Navigation Tabs - Sticky in vertical middle */}
                     <div className="lg:col-span-4 flex flex-col gap-8 items-start sticky top-[20vh] self-start">
-                        {SERVICES.map((service, index) => (
+                        {data.map((service, index) => (
                             <button
                                 key={service.id}
                                 onClick={() => setActiveIndex(index)}
@@ -55,8 +54,8 @@ export function ServicesList() {
                                 {/* Image Container */}
                                 <div className="relative w-full aspect-[16/10] md:h-[500px] bg-white/5 rounded-2xl overflow-hidden border border-white/10">
                                     <Image
-                                        src={SERVICES[activeIndex].image}
-                                        alt={SERVICES[activeIndex].label}
+                                        src={data[activeIndex].image}
+                                        alt={data[activeIndex].label}
                                         fill
                                         className="object-cover opacity-80"
                                     />
@@ -66,7 +65,7 @@ export function ServicesList() {
                                 <div className="flex flex-col gap-32">
                                     {/* Tags Row - Using Tag component from design system */}
                                     <div className="flex flex-wrap gap-8">
-                                        {SERVICES[activeIndex].tags.map((tag) => (
+                                        {data[activeIndex].tags.map((tag) => (
                                             <Tag key={tag} variant="default">
                                                 {tag}
                                             </Tag>
@@ -75,7 +74,7 @@ export function ServicesList() {
 
                                     {/* Description - Using text-text-lg from design system */}
                                     <p className="font-text text-text-lg opacity-80 max-w-3xl">
-                                        {SERVICES[activeIndex].description}
+                                        {data[activeIndex].description}
                                     </p>
                                 </div>
                             </motion.div>

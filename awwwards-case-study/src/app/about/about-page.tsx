@@ -13,9 +13,23 @@ import { ServicesList } from "@/components/blocks/ServicesList";
 import { VideoScrollingCTA } from "@/components/blocks/VideoScrollingCTA";
 import { LocationsMap } from "@/components/blocks/LocationsMap";
 
+import { AboutHeroData } from "@/content/about";
+import { ClientLogo } from "@/content/clients";
+import { Location } from "@/content/locations";
+import { Service } from "@/content/services";
+import { TeamMember } from "@/content/team";
+
 gsap.registerPlugin(ScrollTrigger);
 
-export default function AboutPage() {
+interface AboutPageProps {
+    aboutData: AboutHeroData;
+    clientsData: ClientLogo[];
+    locationsData: Location[];
+    servicesData: Service[];
+    teamData: TeamMember[];
+}
+
+export default function AboutPage({ aboutData, clientsData, locationsData, servicesData, teamData }: AboutPageProps) {
     const mainRef = useRef<HTMLElement>(null);
     const darkSectionRef = useRef<HTMLDivElement>(null);
 
@@ -63,10 +77,10 @@ export default function AboutPage() {
     return (
         <main ref={mainRef} className="min-h-screen bg-white transition-colors duration-500">
             {/* Scroll-linked Plane Hero */}
-            <AboutPlaneHero />
+            <AboutPlaneHero data={aboutData} />
             {/* Client Logos Section - Transparent BG with spacing */}
             <div className="mt-[100px] mb-[200px]">
-                <ClientLogos />
+                <ClientLogos data={clientsData} />
             </div>
             {/* Wrapper for Dark Mode Sections */}
             <div ref={darkSectionRef} className="relative z-10 pb-[200px] space-y-[100px] md:space-y-[200px]">
@@ -74,15 +88,15 @@ export default function AboutPage() {
                 <CenteredQuote className="bg-transparent" />
 
                 {/* Interactive Locations Map */}
-                <LocationsMap />
+                <LocationsMap data={locationsData} />
 
                 {/* Services List (Capabilities) */}
-                <ServicesList />
+                <ServicesList data={servicesData} />
 
             </div>
 
             {/* Team Accordion Section - White Background */}
-            <TeamAccordion />
+            <TeamAccordion data={teamData} />
 
             {/* Video Scrolling CTA */}
             <VideoScrollingCTA />

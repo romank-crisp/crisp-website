@@ -7,7 +7,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-import { X, Calendar, Mail, MessageSquare, Menu } from "lucide-react";
+import { X, Calendar, Mail, MessageSquare, Menu, ArrowRight } from "lucide-react";
 
 interface NavbarMobileProps {
     isHidden?: boolean;
@@ -227,10 +227,20 @@ export function NavbarMobile() {
                                 variant="filled"
                                 size="medium"
                                 className="mobile-footer-item w-full justify-start gap-12 px-24 h-[56px] rounded-2xl opacity-0 !text-[16px]"
-                                leftIcon={Calendar}
+                                rightIcon={ArrowRight}
                                 onClick={handleOpenContact}
                             >
                                 Discuss a project
+                            </Button>
+
+                            <Button
+                                variant="outline"
+                                size="medium"
+                                className="mobile-footer-item w-full justify-start gap-12 px-24 h-[56px] rounded-2xl opacity-0 !text-[16px]"
+                                leftIcon={Calendar}
+                                href="https://calendly.com/roman-crisp-studio/30-minute-meeting-clone"
+                            >
+                                Book a meeting
                             </Button>
 
                             <Button
@@ -238,9 +248,9 @@ export function NavbarMobile() {
                                 size="medium"
                                 className="mobile-footer-item w-full justify-start gap-12 px-24 text-text opacity-0 hover:opacity-100 h-[48px] !text-[14px]"
                                 leftIcon={Mail}
-                                onClick={handleOpenContact}
+                                href="mailto:hello@crisp-studio.com"
                             >
-                                Write a message
+                                Email us
                             </Button>
 
                             <Button
@@ -248,7 +258,7 @@ export function NavbarMobile() {
                                 size="medium"
                                 className="mobile-footer-item w-full justify-start gap-12 px-24 text-text opacity-0 hover:opacity-100 h-[48px] !text-[14px]"
                                 leftIcon={MessageSquare}
-                                onClick={handleOpenContact}
+                                href="https://api.whatsapp.com/send/?phone=41794540545&text=hi%20crisp,%20lets%20discuss%20a%20project"
                             >
                                 Contact via Whatsapp
                             </Button>
@@ -256,6 +266,6 @@ export function NavbarMobile() {
                     </div>
                 </div>
             </div>
-        </header>
+        </header >
     );
 }

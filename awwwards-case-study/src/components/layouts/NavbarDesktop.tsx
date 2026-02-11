@@ -10,9 +10,9 @@ import { Menu, ArrowRight } from "lucide-react";
 import { useContactForm } from "@/context/ContactFormContext";
 import { useBrand } from "@/context/BrandContext";
 
-import { mainNavigation as menuItems } from "@/content/navigation";
+import { MenuItem } from "@/content/navigation";
 
-export function NavbarDesktop() {
+export function NavbarDesktop({ menuItems }: { menuItems: MenuItem[] }) {
     const { brand } = useBrand();
     const { openContactForm, isNavHidden } = useContactForm();
     const [isMenuHovered, setIsMenuHovered] = useState(false);
@@ -98,6 +98,8 @@ export function NavbarDesktop() {
     // Play or reverse timeline based on hover state
     useGSAP(() => {
         if (!timelineRef.current) return;
+
+        if (timelineRef.current.progress() === 0 && !isMenuHovered) return; // optimization
 
         if (isMenuHovered) {
             timelineRef.current.play();

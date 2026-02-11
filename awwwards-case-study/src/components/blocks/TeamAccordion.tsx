@@ -5,10 +5,10 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import Image from "next/image";
 import { Plus } from "lucide-react";
-import { teamMembers, TeamMember } from "@/content/team";
+import { TeamMember } from "@/content/team";
 import { Tag } from "@/components/ui/Tag";
 
-export function TeamAccordion() {
+export function TeamAccordion({ data }: { data: TeamMember[] }) {
     const [openId, setOpenId] = useState<string | null>(null);
     const [hoveredMember, setHoveredMember] = useState<TeamMember | null>(null);
     const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
@@ -75,6 +75,7 @@ export function TeamAccordion() {
             rotation: rotation,
             duration: 0.6,
             ease: "power2.out",
+            overwrite: "auto"
         });
     }, [cursorPos, hoveredMember, prefersReducedMotion]);
 
@@ -88,6 +89,7 @@ export function TeamAccordion() {
                 scale: 1.1,
                 duration: 0.3,
                 ease: "power2.out",
+                overwrite: "auto"
             });
         } else {
             gsap.to(previewRef.current, {
@@ -95,6 +97,7 @@ export function TeamAccordion() {
                 scale: 0.9,
                 duration: 0.3,
                 ease: "power2.in",
+                overwrite: "auto"
             });
         }
     }, [hoveredMember, prefersReducedMotion]);
@@ -116,12 +119,14 @@ export function TeamAccordion() {
                     height: 0,
                     duration: 0.5,
                     ease: "power3.inOut",
+                    overwrite: "auto"
                 });
                 if (prevIcon) {
                     gsap.to(prevIcon, {
                         rotation: 0,
                         duration: 0.5,
                         ease: "power3.inOut",
+                        overwrite: "auto"
                     });
                 }
             }
@@ -147,12 +152,14 @@ export function TeamAccordion() {
                     height: autoHeight,
                     duration: 0.5,
                     ease: "power3.inOut",
+                    overwrite: "auto"
                 });
                 if (icon) {
                     gsap.to(icon, {
                         rotation: 45,
                         duration: 0.5,
                         ease: "power3.inOut",
+                        overwrite: "auto"
                     });
                 }
             }
@@ -169,7 +176,7 @@ export function TeamAccordion() {
                 </h2>
 
                 <div className="space-y-0">
-                    {teamMembers.map((member, index) => {
+                    {data.map((member, index) => {
                         const isOpen = openId === member.id;
                         const panelId = `panel-${member.id}`;
 

@@ -1,6 +1,3 @@
-
-import aboutData from "./data/about.json";
-
 export interface AboutHeroData {
     headerWords: string[];
     headerSuffix: {
@@ -14,5 +11,3 @@ export interface AboutHeroData {
         column: "left" | "right";
     }[];
 }
-
-export const aboutHeroData: AboutHeroData = aboutData as unknown as AboutHeroData;

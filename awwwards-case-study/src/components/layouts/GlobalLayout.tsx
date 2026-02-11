@@ -7,13 +7,22 @@ import { BrandProvider } from "@/context/BrandContext";
 import { BrandSwitcher } from "@/components/ui/BrandSwitcher";
 import { ContactOverlay } from "@/components/forms/ContactOverlay";
 import { Navbar } from "@/components/layouts/Navbar";
-import { Footer } from "@/components/layouts/Footer";
+import { Footer, FooterProps } from "@/components/layouts/Footer";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { SmoothScroll } from "@/components/layouts/SmoothScroll";
+import { MenuItem } from "@/content/navigation";
 
-export function GlobalLayout({ children }: { children: React.ReactNode }) {
+export function GlobalLayout({ children, footerData, navigationData }: { children: React.ReactNode, footerData: FooterProps['data'], navigationData: MenuItem[] }) {
     const pathname = usePathname();
     const isAdmin = pathname?.startsWith('/admin');
+
+    // Ensure cursor state is set correctly on initial mount
+    useEffect(() => {
+        // Force initial state check on client-side
+        if (!isAdmin) {
+            document.documentElement.classList.remove('system-cursor');
+        }
+    }, []);
 
     useEffect(() => {
         if (isAdmin) {
@@ -22,13 +31,9 @@ export function GlobalLayout({ children }: { children: React.ReactNode }) {
             document.documentElement.classList.remove('system-cursor');
         }
 
-        // Cleanup on unmount or navigation
+        // Cleanup on unmount - always remove the class
         return () => {
-            // We can optionally clean up here, though Next.js navigation might handle it
-            // but specifically we want to ensure it's removed if we leave admin
-            if (isAdmin) {
-                document.documentElement.classList.remove('system-cursor');
-            }
+            document.documentElement.classList.remove('system-cursor');
         };
     }, [isAdmin]);
 
@@ -47,10 +52,10 @@ export function GlobalLayout({ children }: { children: React.ReactNode }) {
             <BrandProvider>
                 <CustomCursor />
                 <ContactOverlay />
-                <Navbar />
+                <Navbar menuItems={navigationData} />
                 <SmoothScroll>
                     {children}
-                    <Footer />
+                    <Footer data={footerData} />
                 </SmoothScroll>
                 <BrandSwitcher />
             </BrandProvider>

@@ -1,15 +1,17 @@
 "use server";
 
-import fs from "fs/promises";
+import { Storage } from "@google-cloud/storage";
 import path from "path";
 
-const DATA_DIR = path.join(process.cwd(), "src/content/data");
+const storage = new Storage();
+const BUCKET_NAME = "crisp-website-485112_cloudbuild";
+const DATA_PREFIX = "data";
 
 export async function readContent(filename: string) {
     try {
-        const filePath = path.join(DATA_DIR, filename);
-        const fileContent = await fs.readFile(filePath, "utf-8");
-        return JSON.parse(fileContent);
+        const filePath = path.join(DATA_PREFIX, filename);
+        const [files] = await storage.bucket(BUCKET_NAME).file(filePath).download();
+        return JSON.parse(files.toString());
     } catch (error) {
         console.error(`Error reading ${filename}:`, error);
         throw new Error(`Failed to read content file: ${filename}`);
@@ -18,8 +20,8 @@ export async function readContent(filename: string) {
 
 export async function updateContent(filename: string, data: any) {
     try {
-        const filePath = path.join(DATA_DIR, filename);
-        await fs.writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
+        const filePath = path.join(DATA_PREFIX, filename);
+        await storage.bucket(BUCKET_NAME).file(filePath).save(JSON.stringify(data, null, 2));
         return { success: true };
     } catch (error) {
         console.error(`Error updating ${filename}:`, error);

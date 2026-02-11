@@ -23,18 +23,22 @@ export const metadata: Metadata = {
 };
 
 import { GlobalLayout } from "@/components/layouts/GlobalLayout";
+import { readContent } from "@/app/actions/content";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const footerData = await readContent("footer.json");
+  const navigationData = await readContent("navigation.json");
+
   return (
     <html lang="en" className={`${staatliches.variable} ${dmSans.variable}`}>
       <body
         className="antialiased bg-white text-black"
       >
-        <GlobalLayout>
+        <GlobalLayout footerData={footerData} navigationData={navigationData}>
           {children}
         </GlobalLayout>
       </body>

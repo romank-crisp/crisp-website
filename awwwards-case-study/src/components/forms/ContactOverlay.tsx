@@ -259,27 +259,40 @@ export function ContactOverlay() {
                     {/* Circle Actions */}
                     <div className="absolute bottom-48 left-1/2 -translate-x-1/2 flex gap-12 z-20">
                         <div className="relative group/tooltip">
-                            <button className={`${buttonSizeClasses} bg-white flex items-center justify-center shadow-[0_8px_48px_rgba(0,0,0,0.12)] text-text transition-all duration-500 hover:scale-110 active:scale-95 hover:bg-black hover:text-white`}>
+                            <a
+                                href="https://calendly.com/roman-crisp-studio/30-minute-meeting-clone"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`${buttonSizeClasses} bg-white flex items-center justify-center shadow-[0_8px_48px_rgba(0,0,0,0.12)] text-text transition-all duration-500 hover:scale-110 active:scale-95 hover:bg-black hover:text-white`}
+                            >
                                 <Calendar size={iconSize} />
-                            </button>
+                            </a>
                             <span className={`absolute ${tooltipPosition} left-1/2 -translate-x-1/2 bg-black text-white text-[10px] uppercase tracking-widest font-bold px-12 h-[36px] flex items-center rounded pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-all duration-300 whitespace-nowrap`}>
                                 Book a meeting
                             </span>
                         </div>
 
                         <div className="relative group/tooltip">
-                            <button className={`${buttonSizeClasses} bg-white flex items-center justify-center shadow-[0_8px_48px_rgba(0,0,0,0.12)] text-text transition-all duration-500 hover:scale-110 active:scale-95 hover:bg-black hover:text-white`}>
+                            <a
+                                href="mailto:hello@crisp-studio.com"
+                                className={`${buttonSizeClasses} bg-white flex items-center justify-center shadow-[0_8px_48px_rgba(0,0,0,0.12)] text-text transition-all duration-500 hover:scale-110 active:scale-95 hover:bg-black hover:text-white`}
+                            >
                                 <Mail size={iconSize} />
-                            </button>
+                            </a>
                             <span className={`absolute ${tooltipPosition} left-1/2 -translate-x-1/2 bg-black text-white text-[10px] uppercase tracking-widest font-bold px-12 h-[36px] flex items-center rounded pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-all duration-300 whitespace-nowrap`}>
-                                Write a message
+                                Email us
                             </span>
                         </div>
 
                         <div className="relative group/tooltip">
-                            <button className={`${buttonSizeClasses} bg-white flex items-center justify-center shadow-[0_8px_48px_rgba(0,0,0,0.12)] text-text transition-all duration-500 hover:scale-110 active:scale-95 hover:bg-black hover:text-white`}>
+                            <a
+                                href="https://api.whatsapp.com/send/?phone=41794540545&text=hi%20crisp,%20lets%20discuss%20a%20project"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`${buttonSizeClasses} bg-white flex items-center justify-center shadow-[0_8px_48px_rgba(0,0,0,0.12)] text-text transition-all duration-500 hover:scale-110 active:scale-95 hover:bg-black hover:text-white`}
+                            >
                                 <MessageSquare size={iconSize} />
-                            </button>
+                            </a>
                             <span className={`absolute ${tooltipPosition} left-1/2 -translate-x-1/2 bg-black text-white text-[10px] uppercase tracking-widest font-bold px-12 h-[36px] flex items-center rounded pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-all duration-300 whitespace-nowrap`}>
                                 Contact via WhatsApp
                             </span>

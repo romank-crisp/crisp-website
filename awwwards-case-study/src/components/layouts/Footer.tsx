@@ -3,16 +3,29 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { footerNavigation, socialLinks, footerContent } from "@/content/footer";
+import { FooterLink, SocialLink, FooterContent as IFooterContent } from "@/content/footer";
 
 import { useBrand } from "@/context/BrandContext";
 
-export function Footer() {
+export interface FooterProps {
+    data: {
+        navigation: FooterLink[];
+        socials: SocialLink[];
+        content: {
+            ctaText: string;
+            copyrightSuffix: string;
+        };
+    };
+}
+
+export function Footer({ data }: FooterProps) {
     const { brand } = useBrand();
     const currentYear = new Date().getFullYear();
     const pathname = usePathname();
 
     if (pathname === "/contact") return null;
+
+    const { navigation: footerNavigation, socials: socialLinks, content: footerContent } = data;
 
     return (
         <footer className="relative bg-[#07070F] text-white pt-32 md:pt-64 pb-8 overflow-hidden">

@@ -5,9 +5,9 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { clsx } from "clsx";
 
-import { locations as LOCATIONS } from "@/content/locations";
+import { Location } from "@/content/locations";
 
-export function LocationsMap() {
+export function LocationsMap({ data }: { data: Location[] }) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [hoveredLocation, setHoveredLocation] = useState<string | null>(null);
     const [cursorPos, setCursorPos] = useState<{ x: number; y: number } | null>(null);
@@ -94,7 +94,7 @@ export function LocationsMap() {
         setCursorPos({ x, y });
 
         // Apply magnetic effect to all dots based on cursor position
-        LOCATIONS.forEach(loc => {
+        data.forEach(loc => {
             const dx = x - loc.x;
             const dy = y - loc.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
@@ -152,11 +152,11 @@ export function LocationsMap() {
         }
 
         // Find the hovered location
-        const hoveredLoc = LOCATIONS.find(loc => loc.id === targetId);
+        const hoveredLoc = data.find(loc => loc.id === targetId);
         if (!hoveredLoc) return;
 
         // Animate nearby dots toward the hovered one
-        LOCATIONS.forEach(loc => {
+        data.forEach(loc => {
             if (loc.id === targetId) return;
 
             // Calculate distance
@@ -188,7 +188,7 @@ export function LocationsMap() {
                 onMouseLeave={handleMouseLeave}
             >
                 {/* Locations Layer */}
-                {LOCATIONS.map((loc) => (
+                {data.map((loc) => (
                     <div
                         key={loc.id}
                         data-location-id={loc.id}

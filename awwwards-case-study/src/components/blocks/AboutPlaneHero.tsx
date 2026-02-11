@@ -4,11 +4,11 @@ import { useRef, useLayoutEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { aboutHeroData } from "@/content/about";
+import { AboutHeroData } from "@/content/about";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export function AboutPlaneHero() {
+export function AboutPlaneHero({ data }: { data: AboutHeroData }) {
     const containerRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const headerRef = useRef<HTMLHeadingElement>(null);
@@ -126,7 +126,7 @@ export function AboutPlaneHero() {
                             About Us
                         </h4>
                         <h1 ref={headerRef} className="font-mega text-mega-h2 text-brand uppercase leading-[0.85] tracking-tight text-left max-w-5xl flex flex-wrap gap-x-[0.25em]">
-                            {aboutHeroData.headerWords.map((word, i) => (
+                            {data.headerWords.map((word, i) => (
                                 <span key={i} className="inline-block overflow-hidden">
                                     <span className="hero-word-inner inline-block">
                                         {word}
@@ -134,10 +134,10 @@ export function AboutPlaneHero() {
                                 </span>
                             ))}
                             <span className="inline-block overflow-hidden">
-                                <span className="hero-word-inner inline-block text-text">{aboutHeroData.headerSuffix.since}</span>
+                                <span className="hero-word-inner inline-block text-text">{data.headerSuffix.since}</span>
                             </span>
                             <span className="inline-block overflow-hidden">
-                                <span className="hero-word-inner inline-block text-text">{aboutHeroData.headerSuffix.year}</span>
+                                <span className="hero-word-inner inline-block text-text">{data.headerSuffix.year}</span>
                             </span>
                         </h1>
                     </div>
@@ -149,17 +149,17 @@ export function AboutPlaneHero() {
                         <div className="md:col-span-4 md:col-start-2 flex flex-col gap-[30vh]">
                             {/* Block 1 */}
                             <div className="about-text-1">
-                                <h4 className="font-heading text-h4 mb-12 text-brand">{aboutHeroData.blocks[0].title}</h4>
+                                <h4 className="font-heading text-h4 mb-12 text-brand">{data.blocks[0].title}</h4>
                                 <p className="font-text text-[24px] md:text-[32px] text-text leading-[1.2] tracking-tight text-left">
-                                    {aboutHeroData.blocks[0].content}
+                                    {data.blocks[0].content}
                                 </p>
                             </div>
 
                             {/* Block 3 */}
                             <div className="about-text-3">
-                                <h4 className="font-heading text-h4 mb-12 text-brand">{aboutHeroData.blocks[2].title}</h4>
+                                <h4 className="font-heading text-h4 mb-12 text-brand">{data.blocks[2].title}</h4>
                                 <p className="font-text text-[24px] md:text-[32px] text-text leading-[1.2] tracking-tight text-left">
-                                    {aboutHeroData.blocks[2].content}
+                                    {data.blocks[2].content}
                                 </p>
                             </div>
                         </div>
@@ -168,17 +168,17 @@ export function AboutPlaneHero() {
                         <div className="md:col-span-4 md:col-start-8 flex flex-col gap-[30vh] pt-[20vh]">
                             {/* Block 2 */}
                             <div className="about-text-2">
-                                <h4 className="font-heading text-h4 mb-12 text-brand">{aboutHeroData.blocks[1].title}</h4>
+                                <h4 className="font-heading text-h4 mb-12 text-brand">{data.blocks[1].title}</h4>
                                 <p className="font-text text-[24px] md:text-[32px] text-text leading-[1.2] tracking-tight text-left">
-                                    {aboutHeroData.blocks[1].content}
+                                    {data.blocks[1].content}
                                 </p>
                             </div>
 
                             {/* Block 4 */}
                             <div className="about-text-4">
-                                <h4 className="font-heading text-h4 mb-12 text-brand">{aboutHeroData.blocks[3].title}</h4>
+                                <h4 className="font-heading text-h4 mb-12 text-brand">{data.blocks[3].title}</h4>
                                 <p className="font-text text-[24px] md:text-[32px] text-text leading-[1.2] tracking-tight text-left">
-                                    {aboutHeroData.blocks[3].content}
+                                    {data.blocks[3].content}
                                 </p>
                             </div>
                         </div>

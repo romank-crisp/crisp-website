@@ -5,6 +5,7 @@ import { ClientLogos } from "@/components/blocks/ClientLogos";
 import { useBrand } from "@/context/BrandContext";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ClientLogo } from "@/content/clients";
 
 // Animated Works Heading Component
 function AnimatedWorksHeading() {
@@ -118,12 +119,15 @@ const WORKS = [
     }
 ];
 
-export function WorksPage() {
+
+
+export function WorksPage({ clientsData }: { clientsData: ClientLogo[] }) {
     const { brand } = useBrand();
 
     return (
         <main className="min-h-screen bg-white pt-[15vh] pb-32">
             <div className="max-w-[1440px] mx-auto px-6 md:px-12">
+                {/* ... keeping this part unchanged if I don't select it ... */}
                 <section className="mb-[15vh] grid grid-cols-1 md:grid-cols-12 gap-y-12 md:gap-x-8 items-center">
                     <div className="md:col-span-8">
                         <h4 className="font-heading text-sm font-bold uppercase tracking-widest mb-4 text-gray-500">
@@ -179,7 +183,7 @@ export function WorksPage() {
 
 
 
-            <ClientLogos />
+            <ClientLogos data={clientsData} />
         </main >
     );
 }

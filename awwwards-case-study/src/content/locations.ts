@@ -1,6 +1,3 @@
-
-import locationsData from "./data/locations.json";
-
 export interface LocationCity {
     name: string;
 }
@@ -12,6 +9,3 @@ export interface Location {
     y: number;
     cities?: string[];
 }
-
-// Location data - sourced from JSON
-export const locations: Location[] = locationsData as Location[];
