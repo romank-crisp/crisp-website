@@ -24,7 +24,29 @@ export function CaseStudyDetails({ intro, sections, sidebar }: CaseStudyDetailsP
                                     <section key={index} className="space-y-8">
                                         <h3 className="font-heading text-sm font-bold text-brand uppercase tracking-wider">{section.title}</h3>
                                         <div className="font-text text-text-md text-text">
-                                            {section.content}
+                                            {section.type === 'deliverables' && section.items ? (
+                                                <div className="flex flex-col">
+                                                    {section.items.map((item, idx) => (
+                                                        <div key={idx} className="flex gap-10 items-start py-20 border-t border-text/10 first:border-t-0">
+                                                            <p className="font-heading text-h2 font-bold leading-none w-[60px] md:w-[80px] shrink-0">
+                                                                {String(idx + 1).padStart(2, '0')}
+                                                            </p>
+                                                            <div className="flex flex-col gap-[10px]">
+                                                                <h3 className="font-heading text-h3 font-bold leading-tight">
+                                                                    {item.title}
+                                                                </h3>
+                                                                <p className="font-text text-text-md text-text/80">
+                                                                    {item.text}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : section.type === 'html' ? (
+                                                <div dangerouslySetInnerHTML={{ __html: section.content || '' }} />
+                                            ) : (
+                                                <p>{section.content}</p>
+                                            )}
                                         </div>
                                     </section>
                                 ))}
@@ -36,11 +58,15 @@ export function CaseStudyDetails({ intro, sections, sidebar }: CaseStudyDetailsP
                     <div className="w-full md:w-1/3 space-y-48 md:sticky md:top-32 self-start mt-24 md:mt-0 border-t md:border-t-0 md:border-l border-text/10 pt-32 md:pt-0 md:pl-24 lg:pl-32">
                         {sidebar.map((item, index) => (
                             <div key={index} className="space-y-8">
-                                <h4 className="font-heading text-sm font-bold uppercase tracking-wider text-black">
+                                <h4 className={`font-heading text-sm font-bold uppercase tracking-wider ${item.isRed ? 'text-brand' : 'text-black'}`}>
                                     {item.label}
                                 </h4>
                                 <div className="font-text text-text-md text-text">
-                                    {item.value}
+                                    {Array.isArray(item.value) ? (
+                                        item.value.map((line, i) => <p key={i}>{line}</p>)
+                                    ) : (
+                                        <p>{item.value}</p>
+                                    )}
                                 </div>
                             </div>
                         ))}

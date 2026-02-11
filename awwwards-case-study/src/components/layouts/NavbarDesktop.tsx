@@ -1,43 +1,35 @@
 "use client";
 
-import { clsx } from "clsx";
 import Image from "next/image";
-import { useState, useRef, useEffect } from "react";
-// Removed: import Logo from "@/app/img/crisp-logo.svg";
+import { useState, useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Menu, ArrowRight } from "lucide-react";
 import { useContactForm } from "@/context/ContactFormContext";
+import { useBrand } from "@/context/BrandContext";
 
-gsap.registerPlugin(ScrollTrigger);
-
-interface NavbarDesktopProps {
-    isHidden?: boolean;
-}
-
-const menuItems = [
-    { label: "Home", path: "/" },
-    { label: "Works", path: "/works" },
-    { label: "About", path: "/about" },
-    { label: "Services", path: "/services" }
-];
+import { mainNavigation as menuItems } from "@/content/navigation";
 
 export function NavbarDesktop() {
+    const { brand } = useBrand();
     const { openContactForm, isNavHidden } = useContactForm();
     const [isMenuHovered, setIsMenuHovered] = useState(false);
     const navbarRef = useRef<HTMLElement>(null);
-    const menuItemsRef = useRef<HTMLDivElement>(null);
+    const navContentRef = useRef<HTMLDivElement>(null);
     const menuTriggerRef = useRef<HTMLDivElement>(null);
     const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
+    const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
-    // 1. Scroll-based resizing with "Return on Stop" logic
+    // Scroll-based resizing with "Return on Stop" logic
     useGSAP(() => {
         if (!navbarRef.current) return;
 
         const handleScroll = () => {
+            // Don't scale during menu expansion
+            if (isMenuHovered) return;
+
             // Shrink on scroll
             gsap.to(navbarRef.current, {
                 scale: 0.8,
@@ -65,34 +57,56 @@ export function NavbarDesktop() {
             window.removeEventListener("scroll", handleScroll);
             if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
         };
-    }, { scope: navbarRef });
+    }, { dependencies: [isMenuHovered], scope: navbarRef });
 
-    // 2. Menu Expansion Animation via GSAP (Fixes CSS max-width bounce/contraction)
+    // Create timeline once on mount
     useGSAP(() => {
-        if (!menuItemsRef.current || !menuTriggerRef.current) return;
+        if (!navContentRef.current || !menuTriggerRef.current) return;
 
-        // Animate Menu Items (Expand)
-        gsap.to(menuItemsRef.current, {
-            maxWidth: isMenuHovered ? 490 : 0,
-            opacity: isMenuHovered ? 1 : 0,
-            paddingRight: isMenuHovered ? 50 : 0,
-            duration: 0.8,
-            ease: "power2.inOut",
-            overwrite: "auto"
+        const tl = gsap.timeline({ paused: true });
+
+        // Step 1: Collapse Menu trigger (width, opacity, margin)
+        tl.to(menuTriggerRef.current, {
+            width: 0,
+            opacity: 0,
+            marginRight: 0,
+            duration: 0.3,
+            ease: "power2.out"
         });
 
-        // Animate Menu Trigger (Collapse)
-        gsap.to(menuTriggerRef.current, {
-            maxWidth: isMenuHovered ? 0 : 200,
-            opacity: isMenuHovered ? 0 : 1,
-            paddingRight: isMenuHovered ? 0 : 24,
+        // Step 2: Expand the nav content width to fit content (approx 450px)
+        tl.to(navContentRef.current, {
+            width: 450,
             duration: 0.8,
-            ease: "power2.inOut",
-            overwrite: "auto"
-        });
+            ease: "power2.inOut"
+        }, "-=0.1");
+
+        // Step 3: Staggered animation for menu items
+        tl.fromTo(".navbar-menu-item",
+            { x: -30, opacity: 0 },
+            { x: 0, opacity: 1, duration: 0.5, stagger: 0.06, ease: "power4.out" },
+            "-=0.4"
+        );
+
+        timelineRef.current = tl;
+
+        return () => {
+            tl.kill();
+        };
+    }, []); // Empty dependency array - create only once
+
+    // Play or reverse timeline based on hover state
+    useGSAP(() => {
+        if (!timelineRef.current) return;
+
+        if (isMenuHovered) {
+            timelineRef.current.play();
+        } else {
+            timelineRef.current.reverse();
+        }
     }, [isMenuHovered]);
 
-    // 3. Menu Visibility
+    // Menu Visibility
     useGSAP(() => {
         gsap.to(navbarRef.current, {
             opacity: isNavHidden ? 0 : 1,
@@ -106,62 +120,61 @@ export function NavbarDesktop() {
     return (
         <header
             ref={navbarRef}
-            className="fixed z-50 top-32 left-1/2 -translate-x-1/2 hidden lg:block bg-white border border-black/[0.03] shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-full pointer-events-auto origin-top overflow-hidden max-w-[970px]"
+            className="fixed z-50 top-24 lg:top-32 left-1/2 -translate-x-1/2 hidden lg:block bg-white border border-black/[0.03] shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-full pointer-events-auto origin-top"
+            style={{ overflow: "visible" }}
         >
             <nav
-                className="flex items-center h-[96px] px-[32px] relative"
+                className="flex items-center gap-[40px] h-[96px] px-[32px] relative max-w-[1440px]"
                 onMouseEnter={() => setIsMenuHovered(true)}
                 onMouseLeave={() => setIsMenuHovered(false)}
             >
                 {/* Logo Section */}
-                <div className="flex items-center shrink-0 pr-[50px]">
+                <div className="flex items-center shrink-0">
                     <Link href="/" className="flex items-center">
                         <Image
-                            src="/img/crisp-logo.svg"
-                            alt="Crisp Logo"
+                            src={brand.logo}
+                            alt={`${brand.name} Logo`}
                             width={100}
                             height={33}
                             priority
-                            className="w-auto h-[33px]"
+                            className="w-auto h-[33px] transition-transform duration-300 origin-left"
+                            style={{ transform: `scale(${brand.logoScale || 1})` }}
                         />
                     </Link>
                 </div>
 
-                {/* Dynamic Center Section: Items vs Trigger */}
-                <div className="flex items-center relative">
-                    {/* Menu Items (Expansion) */}
-                    <div
-                        ref={menuItemsRef}
-                        className="flex items-center overflow-hidden opacity-0"
-                        style={{ maxWidth: 0 }}
-                    >
-                        <div className="flex items-center gap-[32px]">
-                            {menuItems.map((item) => (
-                                <Link
-                                    key={item.label}
-                                    href={item.path}
-                                    className="text-h3 font-bold whitespace-nowrap text-text/40 hover:text-brand transition-colors duration-500"
-                                >
-                                    {item.label}
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Menu Trigger (Counterpart) */}
-                    <div
-                        ref={menuTriggerRef}
-                        className="flex items-center overflow-hidden"
-                    >
-                        <div className="flex items-center gap-8 text-text whitespace-nowrap">
-                            <Menu size={20} />
-                            <span className="text-h3 font-bold">Menu</span>
-                        </div>
+                {/* Dynamic Center Section - Menu Items */}
+                <div
+                    ref={navContentRef}
+                    className="flex items-center overflow-hidden justify-center"
+                    style={{ width: 0 }}
+                >
+                    <div className="flex items-center gap-[32px] whitespace-nowrap">
+                        {menuItems.map((item) => (
+                            <Link
+                                key={item.label}
+                                href={item.path}
+                                className="navbar-menu-item text-h3 font-bold whitespace-nowrap text-text/40 hover:text-brand transition-colors duration-500"
+                                style={{ opacity: 0 }}
+                            >
+                                {item.label}
+                            </Link>
+                        ))}
                     </div>
                 </div>
 
-                {/* CTA Button */}
+                {/* Right Section: Menu Trigger + CTA */}
                 <div className="flex items-center shrink-0">
+                    {/* Menu Trigger */}
+                    <div
+                        ref={menuTriggerRef}
+                        className="flex items-center gap-8 text-text whitespace-nowrap overflow-hidden mr-6" // Added mr-6 (24px) here instead of gap
+                    >
+                        <Menu size={20} />
+                        <span className="text-h3 font-bold">Menu</span>
+                    </div>
+
+                    {/* CTA Button */}
                     <Button
                         variant="filled"
                         size="medium"

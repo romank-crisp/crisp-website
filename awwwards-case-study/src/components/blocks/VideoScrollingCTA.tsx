@@ -7,10 +7,12 @@ import { useGSAP } from "@gsap/react";
 import { Button } from "@/components/ui/Button";
 import { Calendar, Mail, MessageCircle } from "lucide-react";
 import { useContactForm } from "@/context/ContactFormContext";
+import { useBrand } from "@/context/BrandContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function VideoScrollingCTA() {
+    const { brand } = useBrand();
     const { openContactForm } = useContactForm();
     const containerRef = useRef<HTMLDivElement>(null);
     const stickyRef = useRef<HTMLDivElement>(null);
@@ -146,7 +148,7 @@ export function VideoScrollingCTA() {
                             variant="outline"
                             size="large"
                             leftIcon={Mail}
-                            href="mailto:hello@crisp.studio"
+                            href={`mailto:hello@${brand.name.toLowerCase()}.studio`}
                             className="!text-white !border-white/20 hover:!border-white hover:!bg-white/10"
                         >
                             Email us

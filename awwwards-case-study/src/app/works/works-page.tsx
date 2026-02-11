@@ -2,13 +2,101 @@
 
 import { WorkCard } from "@/components/ui/WorkCard";
 import { ClientLogos } from "@/components/blocks/ClientLogos";
+import { useBrand } from "@/context/BrandContext";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+// Animated Works Heading Component
+function AnimatedWorksHeading() {
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const dynamicPhrases = [
+        "brands that scale.",
+        "websites that convert.",
+        "robust design systems.",
+        "content across channels.",
+        "rock-solid design."
+    ];
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentIndex((prev) => (prev + 1) % dynamicPhrases.length);
+        }, 3000); // Slower interval for better readability (2s -> 3s)
+
+        return () => clearInterval(interval);
+    }, []);
+
+    const wordVariants = {
+        initial: { y: "110%", opacity: 0 },
+        animate: {
+            y: "0%",
+            opacity: 1,
+            transition: {
+                duration: 0.8,
+                ease: "circOut" as const
+            }
+        },
+        exit: {
+            y: "-110%",
+            opacity: 0,
+            transition: {
+                duration: 0.6,
+                ease: "circIn" as const
+            }
+        }
+    };
+
+    const containerVariants = {
+        animate: {
+            transition: {
+                staggerChildren: 0.08
+            }
+        },
+        exit: {
+            transition: {
+                staggerChildren: 0.05,
+                staggerDirection: -1
+            }
+        }
+    };
+
+    return (
+        <h1 className="font-mega text-mega-h2 text-text uppercase leading-[0.85] tracking-tight text-left min-h-[3em] flex flex-col justify-start">
+            <span className="relative block">
+                <AnimatePresence mode="wait">
+                    <motion.span
+                        key={currentIndex}
+                        variants={containerVariants}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                        className="inline-block"
+                    >
+                        {dynamicPhrases[currentIndex].split(" ").map((word, i) => (
+                            <span key={`${currentIndex}-${i}`} className="inline-block overflow-hidden align-bottom mr-[0.25em]">
+                                <motion.span
+                                    variants={wordVariants}
+                                    className="inline-block"
+                                >
+                                    {word}
+                                </motion.span>
+                            </span>
+                        ))}
+                    </motion.span>
+                </AnimatePresence>
+            </span>
+            <span className="text-brand">delivered.</span>
+        </h1>
+    );
+}
+
 
 const WORKS = [
     {
         title: "Folkeuniversitetet",
         tags: ["Branding", "Communication Materials", "Web Design"],
         image: "/img/imgcases/folkeuniversitetet/fu-case-01.png",
-        video: "/img/imgcases/folkeuniversitetet/fu-showreel.mp4",
+        video: "/img/imgcases/folkeuniversitetet/fu-showreel.webm",
         poster: "/img/imgcases/folkeuniversitetet/fu-case-01.png",
         href: "/works/folkeuniversitetet"
     },
@@ -27,32 +115,30 @@ const WORKS = [
         video: "/img/imgcases/theytalk/theytalk-full.webm",
         poster: "/img/imgcases/theytalk/theytalk-01.png",
         href: "/works/theytalk"
-    },
-    {
-        title: "Content Engine",
-        tags: ["Platform", "Web Design"],
-        image: "/img/imgcases/content-engine/ce-01.png",
-        video: "/img/imgcases/centrogreen/centrogreen-reel.webm",
-        poster: "/img/imgcases/content-engine/ce-01.png",
-        href: "/works/content-engine"
     }
 ];
 
+export function WorksPage() {
+    const { brand } = useBrand();
 
-export default function WorksPage() {
     return (
-        <main className="min-h-screen pt-24 md:pt-32 pb-20 md:pb-32 bg-white text-black">
-            <div className="max-w-[1440px] mx-auto px-6 md:px-12 mt-[15vh]">
-                {/* Header Section */}
-                <section className="mb-16 md:mb-24 grid grid-cols-1 md:grid-cols-12 gap-y-6 md:gap-x-8 items-end">
-                    <h1 className="md:col-span-8 font-mega text-mega-h2 text-brand uppercase mb-8 md:mb-0">
-                        Brands that<br />make your<br />product better
-                    </h1>
+        <main className="min-h-screen bg-white pt-[15vh] pb-32">
+            <div className="max-w-[1440px] mx-auto px-6 md:px-12">
+                <section className="mb-[15vh] grid grid-cols-1 md:grid-cols-12 gap-y-12 md:gap-x-8 items-center">
+                    <div className="md:col-span-8">
+                        <h4 className="font-heading text-sm font-bold uppercase tracking-widest mb-4 text-gray-500">
+                            Our Works
+                        </h4>
+                        <AnimatedWorksHeading />
+                    </div>
 
-                    <div className="md:col-span-4 md:col-start-9">
-                        <p className="font-text text-base md:text-lg leading-relaxed">
-                            In times like this, we bring over 50Y of team experience to make you brand
-                        </p>
+                    <div className="md:col-span-2 md:col-start-11 flex md:justify-end md:-translate-x-[10vw] transform">
+                        <div className="font-text text-xl md:text-2xl leading-relaxed text-gray-400">
+                            <p>Visual Design</p>
+                            <p>Websites</p>
+                            <p>User Experience</p>
+                            <p>Content Design</p>
+                        </div>
                     </div>
                 </section>
 
@@ -89,8 +175,11 @@ export default function WorksPage() {
                     </div>
                 </section>
 
-            </div>
+            </div >
+
+
+
             <ClientLogos />
-        </main>
+        </main >
     );
 }

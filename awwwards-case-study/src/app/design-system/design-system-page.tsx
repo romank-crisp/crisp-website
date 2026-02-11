@@ -72,13 +72,15 @@ export default function DesignSystemPage() {
 
     return (
         <main className="min-h-screen bg-white text-text p-32 md:p-64 pt-160">
-            <Navbar isHidden={false} />
+
 
             <div className="flex flex-col gap-32 mb-64 border-b border-text/10 pb-32">
                 <div>
-                    <h1 className="font-mega text-mega-h2 leading-[0.8] uppercase mb-8">Design System</h1>
-                    <p className="font-text text-text-md opacity-60 max-w-xl">
-                        Crisp Studio design system.
+                    <h1 className="font-mega text-[12vw] leading-[0.85] tracking-tight uppercase mb-8">
+                        Design<br />System
+                    </h1>
+                    <p className="font-text text-xl md:text-2xl opacity-60 max-w-2xl">
+                        A comprehensive guide to our visual language, components, and interaction patterns.
                     </p>
                 </div>
 
@@ -152,7 +154,7 @@ export default function DesignSystemPage() {
                                         { label: "H1", class: "font-heading text-h1", text: "The quick brown fox jumps" },
                                         { label: "H2", class: "font-heading text-h2", text: "The quick brown fox jumps" },
                                         { label: "H3", class: "font-heading text-h3", text: "The quick brown fox jumps over the lazy dog" },
-                                        { label: "H4", class: "font-heading text-h4", text: "The quick brown fox jumps over the lazy dog" },
+                                        { label: "H4", class: "font-heading text-h4 uppercase tracking-[2px]", text: "The quick brown fox jumps over the lazy dog" },
                                     ].map((item, i) => (
                                         <div key={i} className="flex flex-col gap-8">
                                             <div className="flex items-center gap-12">

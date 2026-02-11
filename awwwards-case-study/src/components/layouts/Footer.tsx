@@ -3,8 +3,12 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { footerNavigation, socialLinks, footerContent } from "@/content/footer";
+
+import { useBrand } from "@/context/BrandContext";
 
 export function Footer() {
+    const { brand } = useBrand();
     const currentYear = new Date().getFullYear();
     const pathname = usePathname();
 
@@ -12,12 +16,12 @@ export function Footer() {
 
     return (
         <footer className="relative bg-[#07070F] text-white pt-32 md:pt-64 pb-8 overflow-hidden">
-            <div className="container mx-auto px-8 md:px-16 flex flex-col h-full">
+            <div className="max-w-[1440px] mx-auto px-6 md:px-12 flex flex-col h-full">
 
                 {/* Big Text */}
                 <div className="mb-32 md:mb-64">
                     <h2 className="font-mega text-mega-h2 text-brand text-center md:text-left uppercase">
-                        Crisp Studio
+                        {brand.name} Studio
                     </h2>
                 </div>
 
@@ -26,46 +30,43 @@ export function Footer() {
 
                     {/* Left Links */}
                     <div className="md:col-span-6 flex gap-8 md:gap-16 text-sm font-bold uppercase tracking-widest">
-                        <Link href="/" className="hover:text-brand transition-colors">Home</Link>
-                        <Link href="/works/centrogreen" className="hover:text-brand transition-colors">Works</Link>
-                        <Link href="/about" className="hover:text-brand transition-colors">About</Link>
-                        <Link href="/services" className="hover:text-brand transition-colors">Services</Link>
+                        {footerNavigation.map((link) => (
+                            <Link key={link.label} href={link.path} className="hover:text-brand transition-colors">
+                                {link.label}
+                            </Link>
+                        ))}
                     </div>
 
                     {/* Right CTA */}
                     <div className="md:col-span-6 flex md:justify-end">
                         <Link href="/contact" className="text-sm font-bold uppercase tracking-widest hover:text-brand transition-colors underline decoration-white/30 underline-offset-4">
-                            New business inquires click here
+                            {footerContent.ctaText}
                         </Link>
                     </div>
                 </div>
 
                 {/* Bottom Row */}
                 <div className="flex flex-col md:flex-row justify-between items-end md:items-center mt-auto pt-32 pb-8 gap-8 md:gap-0 opacity-40 text-xs uppercase tracking-wider">
-                    <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-                        {[
-                            { href: "/", label: "Home" },
-                            { href: "/about", label: "About" },
-                            { href: "/services", label: "Services" },
-                            { href: "/contact", label: "Contact" },
-                            { href: "/typography", label: "Typography" },
-                            { href: "/works/centrogreen", label: "Centrogreen" },
-                            { href: "/works/content-engine", label: "Content Engine" },
-                            { href: "/works/folkeuniversitetet", label: "Folke" },
-                            { href: "/works/theytalk", label: "TheyTalk" },
-                            { href: "/design-system", label: "Design System" },
-                            { href: "/privacy-policy", label: "Privacy" },
-                        ].map((link, i, arr) => (
-                            <React.Fragment key={link.href}>
-                                <Link href={link.href} className="hover:text-white transition-colors">
+                    <div className="flex items-center gap-8">
+                        {socialLinks.map((link) => {
+                            const isInternal = link.url.startsWith("/");
+                            if (isInternal) {
+                                return (
+                                    <Link key={link.label} href={link.url} className="hover:text-white transition-colors">
+                                        {link.label}
+                                    </Link>
+                                );
+                            }
+                            return (
+                                <a key={link.label} href={link.url} className="hover:text-white transition-colors">
                                     {link.label}
-                                </Link>
-                                {i < arr.length - 1 && <span>•</span>}
-                            </React.Fragment>
-                        ))}
+                                </a>
+                            );
+                        })}
+                        <Link href="/admin" className="hover:text-white transition-colors text-white/50">Admin</Link>
                     </div>
                     <div>
-                        ©{currentYear} Crisp Studio. All rights reserved.
+                        ©{currentYear} {brand.name} Studio. {footerContent.copyrightSuffix}
                     </div>
                 </div>
             </div>

@@ -1,0 +1,92 @@
+{
+  "intro": "CentroGreen is a new air purification brand in the UAE.",
+  "sections": [
+    {
+      "title": "The Problem: Unknown Brand, High-Stakes Category",
+      "type": "text",
+      "content": "Air purifiers are on the rise in the UAE. CentroGreen arrived with excellent technology and almost zero recognition. It needed to look trustworthy, premium and serious about health."
+    },
+    {
+      "title": "The Challenge: Compete Without a Past",
+      "type": "text",
+      "content": "CentroGreen could not lean on decades of history or global awareness. The brand had to enter a crowded category with limited budget and a tight launch timeline. Our task was to position an upper mid-class, high-quality air purification brand that feels more advanced and more honest than its competitors."
+    },
+    {
+      "title": "What We Did",
+      "type": "deliverables",
+      "items": [
+        {
+          "title": "Defined a clear, honest promise",
+          "text": "We framed CentroGreen around sustainable, bespoke air purification that focuses on perfecting details and protecting health, not on gimmicks or exaggerated claims."
+        },
+        {
+          "title": "Built a premium, technology-led identity",
+          "text": "We designed the visual identity to communicate trust, innovation, premium quality and accessibility, with a tone that feels precise rather than clinical."
+        },
+        {
+          "title": "Created a symbol rooted in local context",
+          "text": "We explored multiple logo directions and landed on a mark that combines a hawk-inspired eye with key letterforms, connecting advanced vision and local cultural references."
+        },
+        {
+          "title": "Launched a marketing site with a job",
+          "text": "We designed a marketing website whose main role is simple: tell the product story clearly and move users towards the e-commerce experience."
+        },
+        {
+          "title": "Focused on hero products first",
+          "text": "We structured the platform around detailed pages for the five main devices, keeping accessories and secondary products for a second phase to avoid clutter."
+        },
+        {
+          "title": "Developed 3D product visualisation",
+          "text": "We replaced weak photography with 3D renders and interactive views, giving the brand a central visual asset that works across website, one-pagers and social content."
+        },
+        {
+          "title": "Set up a reusable design system",
+          "text": "We documented the identity and components in a Figma-based design system, making it easy to scale new pages and formats while staying consistent."
+        }
+      ]
+    },
+    {
+      "title": "How We Used AI (And How We Did Not)",
+      "type": "text",
+      "content": "AI supported us in research, naming and copy drafts, visual exploration, design system workflows and parts of code generation for the website. We used detailed prompts and structured inputs to get meaningful outputs quickly. The core work—art direction, logo, key visuals, messaging and UX decisions—was created and owned by the design team, with AI acting as an assistant, not as the author of the brand."
+    },
+    {
+      "title": "The Result",
+      "type": "text",
+      "content": "CentroGreen now enters the UAE market with a focused story, a recognisable identity and a digital presence that makes its technology understandable and desirable. Early signals show increased traffic, stronger engagement and longer time on site. The project proves that even a new player can claim a credible space in a sensitive category—if the brand is built on clarity, precision and real product strength."
+    }
+  ],
+  "sidebar": [
+    {
+      "label": "Year",
+      "value": "2025"
+    },
+    {
+      "label": "CLIENT / LOCATION",
+      "value": "CentroGreen (UAE)"
+    },
+    {
+      "label": "INDUSTRY",
+      "value": [
+        "eCommerce ",
+        " Manufacturing "
+      ]
+    },
+    {
+      "label": "DELIVERABLES",
+      "value": [
+        "Branding ",
+        " Website ",
+        " Visual Communication Assets"
+      ]
+    },
+    {
+      "label": "AI-ASSISTED WORKFLOWS",
+      "isRed": true,
+      "value": [
+        "Messaging and Tone of Voice",
+        "Product Visuals "
+      ]
+    }
+  ]
+}

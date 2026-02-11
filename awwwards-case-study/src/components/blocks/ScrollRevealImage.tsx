@@ -23,7 +23,7 @@ export function ScrollRevealImage({
     videoSrc,
     alt,
     className,
-    aspectRatio = "aspect-[16/9]",
+    aspectRatio,
     mode = "intrinsic"
 }: ScrollRevealImageProps) {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -77,10 +77,11 @@ export function ScrollRevealImage({
         <div
             ref={containerRef}
             className={clsx(
-                "relative w-full overflow-hidden bg-gray-100 will-change-[clip-path]",
+                "relative w-full h-auto max-w-full overflow-hidden bg-gray-100 will-change-[clip-path]",
                 isCover ? aspectRatio : "",
                 className
-            )}
+            )
+            }
         >
             <div ref={mediaRef} className={clsx("w-full will-change-transform", isCover ? "h-full" : "")}>
                 {videoSrc ? (
@@ -99,15 +100,22 @@ export function ScrollRevealImage({
                         }}
                     />
                 ) : (
-                    <Image
-                        src={src}
-                        alt={alt}
-                        width={isCover ? undefined : 0}
-                        height={isCover ? undefined : 0}
-                        sizes="100vw"
-                        fill={isCover}
-                        className={clsx("block", isCover ? "object-cover" : "w-full h-auto")}
-                    />
+                    isCover ? (
+                        <Image
+                            src={src}
+                            alt={alt}
+                            fill
+                            sizes="100vw"
+                            className="object-cover block"
+                        />
+                    ) : (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img
+                            src={src}
+                            alt={alt}
+                            className="block w-full h-auto"
+                        />
+                    )
                 )}
             </div>
         </div>

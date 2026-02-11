@@ -1,6 +1,5 @@
 "use client";
 
-import { clsx } from "clsx";
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 // Removed module import to use public path instead
@@ -18,12 +17,14 @@ const menuItems = [
     { label: "Home", path: "/" },
     { label: "Works", path: "/works" },
     { label: "About", path: "/about" },
-    { label: "Services", path: "/services" }
+    // { label: "Services", path: "/services" }
 ];
 
 import { useContactForm } from "@/context/ContactFormContext";
+import { useBrand } from "@/context/BrandContext";
 
 export function NavbarMobile() {
+    const { brand } = useBrand();
     const { openContactForm, isNavHidden } = useContactForm();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navbarRef = useRef<HTMLElement>(null);
@@ -161,7 +162,15 @@ export function NavbarMobile() {
             >
                 <div className="flex items-center justify-between w-full shrink-0">
                     <Link href="/" onClick={() => setIsMenuOpen(false)} className="flex items-center pl-8">
-                        <Image src="/img/crisp-logo.svg" alt="Crisp Logo" width={100} height={28} priority className="h-7 w-auto" />
+                        <Image
+                            src={brand.logo}
+                            alt={`${brand.name} Logo`}
+                            width={100}
+                            height={28}
+                            priority
+                            className="h-7 w-auto transition-transform duration-300 origin-left"
+                            style={{ transform: `scale(${brand.logoScale || 1})` }}
+                        />
                     </Link>
 
                     <div className="flex items-center gap-8 pr-4">

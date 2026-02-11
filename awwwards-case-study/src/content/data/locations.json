@@ -1,0 +1,68 @@
+[
+  {
+    "id": "pt",
+    "label": "Portugal",
+    "x": 10,
+    "y": 55,
+    "cities": [
+      "Lisbon"
+    ]
+  },
+  {
+    "id": "ch",
+    "label": "Switzerland",
+    "x": 35,
+    "y": 35,
+    "cities": [
+      "Zurich",
+      "Winterthur"
+    ]
+  },
+  {
+    "id": "de",
+    "label": "Germany",
+    "x": 40,
+    "y": 15,
+    "cities": [
+      "Berlin"
+    ]
+  },
+  {
+    "id": "cz",
+    "label": "Czech Republic",
+    "x": 55,
+    "y": 30,
+    "cities": [
+      "Brno"
+    ]
+  },
+  {
+    "id": "hr",
+    "label": "Croatia",
+    "x": 45,
+    "y": 70,
+    "cities": [
+      "Zagreb"
+    ]
+  },
+  {
+    "id": "pl",
+    "label": "Poland",
+    "x": 72,
+    "y": 22,
+    "cities": [
+      "Wroclaw",
+      "Warsaw"
+    ]
+  },
+  {
+    "id": "ua",
+    "label": "Ukraine",
+    "x": 85,
+    "y": 35,
+    "cities": [
+      "Sumy",
+      "Kyiv"
+    ]
+  }
+]

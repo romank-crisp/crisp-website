@@ -39,6 +39,7 @@ const config: Config = {
                 32: "var(--space-32)",
                 48: "var(--space-48)",
                 64: "var(--space-64)",
+                128: "var(--space-128)",
             },
         },
     },

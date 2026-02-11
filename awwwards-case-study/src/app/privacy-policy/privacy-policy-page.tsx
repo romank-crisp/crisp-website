@@ -1,4 +1,10 @@
+"use client";
+
+import { useBrand } from "@/context/BrandContext";
+
 export default function PrivacyPolicyPage() {
+    const { brand } = useBrand();
+
     return (
         <main className="min-h-screen bg-white py-64 px-32">
             <div className="max-w-[800px] mx-auto">
@@ -50,8 +56,8 @@ export default function PrivacyPolicyPage() {
                         </ul>
                         <p className="mt-16">
                             To exercise these rights, please contact us at{" "}
-                            <a href="mailto:privacy@crisp.com" className="text-brand underline hover:no-underline">
-                                privacy@crisp.com
+                            <a href={`mailto:privacy@${brand.name.toLowerCase()}.com`} className="text-brand underline hover:no-underline">
+                                privacy@{brand.name.toLowerCase()}.com
                             </a>
                         </p>
                     </section>
@@ -60,8 +66,8 @@ export default function PrivacyPolicyPage() {
                         <h2 className="font-heading text-h2 font-bold mb-16">Contact</h2>
                         <p>
                             If you have any questions about this privacy policy, please contact us at{" "}
-                            <a href="mailto:privacy@crisp.com" className="text-brand underline hover:no-underline">
-                                privacy@crisp.com
+                            <a href={`mailto:privacy@${brand.name.toLowerCase()}.com`} className="text-brand underline hover:no-underline">
+                                privacy@{brand.name.toLowerCase()}.com
                             </a>
                         </p>
                     </section>

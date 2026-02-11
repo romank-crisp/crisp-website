@@ -1,0 +1,168 @@
+{
+  "slug": "theytalk",
+  "meta": {
+    "title": "TheyTalk - Case Study",
+    "description": "TheyTalk – Influencer marketing with a brain."
+  },
+  "hero": {
+    "title": "TheyTalk",
+    "subtitle": "AI-native influencer marketing platform",
+    "videoPath": "/img/imgcases/theytalk/theytalk-full.webm",
+    "posterPath": "/img/imgcases/theytalk/theytalk-01.png",
+    "tags": [
+      "Logo",
+      "Brand Identity",
+      "UX/UIConcept"
+    ]
+  },
+  "blocks": [
+    {
+      "type": "text-reveal",
+      "id": "intro-text",
+      "props": {
+        "text": "Founders needed a brand that could explain AI-driven matching in seconds, make founders look credible in front of investors, but same time feel native to the bright world of influencers.",
+        "className": "font-text text-text-lg w-full md:w-[60%] text-left text-text/90"
+      }
+    },
+    {
+      "type": "image-scroll",
+      "id": "they-talk-video-01",
+      "props": {
+        "src": "/img/imgcases/theytalk/they-talk-01.png",
+        "videoSrc": "/img/imgcases/theytalk/they-talk-01.webm",
+        "alt": "TheyTalk Presentation Video",
+        "aspectRatio": "aspect-[16/9]"
+      }
+    },
+    {
+      "type": "image-grid-hover",
+      "id": "logo-grid-showcase",
+      "props": {
+        "heroSrc": "/img/imgcases/theytalk/tt-logo-grid-main.png",
+        "gridSrcs": [
+          "/img/imgcases/theytalk/tt-logo-grid01.jpg",
+          "/img/imgcases/theytalk/tt-logo-grid02.jpg",
+          "/img/imgcases/theytalk/tt-logo-grid03.png",
+          "/img/imgcases/theytalk/tt-logo-grid04.png"
+        ],
+        "alt": "TheyTalk Logo Grid Concepts"
+      }
+    },
+    {
+      "type": "theytalk-design-system",
+      "id": "color-palette",
+      "props": {}
+    },
+    {
+      "type": "image-scroll",
+      "id": "brand-visual-08",
+      "props": {
+        "src": "/img/imgcases/theytalk/theytalk-08.png",
+        "alt": "TheyTalk Design Elements",
+        "aspectRatio": "aspect-[16/9]"
+      }
+    },
+    {
+      "type": "lottie",
+      "id": "typo-animation-01",
+      "props": {
+        "animationPath": "/img/imgcases/theytalk/they-talk-typo1.json",
+        "loop": false,
+        "aspectRatio": "aspect-[16/9]"
+      }
+    },
+    {
+      "type": "lottie",
+      "id": "typo-animation-02",
+      "props": {
+        "animationPath": "/img/imgcases/theytalk/they-talk-typo2.json",
+        "loop": false,
+        "aspectRatio": "aspect-[16/9]"
+      }
+    },
+    {
+      "type": "theytalk-influencer",
+      "id": "influencer-showcase",
+      "props": {
+        "videoSrc": "/img/imgcases/theytalk/tt-influencer-01.webm",
+        "overlayImageSrc": "/img/imgcases/theytalk/tt-voices-impact.svg",
+        "logoSrc": "/img/imgcases/theytalk/tt-logo-top.svg",
+        "aspectRatio": "aspect-[16/9]"
+      }
+    },
+    {
+      "type": "image-scroll",
+      "id": "brand-visual-01",
+      "props": {
+        "src": "/img/imgcases/theytalk/theytalk-01.png",
+        "alt": "TheyTalk Brand Visual 01",
+        "aspectRatio": "aspect-[16/9]"
+      }
+    },
+    {
+      "type": "text-reveal",
+      "id": "strategy-text",
+      "props": {
+        "text": "We positioned TheyTalk as an AI layer that turns influencer marketing from guesswork into a focused, performance-driven channel. The visual system uses a high-contrast green–black palette and confident layouts that instantly read as tech-forward.",
+        "className": "font-text text-text-lg w-full md:w-[60%] text-left text-text/90"
+      }
+    },
+    {
+      "type": "grid-2-col",
+      "id": "brand-grid-v1",
+      "props": {
+        "left": {
+          "src": "/img/imgcases/theytalk/theytalk-02.png",
+          "alt": "TheyTalk Brand Visual 02",
+          "aspectRatio": "aspect-square"
+        },
+        "right": {
+          "src": "/img/imgcases/theytalk/theytalk-03.png",
+          "alt": "TheyTalk Brand Visual 03",
+          "aspectRatio": "aspect-square"
+        }
+      }
+    },
+    {
+      "type": "image-scroll",
+      "id": "brand-visual-09",
+      "props": {
+        "src": "/img/imgcases/theytalk/theytalk-09.png",
+        "alt": "TheyTalk Brand Visual 09",
+        "aspectRatio": "aspect-[16/9]"
+      }
+    },
+    {
+      "type": "image-scroll",
+      "id": "brand-visual-04",
+      "props": {
+        "src": "/img/imgcases/theytalk/theytalk-04.png",
+        "alt": "TheyTalk Brand Visual 04",
+        "aspectRatio": "aspect-[16/9]"
+      }
+    },
+    {
+      "type": "grid-2-col",
+      "id": "brand-grid-v2",
+      "props": {
+        "left": {
+          "src": "/img/imgcases/theytalk/theytalk-05.png",
+          "alt": "TheyTalk Brand Visual 05",
+          "aspectRatio": "aspect-square"
+        },
+        "right": {
+          "src": "/img/imgcases/theytalk/theytalk-05.png",
+          "videoSrc": "/img/imgcases/theytalk/tt-video-11.webm",
+          "alt": "TheyTalk Video 11",
+          "aspectRatio": "aspect-square"
+        }
+      }
+    }
+  ],
+  "nextCase": {
+    "title": "CentroGreen",
+    "subtitle": "Sustainable Infrastructure",
+    "link": "/works/centrogreen",
+    "videoPath": "/img/imgcases/centrogreen/centrogreen-reel.webm"
+  }
+}

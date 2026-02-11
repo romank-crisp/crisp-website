@@ -10,7 +10,11 @@ export function ContentSplit({ heading, text, image, reverse }: ContentSplitProp
             <div className={clsx("space-y-8 px-16 md:px-0", reverse && "md:order-2")}>
                 <h2 className="text-4xl md:text-6xl font-medium leading-tight">{heading}</h2>
                 <div className="space-y-4 font-text text-xl text-black/60">
-                    {text}
+                    {Array.isArray(text) ? (
+                        text.map((paragraph, index) => <p key={index}>{paragraph}</p>)
+                    ) : (
+                        <div dangerouslySetInnerHTML={{ __html: text }} />
+                    )}
                 </div>
             </div>
             <div className={clsx("relative aspect-square bg-[#F5F5F5] rounded-3xl overflow-hidden", reverse && "md:order-1")}>

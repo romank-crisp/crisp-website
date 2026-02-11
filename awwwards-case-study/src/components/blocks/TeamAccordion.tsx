@@ -186,19 +186,33 @@ export function TeamAccordion() {
                                     aria-controls={panelId}
                                     className="w-full py-24 flex items-center justify-between gap-16 transition-colors focus:outline-none group"
                                 >
-                                    <span className="font-heading text-h1 text-left flex-shrink-0" style={{ color: "var(--color-text)" }}>
-                                        {member.name}
-                                    </span>
+                                    <div className="flex items-baseline gap-16 flex-grow min-w-0">
+                                        <span className="font-heading text-h1 text-left flex-shrink-0" style={{ color: "var(--color-text)" }}>
+                                            {member.name}
+                                        </span>
 
-                                    <span className="font-text text-text-md flex-grow text-left hidden md:block" style={{ color: "var(--color-text)", opacity: 0.6 }}>
-                                        {member.position}
-                                    </span>
+                                        <span className="font-text text-text-md text-left hidden md:block truncate" style={{ color: "var(--color-text)", opacity: 0.6 }}>
+                                            {member.position}
+                                        </span>
+
+                                        {member.name === "Iryna Chubur" && (
+                                            <div className="hidden md:flex ml-[100px] items-center self-center">
+                                                <Image
+                                                    src="/img/client-logos/client-logo-03-swissprofessionals-small.svg"
+                                                    alt="Swiss Professionals"
+                                                    width={120}
+                                                    height={40}
+                                                    className="h-10 w-auto object-contain opacity-60 grayscale hover:grayscale-0 transition-all duration-300"
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
 
                                     <div
                                         ref={(el) => {
                                             if (el) iconRefs.current.set(member.id, el);
                                         }}
-                                        className="flex items-center justify-center flex-shrink-0"
+                                        className="flex items-center justify-center flex-shrink-0 ml-4"
                                     >
                                         <Plus className="w-32 h-32" style={{ color: "var(--color-text)" }} />
                                     </div>
@@ -214,15 +228,33 @@ export function TeamAccordion() {
                                     className="overflow-hidden"
                                     style={{ height: 0 }}
                                 >
-                                    <div className="pb-32 px-0 md:px-64">
-                                        <p className="font-text text-text-md leading-relaxed mb-24" style={{ color: "var(--color-text)", opacity: 0.8 }}>
-                                            {member.bio}
-                                        </p>
+                                    <div className="pb-32 px-0">
+                                        <div className="flex flex-col md:flex-row gap-32 md:gap-48">
+                                            {/* Photo Column */}
+                                            <div className="w-full md:w-[320px] flex-shrink-0 hidden md:block">
+                                                <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg bg-gray-100">
+                                                    <Image
+                                                        src={member.photo}
+                                                        alt={member.name}
+                                                        fill
+                                                        className="object-cover"
+                                                        sizes="(max-width: 768px) 100vw, 320px"
+                                                    />
+                                                </div>
+                                            </div>
 
-                                        <div className="flex flex-wrap gap-8">
-                                            {member.tags.map((tag) => (
-                                                <Tag key={tag}>{tag}</Tag>
-                                            ))}
+                                            {/* Content Column */}
+                                            <div className="flex-grow md:pt-8 md:pr-32">
+                                                <p className="font-text text-text-md leading-relaxed mb-24 max-w-3xl" style={{ color: "var(--color-text)", opacity: 0.8 }}>
+                                                    {member.bio}
+                                                </p>
+
+                                                <div className="flex flex-wrap gap-8">
+                                                    {member.tags.map((tag) => (
+                                                        <Tag key={tag}>{tag}</Tag>
+                                                    ))}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

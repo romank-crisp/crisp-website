@@ -39,7 +39,7 @@ export function TextReveal({ text, className }: TextRevealProps) {
     return (
         <div
             ref={containerRef}
-            className={className}
+            className={`py-16 ${className || ''}`}
         >
             {words.map((word, i) => (
                 <span

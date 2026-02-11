@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+// import { ReactNode } from "react"; // Removed as we are moving to JSON serializable types
 
 // --- Base Block Types ---
 
@@ -37,12 +37,14 @@ export interface HeroVideoProps /* extends BaseBlockProps */ {
 
 export interface CaseStudyDetailsSection {
     title: string;
-    content: ReactNode; // We allow JSX here for rich text flexibility without a full CMS/MDX parser yet
+    type?: 'text' | 'deliverables' | 'html'; // Added 'html' for raw html if needed
+    content?: string;
+    items?: { title: string; text: string }[];
 }
 
 export interface CaseStudySidebarItem {
     label: string;
-    value: string | ReactNode;
+    value: string | string[];
     isRed?: boolean;
 }
 
@@ -95,19 +97,10 @@ export interface TheyTalkInfluencerBlockProps extends BaseBlockProps {
     aspectRatio?: string;
 }
 
-export interface ColorPaletteItem {
-    id: string;
-    name: string;
-    color: string;
-    textColor: string;
-    rgb: string;
-    cmyk: string;
-}
-
 export interface FeatureItem {
     title: string;
     description: string;
-    icon?: ReactNode; // Optional icon/number
+    // icon?: ReactNode; // Removed for JSON compatibility
 }
 
 export interface FeatureGridProps extends BaseBlockProps {
@@ -150,9 +143,9 @@ export interface PricingTableProps extends BaseBlockProps {
 
 export interface ContentSplitProps extends BaseBlockProps {
     heading: string;
-    text: ReactNode; // Or string[] for paragraphs
+    text: string | string[];
     image: ScrollRevealImageProps;
-    reverse?: boolean; // Image on left
+    reverse?: boolean;
 }
 
 

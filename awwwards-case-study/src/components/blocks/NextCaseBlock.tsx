@@ -28,7 +28,6 @@ export function NextCaseBlock({
                         playsInline
                     >
                         <source src={videoPath} type="video/webm" />
-                        <source src={videoPath.replace('.webm', '.mp4')} type="video/mp4" />
                     </video>
                     {/* Overlay Gradient */}
                     <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-700" />

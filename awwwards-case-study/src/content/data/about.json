@@ -1,0 +1,39 @@
+{
+  "headerWords": [
+    "Your",
+    "partner",
+    "for",
+    "launching",
+    "ideas"
+  ],
+  "headerSuffix": {
+    "since": "since",
+    "year": "2006"
+  },
+  "blocks": [
+    {
+      "id": "who-we-are",
+      "title": "Who We Are",
+      "content": "Remote design studio building brands, products and websites that teams can ship.",
+      "column": "left"
+    },
+    {
+      "id": "industry-footprint",
+      "title": "Industry Footprint",
+      "content": "SaaS, life science and education—complex products, strict stakeholders, real business outcomes.",
+      "column": "right"
+    },
+    {
+      "id": "experience",
+      "title": "Experience",
+      "content": "100+ projects delivered with strategy, design, development and AI-accelerated production.",
+      "column": "left"
+    },
+    {
+      "id": "locations",
+      "title": "Locations",
+      "content": "Remote-first, anchored in Switzerland, working daily across Europe, UK and the US.",
+      "column": "right"
+    }
+  ]
+}

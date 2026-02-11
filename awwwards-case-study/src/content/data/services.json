@@ -1,0 +1,46 @@
+[
+  {
+    "id": "visual-design",
+    "label": "Visual Design",
+    "image": "/img/imgcases/folkeuniversitetet/fu-case-01.png",
+    "tags": [
+      "Branding",
+      "UI Design",
+      "Design Systems"
+    ],
+    "description": "We craft visual languages that tell your story. From brand identity to pixel-perfect interfaces, every detail is considered to create an emotional connection with your audience."
+  },
+  {
+    "id": "websites",
+    "label": "Websites",
+    "image": "/img/imgcases/theytalk/tt-case-01.png",
+    "tags": [
+      "Development",
+      "Next.js",
+      "Performance"
+    ],
+    "description": "Beautiful, accessible, and high-perfomance websites built with modern technologies. We prioritize performance and user experience to ensure your message reaches everyone."
+  },
+  {
+    "id": "user-experience",
+    "label": "User Experience",
+    "image": "/img/imgcases/centrogreen/cg-case-01.png",
+    "tags": [
+      "Research",
+      "Prototyping",
+      "Testing"
+    ],
+    "description": "User-centric design backed by research. We map user journeys, create prototypes, and conduct testing to validate assumptions and solve real problems."
+  },
+  {
+    "id": "content-design",
+    "label": "Content Design",
+    "image": "/img/imgcases/folkeuniversitetet/fu-case-02.png",
+    "tags": [
+      "Strategy",
+      "Copywriting",
+      "Storytelling"
+    ],
+    "description": "Words matter. We help you define your voice, structure your content, and craft compelling copy that guides users and drives action."
+  }
+]
