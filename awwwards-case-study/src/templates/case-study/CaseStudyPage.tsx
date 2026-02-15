@@ -1,24 +1,24 @@
 "use client";
 
 import { CaseStudyContent } from "@/types/case-study";
-import { HeroVideo } from "@/components/blocks/HeroVideo";
+import { CaseStudyHeroVideo } from "@/components/blocks/CaseStudyHeroVideo";
 import { CaseStudyDetails } from "@/components/blocks/CaseStudyDetails";
-import { StatsBlock } from "@/components/blocks/StatsBlock";
-import { TextReveal } from "@/components/blocks/TextReveal";
-import { ScrollRevealImage } from "@/components/blocks/ScrollRevealImage";
-import { ImageGridHover } from "@/components/blocks/ImageGridHover";
-import { FeatureGrid } from "@/components/blocks/FeatureGrid";
-import { ProcessSteps } from "@/components/blocks/ProcessSteps";
-import { PricingTable } from "@/components/blocks/PricingTable";
-import { ContentSplit } from "@/components/blocks/ContentSplit";
-import { NextCaseBlock } from "@/components/blocks/NextCaseBlock";
-import { LogoAnimation } from "@/components/blocks/LogoAnimation";
+import { SharedStatsBlock } from "@/components/blocks/SharedStatsBlock";
+import { CaseStudyTextReveal } from "@/components/blocks/CaseStudyTextReveal";
+import { SharedScrollRevealImage } from "@/components/blocks/SharedScrollRevealImage";
+import { CaseStudyImageGridHover } from "@/components/blocks/CaseStudyImageGridHover";
+import { CaseStudyFeatureGrid } from "@/components/blocks/CaseStudyFeatureGrid";
+import { CaseStudyProcessSteps } from "@/components/blocks/CaseStudyProcessSteps";
+import { CaseStudyPricingTable } from "@/components/blocks/CaseStudyPricingTable";
+import { SharedContentSplit } from "@/components/blocks/SharedContentSplit";
+import { CaseStudyNextCaseBlock } from "@/components/blocks/CaseStudyNextCaseBlock";
+import { CaseStudyLogoAnimation } from "@/components/blocks/CaseStudyLogoAnimation";
 import { CentrogreenDesignCode } from "@/components/blocks/CentrogreenDesignCode";
 import { TheyTalkInfluencerBlock } from "@/components/blocks/TheyTalkInfluencerBlock";
 import { TheyTalkDesignSystem } from "@/components/blocks/TheyTalkDesignSystem";
 import { FolkeuniversitetDesignSystem } from "@/components/blocks/FolkeuniversitetDesignSystem";
-import { LottieBlock } from "@/components/blocks/LottieBlock";
-import { VideoScrollingCTA } from "@/components/blocks/VideoScrollingCTA";
+import { CaseStudyLottieBlock } from "@/components/blocks/CaseStudyLottieBlock";
+import { SharedVideoScrollingCTA } from "@/components/blocks/SharedVideoScrollingCTA";
 
 interface CaseStudyPageProps {
     content: CaseStudyContent;
@@ -27,7 +27,7 @@ interface CaseStudyPageProps {
 export function CaseStudyPage({ content }: CaseStudyPageProps) {
     return (
         <main className="min-h-screen bg-white">
-            <HeroVideo
+            <CaseStudyHeroVideo
                 {...content.hero}
             />
 
@@ -37,33 +37,33 @@ export function CaseStudyPage({ content }: CaseStudyPageProps) {
                         case "text-reveal":
                             return (
                                 <div key={block.id} className="max-w-[1475px] mx-auto py-48 md:py-64 px-16 md:px-0">
-                                    <TextReveal {...block.props} />
+                                    <CaseStudyTextReveal {...block.props} />
                                 </div>
                             );
                         case "image-scroll":
                             return (
                                 <div key={block.id} className="max-w-[1475px] mx-auto">
-                                    <ScrollRevealImage {...block.props} />
+                                    <SharedScrollRevealImage {...block.props} />
                                 </div>
                             );
                         case "image-grid-hover":
                             return (
                                 <div key={block.id} className="max-w-[1475px] mx-auto">
-                                    <ImageGridHover {...block.props} />
+                                    <CaseStudyImageGridHover {...block.props} />
                                 </div>
                             );
                         case "logo-animation":
                             return (
                                 <div key={block.id} className="max-w-[1475px] mx-auto py-16 md:py-24">
-                                    <LogoAnimation />
+                                    <CaseStudyLogoAnimation />
                                 </div>
                             );
                         case "grid-2-col":
                             return (
                                 <div key={block.id} className="max-w-[1475px] mx-auto">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-32">
-                                        <ScrollRevealImage {...block.props.left} mode="intrinsic" className="h-full" />
-                                        <ScrollRevealImage {...block.props.right} mode="intrinsic" className="h-full" />
+                                        <SharedScrollRevealImage {...block.props.left} mode="intrinsic" className="h-full" />
+                                        <SharedScrollRevealImage {...block.props.right} mode="intrinsic" className="h-full" />
                                     </div>
                                 </div>
                             );
@@ -72,7 +72,7 @@ export function CaseStudyPage({ content }: CaseStudyPageProps) {
                                 <div key={block.id} className="max-w-[1475px] mx-auto">
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-32">
                                         {block.props.items.map((item, idx) => (
-                                            <ScrollRevealImage key={idx} {...item} mode="intrinsic" className="h-full" />
+                                            <SharedScrollRevealImage key={idx} {...item} mode="intrinsic" className="h-full" />
                                         ))}
                                     </div>
                                 </div>
@@ -80,13 +80,13 @@ export function CaseStudyPage({ content }: CaseStudyPageProps) {
                         case "feature-grid":
                             return (
                                 <div key={block.id} className="max-w-[1475px] mx-auto">
-                                    <FeatureGrid {...block.props} />
+                                    <CaseStudyFeatureGrid {...block.props} />
                                 </div>
                             );
                         case "process-steps":
                             return (
                                 <div key={block.id} className="max-w-[1475px] mx-auto">
-                                    <ProcessSteps {...block.props} />
+                                    <CaseStudyProcessSteps {...block.props} />
                                 </div>
                             );
                         case "centrogreen-designcode":
@@ -98,7 +98,7 @@ export function CaseStudyPage({ content }: CaseStudyPageProps) {
                         case "pricing-table":
                             return (
                                 <div key={block.id} className="max-w-[1475px] mx-auto">
-                                    <PricingTable {...block.props} />
+                                    <CaseStudyPricingTable {...block.props} />
                                 </div>
                             );
                         case "theytalk-influencer":
@@ -122,13 +122,13 @@ export function CaseStudyPage({ content }: CaseStudyPageProps) {
                         case "lottie":
                             return (
                                 <div key={block.id} className="max-w-[1475px] mx-auto">
-                                    <LottieBlock {...block.props} />
+                                    <CaseStudyLottieBlock {...block.props} />
                                 </div>
                             );
                         case "content-split":
                             return (
                                 <div key={block.id} className="max-w-[1475px] mx-auto">
-                                    <ContentSplit {...block.props} />
+                                    <SharedContentSplit {...block.props} />
                                 </div>
                             );
                         default:
@@ -141,13 +141,13 @@ export function CaseStudyPage({ content }: CaseStudyPageProps) {
                 </div>
 
                 <div className="max-w-[1475px] mx-auto px-16 md:px-0">
-                    <StatsBlock {...content.stats} />
+                    <SharedStatsBlock {...content.stats} />
                 </div>
 
-                <VideoScrollingCTA />
+                <SharedVideoScrollingCTA />
             </section>
 
-            {content.nextCase && <NextCaseBlock {...content.nextCase} />}
+            {content.nextCase && <CaseStudyNextCaseBlock {...content.nextCase} />}
         </main>
     );
 }

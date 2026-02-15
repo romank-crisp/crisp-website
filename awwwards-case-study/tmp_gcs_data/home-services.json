@@ -1,0 +1,37 @@
+{
+  "title": [
+    "WHERE",
+    "WE",
+    "CAN",
+    "HELP"
+  ],
+  "services": [
+    {
+      "title": "Brand Strategy & Ideation",
+      "description": "Before a brand is a brand, it is an idea and the set of beliefs that inspired it. We co-shape the foundational visual",
+      "labels": [
+        "DECISION-SHAPING WORKSHOPS",
+        "BRAND FOUNDATION",
+        "CREATIVE AND VISUAL CONCEPTS"
+      ]
+    },
+    {
+      "title": "Brand Identity & Design",
+      "description": "We craft distinctive visual identities that capture the essence of your brand and resonate with your audience.",
+      "labels": [
+        "LOGOS AND BRAND MARKS",
+        "TONE OF VOICE AND MESSAGING HOUSE",
+        "HIGH-PERFORMING WEBSITES"
+      ]
+    },
+    {
+      "title": "Digital Experience",
+      "description": "Creating seamless digital experiences that engage users and drive meaningful interactions with your brand.",
+      "labels": [
+        "USER EXPERIENCE DESIGN",
+        "INTERFACE DESIGN",
+        "INTERACTIVE PROTOTYPES"
+      ]
+    }
+  ]
+}

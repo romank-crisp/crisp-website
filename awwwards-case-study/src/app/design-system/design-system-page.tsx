@@ -76,7 +76,13 @@ export default function DesignSystemPage() {
 
             <div className="flex flex-col gap-32 mb-64 border-b border-text/10 pb-32">
                 <div>
-                    <h1 className="font-mega text-[12vw] leading-[0.85] tracking-tight uppercase mb-8">
+                    <h1
+                        className="font-mega text-mega-h1 uppercase mb-8 text-brand"
+                        style={{
+                            WebkitTextStrokeWidth: '4px',
+                            WebkitTextStrokeColor: 'currentColor',
+                        }}
+                    >
                         Design<br />System
                     </h1>
                     <p className="font-text text-xl md:text-2xl opacity-60 max-w-2xl">
@@ -136,14 +142,22 @@ export default function DesignSystemPage() {
                                         <span className="font-text text-sm opacity-40 uppercase tracking-widest">Mega H1</span>
                                         <code className="text-xs font-mono text-brand bg-brand/5 px-6 py-2 rounded">font-mega text-mega-h1</code>
                                     </div>
-                                    <h1 className="font-mega text-mega-h1 leading-none">Crisp Studio</h1>
+                                    <h1
+                                        className="font-mega text-mega-h1 uppercase text-brand"
+                                        style={{
+                                            WebkitTextStrokeWidth: '4px',
+                                            WebkitTextStrokeColor: 'currentColor',
+                                        }}
+                                    >
+                                        Bold Stuff
+                                    </h1>
                                 </div>
                                 <div className="flex flex-col gap-12">
                                     <div className="flex items-center gap-12 mb-4">
                                         <span className="font-text text-sm opacity-40 uppercase tracking-widest">Mega H2</span>
                                         <code className="text-xs font-mono text-brand bg-brand/5 px-6 py-2 rounded">font-mega text-mega-h2</code>
                                     </div>
-                                    <h2 className="font-mega text-mega-h2 leading-none">Creative Digital</h2>
+                                    <h2 className="font-mega text-mega-h2 uppercase">Creative Digital</h2>
                                 </div>
                             </div>
 
@@ -154,7 +168,7 @@ export default function DesignSystemPage() {
                                         { label: "H1", class: "font-heading text-h1", text: "The quick brown fox jumps" },
                                         { label: "H2", class: "font-heading text-h2", text: "The quick brown fox jumps" },
                                         { label: "H3", class: "font-heading text-h3", text: "The quick brown fox jumps over the lazy dog" },
-                                        { label: "H4", class: "font-heading text-h4 uppercase tracking-[2px]", text: "The quick brown fox jumps over the lazy dog" },
+                                        { label: "H4", class: "font-heading text-sm font-bold uppercase tracking-wider", text: "The quick brown fox jumps over the lazy dog" },
                                     ].map((item, i) => (
                                         <div key={i} className="flex flex-col gap-8">
                                             <div className="flex items-center gap-12">

@@ -1,17 +1,18 @@
 "use client";
 
-import { TeamAccordion } from "@/components/blocks/TeamAccordion";
-import { ClientLogos } from "@/components/blocks/ClientLogos";
+import { AboutTeamAccordion } from "@/components/blocks/AboutTeamAccordion";
+import { SharedClientLogos } from "@/components/blocks/SharedClientLogos";
 import { AboutPlaneHero } from "@/components/blocks/AboutPlaneHero";
-import { CenteredQuote } from "@/components/blocks/CenteredQuote";
+
 import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import { ServicesList } from "@/components/blocks/ServicesList";
-import { VideoScrollingCTA } from "@/components/blocks/VideoScrollingCTA";
-import { LocationsMap } from "@/components/blocks/LocationsMap";
+import { AboutServicesList } from "@/components/blocks/AboutServicesList";
+import { SharedVideoScrollingCTA } from "@/components/blocks/SharedVideoScrollingCTA";
+import { AboutLocationsMap } from "@/components/blocks/AboutLocationsMap";
+import { AboutTeamGallery } from "@/components/blocks/AboutTeamGallery";
 
 import { AboutHeroData } from "@/content/about";
 import { ClientLogo } from "@/content/clients";
@@ -41,33 +42,33 @@ export default function AboutPage({ aboutData, clientsData, locationsData, servi
 
         ScrollTrigger.create({
             trigger: darkSectionRef.current,
-            start: "top 60%",
+            start: "top 75%",
             end: "bottom 60%",
             onEnter: () => {
                 gsap.to(mainRef.current, {
                     backgroundColor: "rgb(var(--color-text))",
-                    duration: 0.6,
+                    duration: 0.3,
                     overwrite: "auto"
                 });
             },
             onLeave: () => {
                 gsap.to(mainRef.current, {
                     backgroundColor: "#ffffff",
-                    duration: 0.6,
+                    duration: 0.3,
                     overwrite: "auto"
                 });
             },
             onEnterBack: () => {
                 gsap.to(mainRef.current, {
                     backgroundColor: "rgb(var(--color-text))",
-                    duration: 0.6,
+                    duration: 0.3,
                     overwrite: "auto"
                 });
             },
             onLeaveBack: () => {
                 gsap.to(mainRef.current, {
                     backgroundColor: "#ffffff",
-                    duration: 0.6,
+                    duration: 0.3,
                     overwrite: "auto"
                 });
             }
@@ -80,26 +81,24 @@ export default function AboutPage({ aboutData, clientsData, locationsData, servi
             <AboutPlaneHero data={aboutData} />
             {/* Client Logos Section - Transparent BG with spacing */}
             <div className="mt-[100px] mb-[200px]">
-                <ClientLogos data={clientsData} />
+                <SharedClientLogos data={clientsData} />
             </div>
             {/* Wrapper for Dark Mode Sections */}
             <div ref={darkSectionRef} className="relative z-10 pb-[200px] space-y-[100px] md:space-y-[200px]">
-                {/* Quote Section */}
-                <CenteredQuote className="bg-transparent" />
+                <AboutLocationsMap data={locationsData} />
 
-                {/* Interactive Locations Map */}
-                <LocationsMap data={locationsData} />
-
+                {/* Team Gallery - Infinite Scroll */}
+                <AboutTeamGallery />
                 {/* Services List (Capabilities) */}
-                <ServicesList data={servicesData} />
+                <AboutServicesList data={servicesData} />
 
             </div>
 
             {/* Team Accordion Section - White Background */}
-            <TeamAccordion data={teamData} />
+            <AboutTeamAccordion data={teamData} />
 
             {/* Video Scrolling CTA */}
-            <VideoScrollingCTA />
+            <SharedVideoScrollingCTA />
         </main>
     );
 }

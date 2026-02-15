@@ -13,7 +13,7 @@ interface BrandContextType {
 const BrandContext = createContext<BrandContextType | undefined>(undefined);
 
 export function BrandProvider({ children }: { children: ReactNode }) {
-    const [currentBrandKey, setCurrentBrandKey] = useState<BrandKey>('grownow');
+    const [currentBrandKey, setCurrentBrandKey] = useState<BrandKey>('crisp');
     // We access searchParams via a client wrapper logic or just window in simple client components
     // But since this is a provider at layout level, we might rely on window or passed props.
     // However, switching logic often requires URL params.
@@ -27,7 +27,7 @@ export function BrandProvider({ children }: { children: ReactNode }) {
 
         if (mode === 'grownow' || mode === 'Grownow') {
             handleSetBrand('grownow');
-        } else if (mode === 'crisp') {
+        } else {
             handleSetBrand('crisp');
         }
     }, []);

@@ -13,6 +13,21 @@ const MENU_GROUPS = [
         title: "Pages",
         items: [
             {
+                id: "home-group",
+                label: "Home Page",
+                icon: FileText,
+                children: [
+                    { id: "home-hero.json", label: "Hero Section" },
+                    { id: "home-services.json", label: "Services" },
+                    { id: "home-quote.json", label: "Centered Quote" },
+                    { id: "home-partner.json", label: "Partner Statement" },
+                    { id: "home-clients.json", label: "Clients" },
+                    { id: "home-stats.json", label: "Stats" },
+                    { id: "home-testimonials.json", label: "Testimonials" },
+                    { id: "home-faq.json", label: "FAQ Section" },
+                ]
+            },
+            {
                 id: "about-us-group",
                 label: "About Us",
                 icon: FileText,
@@ -57,6 +72,34 @@ const MENU_GROUPS = [
                     { id: "case-studies/theytalk-general.json", label: "General" },
                     { id: "case-studies/theytalk-case-details.json", label: "Details" },
                     { id: "case-studies/theytalk-case-stats.json", label: "Stats" },
+                ]
+            }
+        ]
+    },
+    {
+        title: "SEO Settings",
+        items: [
+            {
+                id: "seo-pages",
+                label: "Page SEO",
+                icon: FileText,
+                children: [
+                    { id: "seo/seo-home.json", label: "Home" },
+                    { id: "seo/seo-about.json", label: "About" },
+                    { id: "seo/seo-services.json", label: "Services" },
+                    { id: "seo/seo-works.json", label: "Works" },
+                    { id: "seo/seo-contact.json", label: "Contact" },
+                    { id: "seo/seo-privacy-policy.json", label: "Privacy Policy" },
+                ]
+            },
+            {
+                id: "seo-case-studies",
+                label: "Case Studies SEO",
+                icon: FileText,
+                children: [
+                    { id: "seo/seo-centrogreen.json", label: "CentroGreen" },
+                    { id: "seo/seo-folkeuniversitetet.json", label: "Folkeuniversitetet" },
+                    { id: "seo/seo-theytalk.json", label: "TheyTalk" },
                 ]
             }
         ]

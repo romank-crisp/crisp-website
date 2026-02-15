@@ -4,14 +4,12 @@ export interface FooterLink {
     path: string;
 }
 
-export interface SocialLink {
-    label: string;
-    url: string;
+export interface FooterColumn {
+    links: FooterLink[];
 }
 
 export interface FooterContent {
-    ctaText: string;
-    copyrightSuffix: string;
-    navigation: FooterLink[];
-    socials: SocialLink[];
+    columns: FooterColumn[];
+    copyright: string;
+    bottomCta: FooterLink;
 }

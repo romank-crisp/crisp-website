@@ -14,8 +14,8 @@ const config: Config = {
                 text: ["var(--font-text)", "system-ui", "sans-serif"],
             },
             fontSize: {
-                "mega-h1": ["var(--fs-mega-h1)", { lineHeight: "var(--lh-mega)", letterSpacing: "var(--ls-mega)", fontWeight: "400" }],
-                "mega-h2": ["var(--fs-mega-h2)", { lineHeight: "var(--lh-mega)", letterSpacing: "var(--ls-mega)", fontWeight: "400" }],
+                "mega-h1": ["var(--fs-mega-h1)", { lineHeight: "var(--lh-mega)", letterSpacing: "4px", fontWeight: "400" }],
+                "mega-h2": ["var(--fs-mega-h2)", { lineHeight: "var(--lh-mega)", letterSpacing: "2px", fontWeight: "400" }],
                 h1: ["var(--fs-h1)", { lineHeight: "1.1", fontWeight: "500", letterSpacing: "-0.06em" }],
                 h2: ["var(--fs-h2)", { lineHeight: "1.15", fontWeight: "500", letterSpacing: "-0.05em" }],
                 h3: ["var(--fs-h3)", { lineHeight: "1.2", fontWeight: "500", letterSpacing: "-0.04em" }],

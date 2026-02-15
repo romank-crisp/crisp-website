@@ -20,6 +20,9 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: "CentroGreen Case Study",
   description: "Brand identity, Website and Product Visualization",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 import { GlobalLayout } from "@/components/layouts/GlobalLayout";

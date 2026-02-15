@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { usePathname } from "next/navigation";
 
 export function CustomCursor() {
     const cursorRef = useRef<HTMLDivElement>(null);
@@ -14,8 +15,12 @@ export function CustomCursor() {
     const [isBigState, setIsBigState] = useState(false);
     const idleTimeout = useRef<NodeJS.Timeout | null>(null);
 
+    const pathname = usePathname();
+    const isSystemCursorRoute = pathname?.startsWith("/admin") || pathname?.startsWith("/design-system");
+
+    // ALL HOOKS MUST BE CALLED BEFORE ANY CONDITIONAL RETURNS
     useEffect(() => {
-        if (!cursorRef.current) return;
+        if (isSystemCursorRoute || !cursorRef.current) return;
 
         // Use quickSetter for high-performance updates
         const xSetter = gsap.quickSetter(cursorRef.current, "x", "px");
@@ -68,21 +73,15 @@ export function CustomCursor() {
             gsap.ticker.remove(onTick);
             if (idleTimeout.current) clearTimeout(idleTimeout.current);
         };
-    }, []);
+    }, [isSystemCursorRoute]);
 
     // Logic for the big circle state with transition delay
     useEffect(() => {
+        if (isSystemCursorRoute) return;
+
         let timeout: NodeJS.Timeout;
 
-        // Expanded logic: Trigger big state for "video" OR any custom text cursor
-        // The user said "use same logic (change size + add caption)".
-        // So we treat any cursor with text as "video-like".
-
-        // We need to know if there's text. We can infer it from cursorType or check existence.
-        // For simplicity, let's say "block" type also triggers this, or just reuse "video".
-
         if (cursorType === "video" && isIdle) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
             if (!isBigState) setIsBigState(true);
         } else if (!isIdle) {
             if (isBigState) {
@@ -98,11 +97,11 @@ export function CustomCursor() {
         return () => {
             if (timeout) clearTimeout(timeout);
         }
-    }, [isIdle, cursorType, isBigState]);
+    }, [isIdle, cursorType, isBigState, isSystemCursorRoute]);
 
     // Use GSAP directly for visual states to avoid rapid React re-renders competing with DOM
     useEffect(() => {
-        if (!cursorRef.current || !textRef.current || !arrowRef.current) return;
+        if (isSystemCursorRoute || !cursorRef.current || !textRef.current || !arrowRef.current) return;
 
         if (isBigState) {
             gsap.to(cursorRef.current, {
@@ -126,7 +125,7 @@ export function CustomCursor() {
             gsap.to(cursorRef.current, {
                 width: 80,
                 height: 80,
-                backgroundColor: "white", // Arrow background should be white
+                backgroundColor: "white",
                 mixBlendMode: "normal",
                 duration: 0.4,
                 overwrite: "auto",
@@ -159,7 +158,10 @@ export function CustomCursor() {
             });
             gsap.to(arrowRef.current, { opacity: 0, scale: 0, duration: 0.2 });
         }
-    }, [isIdle, isBigState, cursorType]);
+    }, [isIdle, isBigState, cursorType, isSystemCursorRoute]);
+
+    // Return null AFTER all hooks have been called
+    if (isSystemCursorRoute) return null;
 
     return (
         <div

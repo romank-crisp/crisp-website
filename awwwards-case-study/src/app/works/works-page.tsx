@@ -1,7 +1,7 @@
 "use client";
 
 import { WorkCard } from "@/components/ui/WorkCard";
-import { ClientLogos } from "@/components/blocks/ClientLogos";
+import { SharedClientLogos } from "@/components/blocks/SharedClientLogos";
 import { useBrand } from "@/context/BrandContext";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,7 +15,7 @@ function AnimatedWorksHeading() {
         "brands that scale.",
         "websites that convert.",
         "robust design systems.",
-        "content across channels.",
+        "omnichannel content.",
         "rock-solid design."
     ];
 
@@ -62,7 +62,7 @@ function AnimatedWorksHeading() {
     };
 
     return (
-        <h1 className="font-mega text-mega-h2 text-text uppercase leading-[0.85] tracking-tight text-left min-h-[3em] flex flex-col justify-start">
+        <h1 className="font-mega text-mega-h2 text-text uppercase leading-none text-left min-h-[3em] flex flex-col justify-start">
             <span className="relative block">
                 <AnimatePresence mode="wait">
                     <motion.span
@@ -182,8 +182,8 @@ export function WorksPage({ clientsData }: { clientsData: ClientLogo[] }) {
             </div >
 
 
-
-            <ClientLogos data={clientsData} />
+            {/* Client Logos */}
+            <SharedClientLogos data={clientsData} />
         </main >
     );
 }

@@ -3,8 +3,8 @@
 
 @layer base {
   :root {
-    /* --- BRANDING: GROWNOW (Default) --- */
-    --brand-name: "Grownow";
+    /* --- BRANDING: CRISP (Default) --- */
+    --brand-name: "Crisp";
 
     /* Fonts */
     --font-mega: var(--font-staatliches), system-ui, sans-serif;
@@ -12,16 +12,16 @@
     --font-text: var(--font-dm-sans), system-ui, sans-serif;
 
     /* Colors */
-    --color-brand: 83 39 187;
-    /* #5327BB */
+    --color-brand: 224 12 51;
+    /* #E00C33 */
     /* rgb values for alpha usage */
     --color-text: 18 12 42;
     --color-white: 255 255 255;
 
     /* Typography Settings */
-    --lh-mega: 0.88;
+    --lh-mega: 0.85;
     --lh-text: 1.45;
-    --ls-mega: 0.03em;
+    --ls-mega: 4px;
 
     /* ... (rest of defaults) ... */
 
@@ -85,10 +85,11 @@
   }
 
   /* --- BRANDING: CRISP Overrides --- */
-  [data-brand="crisp"] {
-    --brand-name: "Crisp";
-    --color-brand: 224 12 51;
-    /* #E00C33 */
+  /* --- BRANDING: GROWNOW Overrides --- */
+  [data-brand="grownow"] {
+    --brand-name: "Grownow";
+    --color-brand: 83 39 187;
+    /* #5327BB */
   }
 
   *,
@@ -111,8 +112,18 @@
   h4 {
     @apply font-heading font-bold uppercase tracking-[2px];
   }
+}
 
+@layer utilities {
+  .text-mega-h1 {
+    -webkit-text-stroke: 4px currentColor;
+    letter-spacing: 4px;
+  }
 
+  .text-mega-h2 {
+    -webkit-text-stroke: 2px currentColor;
+    letter-spacing: 2px;
+  }
 }
 
 /* Lenis recommended styles */
@@ -137,37 +148,31 @@ html.lenis body {
   pointer-events: none;
 }
 
-/* Global Cursor Hider - Force system cursor off site-wide */
-/* Global Cursor Hider - Force system cursor off site-wide */
-html:not(.system-cursor) *,
-html:not(.system-cursor) *::before,
-html:not(.system-cursor) *::after {
+/* Global Cursor Hiding Logic */
+/* Hide system cursor on EVERYTHING by default */
+html,
+body,
+* {
   cursor: none !important;
 }
 
-html:not(.system-cursor),
-html:not(.system-cursor) body {
-  cursor: none !important;
-}
-
-/* Restore system cursor for admin */
-html.system-cursor,
-html.system-cursor body {
+/* Restore system cursor ONLY when .system-cursor is present on html or body */
+.system-cursor,
+.system-cursor body,
+.system-cursor * {
   cursor: auto !important;
 }
 
-html.system-cursor a,
-html.system-cursor button,
-html.system-cursor [role="button"],
-html.system-cursor label,
-html.system-cursor input,
-html.system-cursor textarea,
-html.system-cursor select {
-  cursor: pointer;
-  /* Use context-appropriate cursor, but mostly auto/pointer */
+.system-cursor a,
+.system-cursor button,
+.system-cursor [role="button"],
+.system-cursor input,
+.system-cursor textarea,
+.system-cursor select {
+  cursor: pointer !important;
 }
 
-html.system-cursor input[type="text"],
-html.system-cursor textarea {
+.system-cursor input[type="text"],
+.system-cursor textarea {
   cursor: text !important;
 }

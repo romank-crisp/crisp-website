@@ -3,84 +3,61 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FooterLink, SocialLink, FooterContent as IFooterContent } from "@/content/footer";
-
+import { FooterContent } from "@/content/footer";
 import { useBrand } from "@/context/BrandContext";
 
 export interface FooterProps {
-    data: {
-        navigation: FooterLink[];
-        socials: SocialLink[];
-        content: {
-            ctaText: string;
-            copyrightSuffix: string;
-        };
-    };
+    data: FooterContent;
 }
 
 export function Footer({ data }: FooterProps) {
-    const { brand } = useBrand();
-    const currentYear = new Date().getFullYear();
     const pathname = usePathname();
+    const { brand } = useBrand();
 
+    // Hide footer on contact page if needed, but the design shows a full footer.
+    // Given the request is to "recreate footer", I'll follow the design exactly.
     if (pathname === "/contact") return null;
 
-    const { navigation: footerNavigation, socials: socialLinks, content: footerContent } = data;
+    const { columns, copyright, bottomCta } = data;
 
     return (
-        <footer className="relative bg-[#07070F] text-white pt-32 md:pt-64 pb-8 overflow-hidden">
-            <div className="max-w-[1440px] mx-auto px-6 md:px-12 flex flex-col h-full">
+        <footer className="relative bg-text text-white pt-64 pb-32 overflow-hidden">
+            <div className="max-w-[1475px] mx-auto px-32 md:px-64 flex flex-col h-full">
 
-                {/* Big Text */}
-                <div className="mb-32 md:mb-64">
-                    <h2 className="font-mega text-mega-h2 text-brand text-center md:text-left uppercase">
-                        {brand.name} Studio
-                    </h2>
+                {/* Top Divider Line */}
+                <div className="w-full h-[1px] bg-white/10 mb-64" />
+
+                {/* Main Links Grid */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-32 md:gap-64 mb-64">
+                    {columns.map((column, idx) => (
+                        <div key={idx} className="flex flex-col gap-4">
+                            {column.links.map((link) => (
+                                <Link
+                                    key={link.label}
+                                    href={link.path}
+                                    className="text-[11px] md:text-[13px] font-medium uppercase tracking-[0.2em] hover:text-brand transition-colors w-fit"
+                                >
+                                    {link.label}
+                                </Link>
+                            ))}
+                        </div>
+                    ))}
                 </div>
 
-                {/* Navigation & Info */}
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 border-t border-white/20 pt-16 pb-32">
-
-                    {/* Left Links */}
-                    <div className="md:col-span-6 flex gap-8 md:gap-16 text-sm font-bold uppercase tracking-widest">
-                        {footerNavigation.map((link) => (
-                            <Link key={link.label} href={link.path} className="hover:text-brand transition-colors">
-                                {link.label}
-                            </Link>
-                        ))}
-                    </div>
-
-                    {/* Right CTA */}
-                    <div className="md:col-span-6 flex md:justify-end">
-                        <Link href="/contact" className="text-sm font-bold uppercase tracking-widest hover:text-brand transition-colors underline decoration-white/30 underline-offset-4">
-                            {footerContent.ctaText}
-                        </Link>
-                    </div>
-                </div>
+                {/* Bottom Divider Line */}
+                <div className="w-full h-[1px] bg-white/10 mb-32" />
 
                 {/* Bottom Row */}
-                <div className="flex flex-col md:flex-row justify-between items-end md:items-center mt-auto pt-32 pb-8 gap-8 md:gap-0 opacity-40 text-xs uppercase tracking-wider">
-                    <div className="flex items-center gap-8">
-                        {socialLinks.map((link) => {
-                            const isInternal = link.url.startsWith("/");
-                            if (isInternal) {
-                                return (
-                                    <Link key={link.label} href={link.url} className="hover:text-white transition-colors">
-                                        {link.label}
-                                    </Link>
-                                );
-                            }
-                            return (
-                                <a key={link.label} href={link.url} className="hover:text-white transition-colors">
-                                    {link.label}
-                                </a>
-                            );
-                        })}
-                        <Link href="/admin" className="hover:text-white transition-colors text-white/50">Admin</Link>
+                <div className="flex flex-col md:flex-row justify-between items-center gap-16 text-[10px] md:text-[11px] uppercase tracking-[0.15em] opacity-60">
+                    <div className="text-center md:text-left">
+                        {copyright.replace("{year}", new Date().getFullYear().toString())}
                     </div>
-                    <div>
-                        ©{currentYear} {brand.name} Studio. {footerContent.copyrightSuffix}
-                    </div>
+                    <Link
+                        href={brand.contactUrl || bottomCta.path}
+                        className="hover:text-white transition-colors underline underline-offset-4 decoration-white/30"
+                    >
+                        {bottomCta.label}
+                    </Link>
                 </div>
             </div>
         </footer>

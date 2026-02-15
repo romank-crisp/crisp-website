@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useLayoutEffect, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ContactFormProvider } from "@/context/ContactFormContext";
 import { BrandProvider } from "@/context/BrandContext";
@@ -12,30 +12,45 @@ import { CustomCursor } from "@/components/ui/CustomCursor";
 import { SmoothScroll } from "@/components/layouts/SmoothScroll";
 import { MenuItem } from "@/content/navigation";
 
+import { PageTransition } from "@/components/layouts/PageTransition";
+
 export function GlobalLayout({ children, footerData, navigationData }: { children: React.ReactNode, footerData: FooterProps['data'], navigationData: MenuItem[] }) {
     const pathname = usePathname();
     const isAdmin = pathname?.startsWith('/admin');
+    const isDesignSystem = pathname?.startsWith('/design-system');
+    const showSystemCursor = isAdmin || isDesignSystem;
 
-    // Ensure cursor state is set correctly on initial mount
-    useEffect(() => {
-        // Force initial state check on client-side
-        if (!isAdmin) {
-            document.documentElement.classList.remove('system-cursor');
-        }
-    }, []);
+    // Streamlined system cursor management
+    useLayoutEffect(() => {
+        const root = document.documentElement;
+        const body = document.body;
 
-    useEffect(() => {
-        if (isAdmin) {
-            document.documentElement.classList.add('system-cursor');
+        if (showSystemCursor) {
+            root.classList.add('system-cursor');
+            body.classList.add('system-cursor');
+            root.setAttribute('data-cursor-type', 'system');
+
+            // Clear inline styles to let CSS take over
+            root.style.cursor = '';
+            body.style.cursor = '';
         } else {
-            document.documentElement.classList.remove('system-cursor');
+            root.classList.remove('system-cursor');
+            body.classList.remove('system-cursor');
+            root.setAttribute('data-cursor-type', 'custom');
+
+            // Force cursor hiding via inline style for maximum override
+            root.style.setProperty('cursor', 'none', 'important');
+            body.style.setProperty('cursor', 'none', 'important');
         }
 
-        // Cleanup on unmount - always remove the class
         return () => {
-            document.documentElement.classList.remove('system-cursor');
+            root.classList.remove('system-cursor');
+            body.classList.remove('system-cursor');
+            root.removeAttribute('data-cursor-type');
+            root.style.cursor = '';
+            body.style.cursor = '';
         };
-    }, [isAdmin]);
+    }, [showSystemCursor]);
 
     if (isAdmin) {
         return (
@@ -54,8 +69,10 @@ export function GlobalLayout({ children, footerData, navigationData }: { childre
                 <ContactOverlay />
                 <Navbar menuItems={navigationData} />
                 <SmoothScroll>
-                    {children}
-                    <Footer data={footerData} />
+                    <PageTransition>
+                        {children}
+                        <Footer data={footerData} />
+                    </PageTransition>
                 </SmoothScroll>
                 <BrandSwitcher />
             </BrandProvider>
