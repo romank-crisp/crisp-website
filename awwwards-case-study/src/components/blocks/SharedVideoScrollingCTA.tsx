@@ -115,14 +115,14 @@ export const SharedVideoScrollingCTA = () => {
 
                     <div
                         ref={ctasRef}
-                        className="mt-32 md:mt-48 flex flex-wrap justify-center gap-12 md:gap-16 pointer-events-auto"
+                        className="mt-32 md:mt-48 flex flex-col md:flex-row flex-wrap justify-center gap-12 md:gap-16 pointer-events-auto px-4 md:px-0"
                     >
                         <Button
                             variant="filled"
                             size="large"
                             leftIcon={Calendar}
                             onClick={openContactForm}
-                            className="text-white hover:brightness-110"
+                            className="text-white hover:brightness-110 w-full md:w-auto"
                         >
                             Schedule a meeting
                         </Button>
@@ -131,7 +131,7 @@ export const SharedVideoScrollingCTA = () => {
                             size="large"
                             leftIcon={Mail}
                             href="mailto:hello@crisp.studio"
-                            className="text-white border-white hover:bg-white/10"
+                            className="text-white border-white hover:bg-white/10 w-full md:w-auto"
                         >
                             Email us
                         </Button>
@@ -140,7 +140,7 @@ export const SharedVideoScrollingCTA = () => {
                             size="large"
                             leftIcon={MessageCircle}
                             href="https://wa.me/41794540545"
-                            className="text-white border-white hover:bg-white/10"
+                            className="text-white border-white hover:bg-white/10 w-full md:w-auto"
                         >
                             WhatsApp
                         </Button>

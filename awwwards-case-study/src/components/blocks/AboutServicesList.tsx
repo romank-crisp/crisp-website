@@ -44,7 +44,7 @@ export const AboutServicesList = ({ data }: { data: Service[] }) => {
 
     return (
         <section ref={containerRef} className="w-full py-48 md:py-64 text-white relative z-10 mb-32 md:mb-48">
-            <div className="max-w-[1440px] mx-auto px-6 md:px-12">
+            <div className="max-w-[1440px] mx-auto px-4 md:px-12">
                 {/* Mega Title */}
                 <h2 className="font-mega text-mega-h2 uppercase mb-32 md:mb-48 text-brand flex flex-wrap gap-x-[0.2em]">
                     {["OUR", "CAPABILITIES"].map((word, i) => (
@@ -57,10 +57,11 @@ export const AboutServicesList = ({ data }: { data: Service[] }) => {
                 </h2>
 
                 {/* Navigation Tabs & Content Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 lg:gap-48">
+                {/* Desktop Layout */}
+                <div className="hidden lg:grid grid-cols-12 gap-48">
 
                     {/* Left Column: Navigation Tabs - Sticky in vertical middle */}
-                    <div className="lg:col-span-4 flex flex-col gap-8 items-start sticky top-[20vh] self-start">
+                    <div className="col-span-4 flex flex-col gap-8 items-start sticky top-[20vh] self-start">
                         {data.map((service, index) => (
                             <button
                                 key={service.id}
@@ -79,7 +80,7 @@ export const AboutServicesList = ({ data }: { data: Service[] }) => {
                     </div>
 
                     {/* Right Column: Content Preview */}
-                    <div className="lg:col-span-8 flex flex-col gap-12 md:gap-16 relative min-h-[600px]">
+                    <div className="col-span-8 flex flex-col gap-16 relative min-h-[600px]">
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={activeIndex}
@@ -119,6 +120,60 @@ export const AboutServicesList = ({ data }: { data: Service[] }) => {
                         </AnimatePresence>
                     </div>
 
+                </div>
+
+                {/* Mobile Layout: Accordion */}
+                <div className="flex flex-col gap-4 lg:hidden">
+                    {data.map((service, index) => {
+                        const isActive = activeIndex === index;
+                        return (
+                            <div key={service.id} className="border-b border-white/10 last:border-0">
+                                <button
+                                    onClick={() => setActiveIndex(isActive ? -1 : index)}
+                                    className="w-full py-6 flex items-center justify-between text-left"
+                                >
+                                    <span className={clsx(
+                                        "font-heading text-2xl transition-opacity duration-300",
+                                        isActive ? "opacity-100 text-brand" : "opacity-60 text-white"
+                                    )}>
+                                        {service.label}
+                                    </span>
+                                    <span className={clsx(
+                                        "text-2xl transition-transform duration-300",
+                                        isActive ? "rotate-45 text-brand" : "text-white/40"
+                                    )}>
+                                        +
+                                    </span>
+                                </button>
+
+                                <div className={clsx(
+                                    "overflow-hidden transition-all duration-500 ease-in-out",
+                                    isActive ? "max-h-[800px] opacity-100 pb-8" : "max-h-0 opacity-0"
+                                )}>
+                                    <div className="flex flex-col gap-6">
+                                        <div className="relative w-full aspect-video bg-white/5 rounded-lg overflow-hidden">
+                                            <Image
+                                                src={service.image}
+                                                alt={service.label}
+                                                fill
+                                                className="object-cover opacity-80"
+                                            />
+                                        </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {service.tags.map((tag) => (
+                                                <Tag key={tag} variant="default" className="text-xs">
+                                                    {tag}
+                                                </Tag>
+                                            ))}
+                                        </div>
+                                        <p className="font-text text-base text-white/80">
+                                            {service.description}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </section>

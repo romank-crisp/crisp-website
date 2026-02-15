@@ -133,7 +133,7 @@ export const AboutLocationsMap = ({ data }: { data: Location[] }) => {
                 }
             `}</style>
 
-            <div className="max-w-[1440px] mx-auto px-6 md:px-12 pointer-events-auto">
+            <div className="max-w-[1440px] mx-auto px-4 md:px-12 pointer-events-auto">
                 {/* Mega Title */}
                 <h2 className="font-mega text-mega-h2 uppercase mb-16 md:mb-32 flex flex-col gap-2">
                     <span className="flex flex-wrap gap-x-[0.2em] text-white">
@@ -157,13 +157,13 @@ export const AboutLocationsMap = ({ data }: { data: Location[] }) => {
                 </h2>
 
                 {/* Description Text */}
-                <p className="font-text text-text-lg text-white/60 max-w-[40%] mb-16 md:mb-24 leading-relaxed">
+                <p className="font-text text-text-lg text-white/60 w-full md:max-w-[40%] mb-16 md:mb-24 leading-relaxed">
                     Remote design studio building brands, products and websites that teams can ship.
                 </p>
             </div>
 
             <div
-                className="max-w-[1440px] mx-auto px-6 md:px-12 relative h-[500px] w-full pointer-events-auto"
+                className="max-w-[1440px] mx-auto px-4 md:px-12 relative h-[500px] w-full pointer-events-auto"
             >
                 {/* Connection Lines Layer */}
                 <svg

@@ -199,7 +199,7 @@ export function ContactOverlay() {
                 {/* Close Button */}
                 <button
                     onClick={closeContactForm}
-                    className="absolute top-24 right-24 md:top-48 md:right-48 w-64 h-64 flex items-center justify-center bg-black border border-white/10 rounded-full hover:scale-110 hover:bg-neutral-900 transition-all duration-500 group z-[110] shadow-2xl"
+                    className="absolute top-24 right-24 md:top-48 md:right-48 w-32 h-32 md:w-64 md:h-64 flex items-center justify-center bg-black border border-white/10 rounded-full hover:scale-110 hover:bg-neutral-900 transition-all duration-500 group z-[110] shadow-2xl"
                 >
                     <Image
                         src="/img/icons/cross.svg"
@@ -211,12 +211,12 @@ export function ContactOverlay() {
                 </button>
 
                 {/* Left Side - Form */}
-                <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-32 md:p-64 overflow-y-auto">
+                <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-24 pt-[45vh] md:p-64 overflow-y-auto relative z-10">
                     <div ref={formContentRef} className="w-full max-w-[520px]">
                         {!isSubmitted ? (
                             <>
                                 <h1 ref={titleRef} className="font-mega text-mega-h2 leading-[var(--lh-mega)] tracking-[var(--ls-mega)] uppercase mb-48 md:mb-64 whitespace-nowrap">
-                                    HI THERE!
+                                    CONTACT US
                                 </h1>
                                 <ContactForm
                                     onSuccess={() => setIsSubmitted(true)}
@@ -242,8 +242,8 @@ export function ContactOverlay() {
                     </div>
                 </div>
 
-                {/* Right Side - Video (Desktop Only) */}
-                <div className="hidden md:block md:w-1/2 bg-[#F1F5F9] relative overflow-hidden">
+                {/* Right Side - Video (Desktop Only) and Mobile Background */}
+                <div className="absolute top-0 left-0 w-full h-[40vh] md:relative md:h-auto md:w-1/2 bg-[#F1F5F9] md:block overflow-hidden z-0">
                     <video
                         ref={videoRef}
                         autoPlay

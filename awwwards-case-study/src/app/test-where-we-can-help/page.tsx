@@ -1,5 +1,5 @@
 import { WhereWeCanHelp } from "@/components/blocks/WhereWeCanHelp";
-import { readContent } from "@/app/actions/content";
+import { readContent } from "@/lib/content";
 
 export default async function TestWhereWeCanHelpPage() {
     // Fetch the data needed by the component

@@ -1,5 +1,5 @@
 import { WorksPage } from './works-page';
-import { readContent } from '@/app/actions/content';
+import { readContent } from '@/lib/content';
 import { parseSeoData } from "@/lib/seo";
 import { SeoData } from "@/types/seo";
 

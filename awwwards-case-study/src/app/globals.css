@@ -39,8 +39,10 @@
     --space-128: 128px;
 
     /* Font Sizes (px) */
-    --fs-mega-h1: 120px;
-    --fs-mega-h2: 70px;
+    --fs-mega-h1: 96px;
+    /* 120px * 0.8 */
+    --fs-mega-h2: 56px;
+    /* 70px * 0.8 */
     --fs-h1: 36px;
     --fs-h2: 26px;
     --fs-h3: 20px;
@@ -154,6 +156,15 @@ html,
 body,
 * {
   cursor: none !important;
+}
+
+@media (pointer: coarse) {
+
+  html,
+  body,
+  * {
+    cursor: auto !important;
+  }
 }
 
 /* Restore system cursor ONLY when .system-cursor is present on html or body */

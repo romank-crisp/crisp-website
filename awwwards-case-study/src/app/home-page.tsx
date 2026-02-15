@@ -189,8 +189,7 @@ function HeroContent({ data }: { data: HeroText }) {
         <span className="mega-word-inner inline-block">{data.words[1]}</span>
       </div>
 
-      {/* WORD 3: FOR + TAGLINE */}
-      <div className="flex items-center gap-64">
+      <div className="flex flex-wrap items-baseline gap-4 md:gap-64">
         <div className="overflow-hidden">
           <span className="mega-word-inner inline-block">{data.words[2]}</span>
         </div>
@@ -216,35 +215,37 @@ function HeroContent({ data }: { data: HeroText }) {
             ))}
           </div>
         </div>
+
+        {/* Mobile Tagline - Moved here near FOR */}
+        <div
+          className="md:hidden flex flex-col text-text font-text text-text-sm normal-case leading-tight tracking-normal"
+          style={{ WebkitTextStrokeWidth: '0px' }}
+        >
+          <div className="flex gap-x-[0.25em]">
+            {firstLineWords.map((word, i) => (
+              <span key={`ml1-${i}`} className="tagline-word inline-block">{word}</span>
+            ))}
+          </div>
+          <div className="flex gap-x-[0.25em]">
+            {secondLineWords.map((word, i) => (
+              <span key={`ml2-${i}`} className="tagline-word inline-block">{word}</span>
+            ))}
+          </div>
+          <div className="flex gap-x-[0.25em]">
+            {thirdLineWords.map((word, i) => (
+              <span key={`ml3-${i}`} className="tagline-word inline-block">{word}</span>
+            ))}
+          </div>
+        </div>
       </div>
+
+
 
       {/* WORD 4: BRANDS */}
       <div className="overflow-hidden">
         <span className="mega-word-inner inline-block">{data.words[3]}</span>
       </div>
-
-      {/* Mobile Tagline */}
-      <div
-        className="md:hidden mt-4 flex flex-col text-text font-text text-text-lg normal-case leading-tight tracking-normal"
-        style={{ WebkitTextStrokeWidth: '0px' }}
-      >
-        <div className="flex gap-x-[0.25em]">
-          {firstLineWords.map((word, i) => (
-            <span key={`ml1-${i}`} className="tagline-word inline-block">{word}</span>
-          ))}
-        </div>
-        <div className="flex gap-x-[0.25em]">
-          {secondLineWords.map((word, i) => (
-            <span key={`ml2-${i}`} className="tagline-word inline-block">{word}</span>
-          ))}
-        </div>
-        <div className="flex gap-x-[0.25em]">
-          {thirdLineWords.map((word, i) => (
-            <span key={`ml3-${i}`} className="tagline-word inline-block">{word}</span>
-          ))}
-        </div>
-      </div>
-    </div>
+    </div >
   );
 }
 
@@ -337,7 +338,7 @@ export default function Home({
   }));
 
   return (
-    <main ref={mainRef} className="min-h-screen bg-white">
+    <main ref={mainRef} className="min-h-screen bg-white pb-32 md:pb-0 pt-[100px]">
       {/* Horizontal Masonry Block */}
       <HorizontalMasonry columns={masonryColumns} />
 

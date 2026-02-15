@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Staatliches, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/layouts/SmoothScroll";
@@ -25,8 +25,16 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+};
+
 import { GlobalLayout } from "@/components/layouts/GlobalLayout";
-import { readContent } from "@/app/actions/content";
+import { readContent } from "@/lib/content";
 
 export default async function RootLayout({
   children,

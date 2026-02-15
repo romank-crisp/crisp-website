@@ -169,7 +169,7 @@ export const AboutTeamAccordion = ({ data }: { data: TeamMember[] }) => {
     };
 
     return (
-        <section className="pt-128 pb-64 px-32 md:px-64 bg-white">
+        <section className="pt-128 pb-64 px-4 md:px-64 bg-white">
             <div className="max-w-[1440px] w-full mx-auto">
                 <h2 className="font-mega text-mega-h2 mb-64 uppercase text-brand">
                     Meet the Team
@@ -193,12 +193,25 @@ export const AboutTeamAccordion = ({ data }: { data: TeamMember[] }) => {
                                     aria-controls={panelId}
                                     className="w-full py-24 flex items-center justify-between gap-16 transition-colors focus:outline-none group"
                                 >
-                                    <div className="flex items-baseline gap-16 flex-grow min-w-0">
-                                        <span className="font-heading text-h1 text-left flex-shrink-0" style={{ color: "var(--color-text)" }}>
-                                            {member.name}
-                                        </span>
+                                    <div className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-16 flex-grow min-w-0">
+                                        <div className="flex items-center gap-4">
+                                            <span className="font-heading text-2xl md:text-h1 text-left flex-shrink-0" style={{ color: "var(--color-text)" }}>
+                                                {member.name}
+                                            </span>
+                                            {member.name === "Iryna Chubur" && (
+                                                <div className="flex md:hidden items-center">
+                                                    <Image
+                                                        src="/img/client-logos/client-logo-03-swissprofessionals-small.svg"
+                                                        alt="Swiss Professionals"
+                                                        width={80}
+                                                        height={26}
+                                                        className="h-6 w-auto object-contain opacity-60 grayscale"
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
 
-                                        <span className="font-text text-text-md text-left hidden md:block truncate" style={{ color: "var(--color-text)", opacity: 0.6 }}>
+                                        <span className="font-text text-text-md text-left block truncate" style={{ color: "var(--color-text)", opacity: 0.6 }}>
                                             {member.position}
                                         </span>
 

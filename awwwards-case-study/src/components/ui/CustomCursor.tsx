@@ -166,7 +166,7 @@ export function CustomCursor() {
     return (
         <div
             ref={cursorRef}
-            className="fixed top-0 left-0 rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center overflow-hidden will-change-transform"
+            className="hidden md:flex fixed top-0 left-0 rounded-full pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-hidden will-change-transform"
         >
             <div
                 ref={textRef}

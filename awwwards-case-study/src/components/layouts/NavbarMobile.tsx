@@ -46,6 +46,7 @@ export function NavbarMobile() {
             gsap.to(navbarRef.current, {
                 scale: isScrolled ? 0.8 : 1,
                 y: isScrolled ? -5 : 0,
+                boxShadow: "0 8px 32px rgba(0,0,0,0.04)",
                 duration: 0.4,
                 ease: "power2.out",
                 overwrite: "auto"
@@ -72,7 +73,9 @@ export function NavbarMobile() {
                 xPercent: -50,
                 scale: 1,
                 y: 0,
+                height: "100vh", // Force full height
                 borderRadius: 0,
+                boxShadow: "none",
                 duration: 0.6,
                 ease: "expo.inOut"
             }, 0);
@@ -120,7 +123,9 @@ export function NavbarMobile() {
                 maxWidth: "600px",
                 xPercent: -50,
                 scale: window.scrollY > 20 ? 0.8 : 1,
+                height: "auto", // Reset height to auto
                 borderRadius: "2rem",
+                boxShadow: "0 8px 32px rgba(0,0,0,0.04)", // Restore shadow
                 duration: 0.6,
                 ease: "expo.inOut"
             }, "<");
@@ -226,7 +231,7 @@ export function NavbarMobile() {
                             <Button
                                 variant="filled"
                                 size="medium"
-                                className="mobile-footer-item w-full justify-start gap-12 px-24 h-[56px] rounded-2xl opacity-0 !text-[16px]"
+                                className="mobile-footer-item w-full justify-center gap-12 px-24 h-[56px] rounded-2xl opacity-0 !text-[16px]"
                                 rightIcon={ArrowRight}
                                 onClick={handleOpenContact}
                             >
@@ -236,7 +241,7 @@ export function NavbarMobile() {
                             <Button
                                 variant="outline"
                                 size="medium"
-                                className="mobile-footer-item w-full justify-start gap-12 px-24 h-[56px] rounded-2xl opacity-0 !text-[16px]"
+                                className="mobile-footer-item w-full justify-center gap-12 px-24 h-[56px] rounded-2xl opacity-0 !text-[16px]"
                                 leftIcon={Calendar}
                                 href="https://calendly.com/roman-crisp-studio/30-minute-meeting-clone"
                             >
@@ -246,7 +251,7 @@ export function NavbarMobile() {
                             <Button
                                 variant="transparent"
                                 size="medium"
-                                className="mobile-footer-item w-full justify-start gap-12 px-24 text-text opacity-0 hover:opacity-100 h-[48px] !text-[14px]"
+                                className="mobile-footer-item w-full justify-center gap-12 px-24 text-text opacity-0 hover:opacity-100 h-[48px] !text-[14px]"
                                 leftIcon={Mail}
                                 href="mailto:hello@crisp-studio.com"
                             >
@@ -256,7 +261,7 @@ export function NavbarMobile() {
                             <Button
                                 variant="transparent"
                                 size="medium"
-                                className="mobile-footer-item w-full justify-start gap-12 px-24 text-text opacity-0 hover:opacity-100 h-[48px] !text-[14px]"
+                                className="mobile-footer-item w-full justify-center gap-12 px-24 text-text opacity-0 hover:opacity-100 h-[48px] !text-[14px]"
                                 leftIcon={MessageSquare}
                                 href="https://api.whatsapp.com/send/?phone=41794540545&text=hi%20crisp,%20lets%20discuss%20a%20project"
                             >

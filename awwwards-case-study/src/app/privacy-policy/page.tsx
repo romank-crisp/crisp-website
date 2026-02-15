@@ -1,6 +1,6 @@
 import { parseSeoData } from "@/lib/seo";
 import { SeoData } from "@/types/seo";
-import { readContent } from '@/app/actions/content';
+import { readContent } from '@/lib/content';
 
 export async function generateMetadata() {
     const seoData = await readContent("seo/seo-privacy-policy.json") as SeoData;
