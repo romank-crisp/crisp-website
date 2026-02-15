@@ -189,7 +189,7 @@ function HeroContent({ data }: { data: HeroText }) {
         <span className="mega-word-inner inline-block">{data.words[1]}</span>
       </div>
 
-      <div className="flex flex-wrap items-baseline gap-4 md:gap-64">
+      <div className="flex flex-row items-center gap-4 md:gap-64">
         <div className="overflow-hidden">
           <span className="mega-word-inner inline-block">{data.words[2]}</span>
         </div>
@@ -338,7 +338,7 @@ export default function Home({
   }));
 
   return (
-    <main ref={mainRef} className="min-h-screen bg-white pb-32 md:pb-0 pt-[100px]">
+    <main ref={mainRef} className="min-h-screen bg-white pb-32 md:pb-0">
       {/* Horizontal Masonry Block */}
       <HorizontalMasonry columns={masonryColumns} />
 

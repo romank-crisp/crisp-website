@@ -201,7 +201,7 @@ function MobileMasonryLayout({ columns }: { columns: MasonryColumn[] }) {
     }, { scope: sliderContainerRef });
 
     return (
-        <div className="w-full overflow-hidden bg-white py-12 relative mt-4 md:mt-48 px-4 md:px-0">
+        <div className="w-full overflow-hidden bg-white py-12 relative mt-[100px] md:mt-48 px-4 md:px-0">
             {/* 
                 NOTE: Global padding 'px-4' is on body. 
                 Full width slider needs -mx-4 to touch edges if desired, or just stay inside.
