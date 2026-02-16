@@ -197,56 +197,74 @@ export const AboutLocationsMap = ({ data }: { data: Location[] }) => {
                 </svg>
 
                 {/* Locations Layer */}
-                {data.map((loc) => (
-                    <div
-                        key={loc.id}
-                        data-location-id={loc.id}
-                        className="location-container absolute group cursor-pointer z-20"
-                        onMouseEnter={() => setHoveredCountry(loc.label)}
-                        onMouseLeave={() => setHoveredCountry(null)}
-                        style={{
-                            left: `${loc.x}%`,
-                            top: `${loc.y}%`,
-                            transform: "translate(-50%, -50%)"
-                        }}
-                    >
-                        {/* Enlarged Hover Target Area (Hidden) */}
-                        <div className="absolute inset-0 -m-12 rounded-full pointer-events-auto" />
+                {/* Locations Layer */}
+                {data.map((loc) => {
+                    const isActive = hoveredCountry === loc.label;
 
-                        {/* Dot Wrapper */}
-                        <div className="relative flex items-center justify-center w-4 h-4 md:w-6 md:h-6 pointer-events-none">
-                            <div className="relative w-full h-full transition-all duration-500 group-hover:scale-125">
-                                {/* Main Dot */}
-                                <div className="location-dot w-full h-full rounded-full bg-brand shadow-[0_0_20px_rgba(var(--color-brand),0.6)]" />
+                    return (
+                        <div
+                            key={loc.id}
+                            data-location-id={loc.id}
+                            className="location-container absolute group cursor-pointer z-20"
+                            onMouseEnter={() => setHoveredCountry(loc.label)}
+                            onMouseLeave={() => setHoveredCountry(null)}
+                            onClick={() => setHoveredCountry(loc.label)}
+                            style={{
+                                left: `${loc.x}%`,
+                                top: `${loc.y}%`,
+                                transform: "translate(-50%, -50%)"
+                            }}
+                        >
+                            {/* Enlarged Hover Target Area (Hidden) */}
+                            <div className="absolute inset-0 -m-12 rounded-full pointer-events-auto" />
 
-                                {/* Inner Core */}
-                                <div className="absolute inset-[25%] rounded-full bg-[rgb(var(--color-text))] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                            {/* Dot Wrapper */}
+                            <div className="relative flex items-center justify-center w-4 h-4 md:w-6 md:h-6 pointer-events-none">
+                                <div className={clsx(
+                                    "relative w-full h-full transition-all duration-500",
+                                    isActive ? "scale-125" : "group-hover:scale-125"
+                                )}>
+                                    {/* Main Dot */}
+                                    <div className="location-dot w-full h-full rounded-full bg-brand shadow-[0_0_20px_rgba(var(--color-brand),0.6)]" />
+
+                                    {/* Inner Core */}
+                                    <div className={clsx(
+                                        "absolute inset-[25%] rounded-full bg-[rgb(var(--color-text))] transition-opacity duration-300",
+                                        isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                                    )} />
+                                </div>
+                            </div>
+
+                            {/* Text Content (Label & Cities) */}
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 flex flex-col items-center pointer-events-none">
+                                {/* Country Name */}
+                                <h3 className={clsx(
+                                    "font-heading text-h3 transition-all duration-500 text-center whitespace-nowrap origin-top",
+                                    isActive ? "text-white translate-y-[-4px] scale-125" : "text-white/40 group-hover:text-white group-hover:translate-y-[-4px] group-hover:scale-125"
+                                )}>
+                                    {loc.label}
+                                </h3>
+
+                                {/* City Pills - Appears on Hover/Click */}
+                                {loc.cities && (
+                                    <div className={clsx(
+                                        "mt-4 flex flex-col items-center gap-2 transition-all duration-500 ease-out delay-75 pointer-events-none",
+                                        isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0"
+                                    )}>
+                                        {loc.cities.map((city) => (
+                                            <div
+                                                key={city}
+                                                className="font-text text-[11px] md:text-[12px] uppercase tracking-[0.2em] text-brand whitespace-nowrap text-center"
+                                            >
+                                                {city}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
-
-                        {/* Text Content (Label & Cities) */}
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 flex flex-col items-center pointer-events-none">
-                            {/* Country Name */}
-                            <h3 className="font-heading text-h3 transition-all duration-500 text-center text-white/40 group-hover:text-white group-hover:translate-y-[-4px] group-hover:scale-125 whitespace-nowrap origin-top">
-                                {loc.label}
-                            </h3>
-
-                            {/* City Pills - Appears on Hover */}
-                            {loc.cities && (
-                                <div className="mt-4 flex flex-col items-center gap-2 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out delay-75 pointer-events-none">
-                                    {loc.cities.map((city) => (
-                                        <div
-                                            key={city}
-                                            className="font-text text-[11px] md:text-[12px] uppercase tracking-[0.2em] text-brand whitespace-nowrap text-center"
-                                        >
-                                            {city}
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </section>
     );
