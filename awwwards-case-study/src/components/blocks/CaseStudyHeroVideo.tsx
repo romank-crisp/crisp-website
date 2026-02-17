@@ -144,7 +144,7 @@ export function CaseStudyHeroVideo({
             <div className={`absolute inset-0 bg-black/30 transition-opacity duration-1000 ${isFullExperience ? 'opacity-0' : 'opacity-100'}`} />
 
             {/* Content */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 pointer-events-none px-16">
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 pointer-events-none px-16 md:px-64">
                 <div ref={textRef} className="space-y-4 max-w-[1475px] mx-auto w-full">
                     <div className="flex items-center justify-center gap-4 text-sm md:text-base uppercase tracking-widest font-medium opacity-90">
                         {tags.map((tag, index) => (

@@ -104,7 +104,7 @@ export const SharedFAQ = ({ data }: { data: HomeFAQData }) => {
             ref={sectionRef}
             className="py-64 md:py-128 bg-white relative z-10 transition-colors duration-500"
         >
-            <div className="max-w-[1475px] w-full mx-auto flex flex-col md:flex-row gap-64 md:gap-48 px-32 md:px-0">
+            <div className="max-w-[1475px] w-full mx-auto flex flex-col md:flex-row gap-64 md:gap-48 px-16 md:px-64">
 
                 {/* Left Column: H1 Header */}
                 <div className="w-full md:w-1/3">

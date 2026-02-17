@@ -228,7 +228,7 @@ export function WhereWeCanHelp({ data }: WhereWeCanHelpProps) {
              Adjusted padding to keep title visually separated from brain center.
              Reduced min-height so it's compact at the top.
          */}
-                <div className="relative z-20 flex justify-center pt-16 pb-16 md:pt-24 md:pb-32 pointer-events-none px-4 md:px-0">
+                <div className="relative z-20 flex justify-center pt-16 pb-16 md:pt-24 md:pb-32 pointer-events-none px-16 md:px-64">
                     <div ref={titleRef} className="max-w-[1475px] w-full mx-auto text-center">
                         <h2 className="font-mega text-mega-h2 leading-none uppercase">
                             {data.title.map((word: string, i: number) => (
@@ -255,7 +255,7 @@ export function WhereWeCanHelp({ data }: WhereWeCanHelpProps) {
                                 data-service={index}
                                 className="min-h-[50vh] flex items-center justify-center py-16"
                             >
-                                <div className="max-w-[1475px] w-full mx-auto px-4 md:px-0">
+                                <div className="max-w-[1475px] w-full mx-auto px-16 md:px-64">
                                     {/* Chess Layout: Alternating Left/Right */}
                                     <div className={`flex w-full ${isEven ? 'justify-start' : 'justify-end'}`}>
                                         <div className="max-w-md w-full">
@@ -288,7 +288,7 @@ export function WhereWeCanHelp({ data }: WhereWeCanHelpProps) {
 
                 {/* CTA Lottie Animation */}
                 <div className="flex justify-end py-64 md:py-128">
-                    <div className="max-w-[1475px] w-full mx-auto px-4 md:px-64">
+                    <div className="max-w-[1475px] w-full mx-auto px-16 md:px-64">
                         <Link href="/works" className="block w-fit ml-auto cursor-pointer hover:scale-105 transition-transform duration-300">
                             <div ref={ctaLottieRef} className="w-[210px] h-[210px] md:w-[280px] md:h-[280px]" />
                         </Link>

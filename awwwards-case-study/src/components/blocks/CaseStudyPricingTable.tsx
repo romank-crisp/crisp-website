@@ -7,8 +7,8 @@ import { ArrowRight } from "lucide-react";
 
 export function CaseStudyPricingTable({ title, tiers }: PricingTableProps) {
     return (
-        <div id="pricing" className="max-w-[1475px] mx-auto py-24 md:py-32 text-center">
-            {title && <h2 className="text-4xl md:text-6xl font-medium mb-16 px-16 md:px-0">{title}</h2>}
+        <div id="pricing" className="max-w-[1475px] mx-auto py-24 md:py-32 text-center px-16 md:px-64">
+            {title && <h2 className="text-4xl md:text-6xl font-medium mb-16">{title}</h2>}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {tiers.map((tier, index) => {
                     const isHighlight = tier.style === 'highlight' || tier.isPopular;

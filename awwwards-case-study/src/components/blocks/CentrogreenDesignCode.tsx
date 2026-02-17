@@ -99,7 +99,7 @@ export function CentrogreenDesignCode() {
 
     return (
         <section ref={containerRef} className="w-full bg-white py-24 md:py-32 flex justify-center">
-            <div className="w-full max-w-[1475px] flex flex-col gap-8 md:gap-12">
+            <div className="w-full max-w-[1475px] flex flex-col gap-8 md:gap-12 px-16 md:px-64">
 
                 {/* 1. ROW 1: 2 Columns */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 w-full">

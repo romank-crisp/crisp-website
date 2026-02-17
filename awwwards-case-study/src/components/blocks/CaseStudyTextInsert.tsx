@@ -31,7 +31,7 @@ export function CaseStudyTextInsert({ title, children, type = "editorial", class
 
     if (type === "quote") {
         return (
-            <div ref={containerRef} className={clsx("py-24 md:py-32 px-6 will-change-transform", className)}>
+            <div ref={containerRef} className={clsx("py-24 md:py-32 px-16 md:px-64 will-change-transform", className)}>
                 <blockquote className="max-w-4xl mx-auto text-center">
                     <p className="text-3xl md:text-5xl lg:text-6xl font-light leading-tight font-mega text-brand">
                         &quot;{children}&quot;
@@ -43,7 +43,7 @@ export function CaseStudyTextInsert({ title, children, type = "editorial", class
     }
 
     return (
-        <div ref={containerRef} className={clsx("py-16 md:py-24 px-6 max-w-[1600px] mx-auto will-change-transform", className)}>
+        <div ref={containerRef} className={clsx("py-16 md:py-24 px-16 md:px-64 max-w-[1600px] mx-auto will-change-transform", className)}>
             <div className="grid md:grid-cols-12 gap-8 md:gap-12">
                 {title && (
                     <div className="md:col-span-4 lg:col-span-3">

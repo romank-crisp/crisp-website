@@ -10,7 +10,7 @@ import useEmblaCarousel from "embla-carousel-react";
 export const SharedClientLogos = ({ data }: { data: ClientLogo[] }) => {
     return (
         <section className="w-full py-16 md:py-24 bg-white">
-            <div className="max-w-[1475px] mx-auto px-4 md:px-0">
+            <div className="max-w-[1475px] mx-auto px-16 md:px-64">
 
 
                 {/* Company Logos Grid */}

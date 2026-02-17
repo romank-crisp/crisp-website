@@ -43,7 +43,7 @@ export function PartnerStatement({ data }: PartnerStatementProps) {
 
     return (
         <section ref={containerRef} className="bg-white py-64 md:py-128">
-            <div className="max-w-[1475px] mx-auto">
+            <div className="max-w-[1475px] mx-auto px-16 md:px-64">
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-32 md:gap-64">
                     {/* Left: Heading */}
                     <h2

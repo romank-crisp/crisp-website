@@ -106,7 +106,7 @@ export function TheyTalkDesignSystem() {
 
     return (
         <section className="w-full py-32 md:py-64 flex justify-center bg-white overflow-hidden">
-            <div className="w-full max-w-[1475px] px-16 md:px-0">
+            <div className="w-full max-w-[1475px] px-16 md:px-64">
                 <div
                     className="grid gap-16 md:gap-24 h-[600px] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]"
                     style={getGridTemplate()}

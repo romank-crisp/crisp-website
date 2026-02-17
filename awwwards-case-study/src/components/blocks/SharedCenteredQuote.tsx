@@ -82,7 +82,7 @@ export const SharedCenteredQuote = ({ quote, author, className }: { quote?: stri
             className={`relative flex items-center justify-center bg-transparent overflow-hidden py-32 md:py-128 my-[10vh] md:my-[20vh] ${className || ""}`}
         >
             {/* Content */}
-            <div className="relative z-10 max-w-[76rem] mx-auto text-center px-4 md:px-6">
+            <div className="relative z-10 max-w-[76rem] mx-auto text-center px-16 md:px-64">
                 <p
                     ref={textRef}
                     className="text-white/30 text-3xl md:text-5xl lg:text-5xl font-light leading-[1.2] tracking-tight flex flex-wrap justify-center gap-x-[0.25em] gap-y-1"

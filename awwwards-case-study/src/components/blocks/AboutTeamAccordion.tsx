@@ -169,7 +169,7 @@ export const AboutTeamAccordion = ({ data }: { data: TeamMember[] }) => {
     };
 
     return (
-        <section className="pt-128 pb-64 px-4 md:px-64 bg-white">
+        <section className="pt-128 pb-64 px-16 md:px-64 bg-white">
             <div className="max-w-[1440px] w-full mx-auto">
                 <h2 className="font-mega text-mega-h2 mb-64 uppercase text-brand">
                     Meet the Team

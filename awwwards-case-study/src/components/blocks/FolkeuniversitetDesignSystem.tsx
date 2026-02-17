@@ -87,7 +87,7 @@ export function FolkeuniversitetDesignSystem() {
     return (
         <section className="w-full py-32 md:py-64 bg-white flex justify-center items-center overflow-hidden">
             <div
-                className="w-full max-w-[1475px] px-16 flex flex-col md:flex-row items-center justify-between gap-32 md:gap-0"
+                className="w-full max-w-[1475px] px-16 md:px-64 flex flex-col md:flex-row items-center justify-between gap-32 md:gap-0"
                 style={{ transform: 'translateY(-25px)' }}
             >
                 {/* Discrete items for equal spacing */}

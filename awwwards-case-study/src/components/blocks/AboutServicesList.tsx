@@ -44,7 +44,7 @@ export const AboutServicesList = ({ data }: { data: Service[] }) => {
 
     return (
         <section ref={containerRef} className="w-full py-48 md:py-64 text-white relative z-10 mb-32 md:mb-48">
-            <div className="max-w-[1440px] mx-auto px-4 md:px-12">
+            <div className="max-w-[1440px] mx-auto px-16 md:px-64">
                 {/* Mega Title */}
                 <h2 className="font-mega text-mega-h2 uppercase mb-32 md:mb-48 text-brand flex flex-wrap gap-x-[0.2em]">
                     {["OUR", "CAPABILITIES"].map((word, i) => (

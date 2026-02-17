@@ -118,7 +118,7 @@ export function AboutPlaneHero({ data }: { data: AboutHeroData }) {
 
             {/* FOREGROUND LAYER: Scrolling Content */}
             <div className="relative z-20 w-full pt-[15vh]">
-                <div className="max-w-[1440px] mx-auto px-6 md:px-12 w-full flex flex-col items-start">
+                <div className="max-w-[1440px] mx-auto px-16 md:px-64 w-full flex flex-col items-start">
 
                     {/* Header */}
                     <div className="mb-[15vh] w-full">

@@ -7,7 +7,7 @@ import { CaseStudyDetailsProps } from "@/types/case-study";
 export function CaseStudyDetails({ intro, sections, sidebar }: CaseStudyDetailsProps) {
     return (
         <section className="w-full py-64 bg-white border-t border-text/5">
-            <div className="max-w-[1475px] mx-auto">
+            <div className="max-w-[1475px] mx-auto px-16 md:px-64">
                 <div className="flex flex-col md:flex-row gap-12 md:gap-24">
 
                     {/* Left Column: Content */}

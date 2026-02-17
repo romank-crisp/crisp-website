@@ -58,19 +58,7 @@ export function HorizontalMasonry({ columns, className }: HorizontalMasonryProps
 
         // Desktop only animations (min-width: 768px)
         mm.add("(min-width: 768px)", () => {
-            // 0. Initial Entry Animation (Peek/Bounce)
-            // We only play this if the section is at the top of the viewport
-            const isAtTop = window.scrollY < (containerRef.current?.offsetTop || 0) + 10;
 
-            if (isAtTop) {
-                gsap.from(trackRef.current, {
-                    x: 100,
-                    duration: 1.4,
-                    delay: 0.5,
-                    ease: "back.out(1.5)",
-                    overwrite: "auto"
-                });
-            }
 
             // 1. Horizontal Translation
             const scrollTween = gsap.to(trackRef.current, {
@@ -82,7 +70,7 @@ export function HorizontalMasonry({ columns, className }: HorizontalMasonryProps
                     end: "bottom bottom",
                     scrub: true,
                     invalidateOnRefresh: true,
-                    immediateRender: false, // Prevents snapping to x:0 before intro runs
+                    immediateRender: false,
                 }
             });
 
@@ -201,7 +189,7 @@ function MobileMasonryLayout({ columns }: { columns: MasonryColumn[] }) {
     }, { scope: sliderContainerRef });
 
     return (
-        <div className="w-full overflow-hidden bg-white py-12 relative mt-[100px] md:mt-48 px-4 md:px-0">
+        <div className="w-full overflow-hidden bg-white py-12 relative mt-[100px] md:mt-48 px-16 md:px-0">
             {/* 
                 NOTE: Global padding 'px-4' is on body. 
                 Full width slider needs -mx-4 to touch edges if desired, or just stay inside.
@@ -212,7 +200,7 @@ function MobileMasonryLayout({ columns }: { columns: MasonryColumn[] }) {
 
             {/* 1. Header (Static) */}
             {heroCell && (
-                <div className="mb-16 px-4">
+                <div className="mb-16">
                     {heroCell.content}
                 </div>
             )}

@@ -26,7 +26,7 @@ export const SharedStatsBlock = ({ stats }: { stats: { value: string; label: str
 
     return (
         <div ref={containerRef} className="w-full bg-white py-64 md:py-128 border-y border-text/10 will-change-transform">
-            <div className="max-w-[1475px] mx-auto">
+            <div className="max-w-[1475px] mx-auto px-16 md:px-64">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-32 md:gap-48">
                     {stats.map((stat, i) => (
                         <div key={i} className="stat-item flex flex-col items-start text-left min-w-0">

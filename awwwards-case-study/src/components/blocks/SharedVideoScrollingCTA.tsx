@@ -101,7 +101,7 @@ export const SharedVideoScrollingCTA = () => {
                     <div className="absolute inset-0 bg-black/20" />
                 </div>
 
-                <div className="relative z-10 text-center pointer-events-none max-w-[1475px] mx-auto w-full">
+                <div className="relative z-10 text-center pointer-events-none max-w-[1475px] mx-auto w-full px-16 md:px-64">
                     <h1 ref={headlineRef} className="font-mega text-mega-h2 uppercase text-white">
                         <span className="inline-block relative z-10 mix-blend-difference">BRING</span>
                         <span
@@ -115,7 +115,7 @@ export const SharedVideoScrollingCTA = () => {
 
                     <div
                         ref={ctasRef}
-                        className="mt-32 md:mt-48 flex flex-col md:flex-row flex-wrap justify-center gap-12 md:gap-16 pointer-events-auto px-4 md:px-0"
+                        className="mt-32 md:mt-48 flex flex-col md:flex-row flex-wrap justify-center gap-12 md:gap-16 pointer-events-auto"
                     >
                         <Button
                             variant="filled"

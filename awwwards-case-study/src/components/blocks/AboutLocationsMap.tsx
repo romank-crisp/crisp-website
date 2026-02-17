@@ -133,7 +133,7 @@ export const AboutLocationsMap = ({ data }: { data: Location[] }) => {
                 }
             `}</style>
 
-            <div className="max-w-[1440px] mx-auto px-4 md:px-12 pointer-events-auto">
+            <div className="max-w-[1440px] mx-auto px-16 md:px-64 pointer-events-auto">
                 {/* Mega Title */}
                 <h2 className="font-mega text-mega-h2 uppercase mb-16 md:mb-32 flex flex-col gap-2">
                     <span className="flex flex-wrap gap-x-[0.2em] text-white">
@@ -163,7 +163,7 @@ export const AboutLocationsMap = ({ data }: { data: Location[] }) => {
             </div>
 
             <div
-                className="max-w-[1440px] mx-auto px-4 md:px-12 relative h-[500px] w-full pointer-events-auto"
+                className="max-w-[1440px] mx-auto px-16 md:px-64 relative h-[500px] w-full pointer-events-auto"
             >
                 {/* Connection Lines Layer */}
                 <svg

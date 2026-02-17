@@ -48,12 +48,12 @@ export function CaseStudyFeatureGrid({ title, subtitle, features }: FeatureGridP
     return (
         <div className="bg-white py-24 md:py-32">
             {(title || subtitle) && (
-                <div className="max-w-[1475px] mx-auto mb-16 px-16 md:px-0">
+                <div className="max-w-[1475px] mx-auto mb-16 px-16 md:px-64">
                     {title && <h2 className="text-3xl md:text-5xl font-medium mb-4">{title}</h2>}
                     {subtitle && <p className="text-black/60 text-lg">{subtitle}</p>}
                 </div>
             )}
-            <div className="max-w-[1475px] mx-auto">
+            <div className="max-w-[1475px] mx-auto px-16 md:px-64">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {features.map((feature, i) => (
                         <FeatureCard key={i} title={feature.title} description={feature.description} />

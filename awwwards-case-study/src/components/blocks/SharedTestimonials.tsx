@@ -113,7 +113,7 @@ export const SharedTestimonials = ({
             ref={containerRef}
             className={`relative bg-white text-text py-64 md:py-128 ${className}`}
         >
-            <div className="max-w-[1475px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-16 lg:gap-x-24 items-center">
+            <div className="max-w-[1475px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-16 lg:gap-x-24 items-center px-16 md:px-64">
 
                 {/* Left Column: Quote & Author Info */}
                 <div className="lg:col-span-8 flex flex-col gap-24">

@@ -40,12 +40,12 @@ export function CaseStudyProcessSteps({ title, description, steps }: ProcessStep
     return (
         <div className="bg-[#F5F5F5] py-24 md:py-32">
             {(title || description) && (
-                <div className="max-w-[1475px] mx-auto mb-20 text-center px-16 md:px-0">
+                <div className="max-w-[1475px] mx-auto mb-20 text-center px-16 md:px-64">
                     {title && <h2 className="text-4xl md:text-6xl font-medium mb-6">{title}</h2>}
                     {description && <p className="text-black/60 max-w-2xl mx-auto">{description}</p>}
                 </div>
             )}
-            <div className="max-w-[1475px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="max-w-[1475px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-16 md:px-64">
                 {steps.map((step, i) => (
                     <ProcessBlock key={i} step={step.stepLabel} title={step.title} description={step.description} />
                 ))}
