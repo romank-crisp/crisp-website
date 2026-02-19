@@ -1,0 +1,25 @@
+{
+    "title": [
+        "Where",
+        "We Can",
+        "Help"
+    ],
+    "services": [
+        {
+            "title": "Strategy",
+            "description": "We build brands that last.",
+            "labels": [
+                "Brand Strategy",
+                "UX Research"
+            ]
+        },
+        {
+            "title": "Design",
+            "description": "We craft beautiful interfaces.",
+            "labels": [
+                "UI Design",
+                "Motion"
+            ]
+        }
+    ]
+}

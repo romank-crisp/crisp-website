@@ -125,7 +125,7 @@ export function AboutPlaneHero({ data }: { data: AboutHeroData }) {
                         <h4 className="font-heading text-h4 mb-4 text-gray-500">
                             About Us
                         </h4>
-                        <h1 ref={headerRef} className="font-mega text-mega-h2 text-brand uppercase text-left max-w-5xl flex flex-wrap gap-x-[0.25em]">
+                        <h1 ref={headerRef} className="font-mega text-mega-h2 text-brand uppercase text-left max-w-5xl flex flex-wrap gap-x-[0.25em] px-[3px] py-[3px]">
                             {data.headerWords.map((word, i) => (
                                 <span key={i} className="inline-block overflow-hidden">
                                     <span className="hero-word-inner inline-block">

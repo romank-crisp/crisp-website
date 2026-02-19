@@ -1,0 +1,10 @@
+{
+    "testimonials": [
+        {
+            "quote": "The team at Crisp Studio is simply amazing. They delivered beyond our expectations.",
+            "logo": "/images/logo-placeholder.png",
+            "name": "Alex Johnson",
+            "position": "CEO, Tech Corp"
+        }
+    ]
+}

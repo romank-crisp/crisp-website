@@ -1,0 +1,14 @@
+{
+    "clients": [
+        {
+            "name": "Client 1",
+            "src": "/images/client1.png",
+            "url": "#"
+        },
+        {
+            "name": "Client 2",
+            "src": "/images/client2.png",
+            "url": "#"
+        }
+    ]
+}

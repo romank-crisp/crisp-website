@@ -1,0 +1,45 @@
+{
+    "columns": [
+        {
+            "links": [
+                {
+                    "label": "Work",
+                    "path": "/work"
+                },
+                {
+                    "label": "Services",
+                    "path": "/services"
+                },
+                {
+                    "label": "Agency",
+                    "path": "/agency"
+                },
+                {
+                    "label": "Contact",
+                    "path": "/contact"
+                }
+            ]
+        },
+        {
+            "links": [
+                {
+                    "label": "Instagram",
+                    "path": "https://instagram.com"
+                },
+                {
+                    "label": "LinkedIn",
+                    "path": "https://linkedin.com"
+                },
+                {
+                    "label": "Twitter",
+                    "path": "https://twitter.com"
+                }
+            ]
+        }
+    ],
+    "copyright": "© {year} Crisp Studio. All rights reserved.",
+    "bottomCta": {
+        "label": "Start a project",
+        "path": "/contact"
+    }
+}

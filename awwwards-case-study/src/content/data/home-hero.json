@@ -1,0 +1,41 @@
+{
+    "heroText": {
+        "words": [
+            "We",
+            "Create",
+            "Digital",
+            "Experiences"
+        ],
+        "tagline": "Award winning studio"
+    },
+    "columns": [
+        {
+            "id": "col-1",
+            "width": "25%",
+            "cells": [
+                {
+                    "id": "cell-1",
+                    "height": "300px",
+                    "className": "",
+                    "contentType": "hero-text"
+                }
+            ]
+        },
+        {
+            "id": "col-2",
+            "width": "25%",
+            "cells": [
+                {
+                    "id": "cell-2",
+                    "height": "400px",
+                    "className": "",
+                    "contentType": "image",
+                    "contentProps": {
+                        "src": "/images/placeholder-1.jpg",
+                        "alt": "Placeholder"
+                    }
+                }
+            ]
+        }
+    ]
+}

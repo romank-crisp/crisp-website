@@ -9,12 +9,15 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Tag } from "@/components/ui/Tag";
 import { Service } from "@/content/services";
+import { PhysicsPills } from "@/components/ui/PhysicsPills";
+import { useContactForm } from "@/context/ContactFormContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export const AboutServicesList = ({ data }: { data: Service[] }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [activeIndex, setActiveIndex] = useState(0);
+    const { openContactForm } = useContactForm();
 
     useGSAP(() => {
         if (!containerRef.current) return;
@@ -44,8 +47,7 @@ export const AboutServicesList = ({ data }: { data: Service[] }) => {
 
     return (
         <section ref={containerRef} className="w-full py-48 md:py-64 text-white relative z-10 mb-32 md:mb-48">
-            <div className="max-w-[1440px] mx-auto px-16 md:px-64">
-                {/* Mega Title */}
+            <div className="max-w-[1400px] mx-auto px-16 md:px-64">
                 <h2 className="font-mega text-mega-h2 uppercase mb-32 md:mb-48 text-brand flex flex-wrap gap-x-[0.2em]">
                     {["OUR", "CAPABILITIES"].map((word, i) => (
                         <span key={i} className="inline-block overflow-hidden">
@@ -56,12 +58,11 @@ export const AboutServicesList = ({ data }: { data: Service[] }) => {
                     ))}
                 </h2>
 
-                {/* Navigation Tabs & Content Grid */}
                 {/* Desktop Layout */}
-                <div className="hidden lg:grid grid-cols-12 gap-48">
+                <div className="hidden lg:flex items-start gap-48">
 
-                    {/* Left Column: Navigation Tabs - Sticky in vertical middle */}
-                    <div className="col-span-4 flex flex-col gap-8 items-start sticky top-[20vh] self-start">
+                    {/* Left Column: Navigation Tabs — fixed width, sticky */}
+                    <div className="w-[360px] shrink-0 flex flex-col gap-8 items-start sticky top-[20vh] self-start">
                         {data.map((service, index) => (
                             <button
                                 key={service.id}
@@ -79,8 +80,8 @@ export const AboutServicesList = ({ data }: { data: Service[] }) => {
                         ))}
                     </div>
 
-                    {/* Right Column: Content Preview */}
-                    <div className="col-span-8 flex flex-col gap-16 relative min-h-[600px]">
+                    {/* Right Column: Physics — flex-1 takes all remaining space */}
+                    <div className="flex-1 min-w-0 relative min-h-[600px]">
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={activeIndex}
@@ -88,33 +89,20 @@ export const AboutServicesList = ({ data }: { data: Service[] }) => {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ duration: 0.3 }}
-                                className="flex flex-col gap-32 w-full"
+                                className="w-full"
                             >
-                                {/* Image Container */}
-                                <div className="relative w-full aspect-[16/10] md:h-[500px] bg-white/5 rounded-2xl overflow-hidden border border-white/10">
-                                    <Image
-                                        src={data[activeIndex].image}
-                                        alt={data[activeIndex].label}
-                                        fill
-                                        className="object-cover opacity-80"
-                                    />
-                                    <div className="absolute inset-0 bg-brand/10 mix-blend-overlay" />
-                                </div>
-
-                                <div className="flex flex-col gap-32">
-                                    {/* Tags Row - Using Tag component from design system */}
-                                    <div className="flex flex-wrap gap-8">
-                                        {data[activeIndex].tags.map((tag) => (
-                                            <Tag key={tag} variant="default">
-                                                {tag}
-                                            </Tag>
-                                        ))}
+                                {/* Physics Container — description lives inside at top */}
+                                <div className="relative w-full h-[625px] rounded-2xl overflow-hidden">
+                                    {/* Description overlay — top-left, 64px padding, full width, white */}
+                                    <div className="absolute top-0 left-0 z-20 p-[64px] w-full pointer-events-none">
+                                        <p className="font-text text-text-lg text-white opacity-90 leading-relaxed w-full">
+                                            {data[activeIndex].description}
+                                        </p>
                                     </div>
-
-                                    {/* Description - Using text-text-lg from design system */}
-                                    <p className="font-text text-text-lg opacity-80 max-w-3xl">
-                                        {data[activeIndex].description}
-                                    </p>
+                                    <PhysicsPills
+                                        tags={data[activeIndex].tags}
+                                        onTagClick={openContactForm}
+                                    />
                                 </div>
                             </motion.div>
                         </AnimatePresence>
@@ -151,24 +139,18 @@ export const AboutServicesList = ({ data }: { data: Service[] }) => {
                                     isActive ? "max-h-[800px] opacity-100 pb-8" : "max-h-0 opacity-0"
                                 )}>
                                     <div className="flex flex-col gap-6">
-                                        <div className="relative w-full aspect-video bg-white/5 rounded-lg overflow-hidden">
-                                            <Image
-                                                src={service.image}
-                                                alt={service.label}
-                                                fill
-                                                className="object-cover opacity-80"
+                                        {/* Physics Container — description at top */}
+                                        <div className="relative w-full aspect-[16/10] md:h-[375px] rounded-lg overflow-hidden">
+                                            <div className="absolute top-0 left-0 z-20 p-[32px] pointer-events-none">
+                                                <p className="font-text text-sm text-white opacity-90 leading-relaxed">
+                                                    {service.description}
+                                                </p>
+                                            </div>
+                                            <PhysicsPills
+                                                tags={service.tags}
+                                                onTagClick={openContactForm}
                                             />
                                         </div>
-                                        <div className="flex flex-wrap gap-2">
-                                            {service.tags.map((tag) => (
-                                                <Tag key={tag} variant="default" className="text-xs">
-                                                    {tag}
-                                                </Tag>
-                                            ))}
-                                        </div>
-                                        <p className="font-text text-base text-white/80">
-                                            {service.description}
-                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -177,5 +159,6 @@ export const AboutServicesList = ({ data }: { data: Service[] }) => {
                 </div>
             </div>
         </section>
+
     );
 }

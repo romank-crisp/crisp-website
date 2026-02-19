@@ -14,6 +14,9 @@ const TEAM_IMAGES = [
     "/img/teampic/teampic-03.jpg",
     "/img/teampic/teampic-04.jpg",
     "/img/teampic/teampic-05.jpg",
+    "/img/teampic/teampic-06.jpg",
+    "/img/teampic/teampic-07.jpg",
+    "/img/teampic/teampic-08.jpg",
 ];
 
 const WIDTHS = [

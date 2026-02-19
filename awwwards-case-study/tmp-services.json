@@ -1,0 +1,56 @@
+[
+  {
+    "id": "visual-design",
+    "label": "Branding",
+    "image": "/img/imgcases/folkeuniversitetet/fu-case-01.png",
+    "tags": [
+      "Brand Identity",
+      "Logo",
+      "Design Systems",
+      "Visual Guidelines",
+      "Typography",
+      "Color Palette",
+      "Brand Strategy",
+      "Art Direction",
+      "Packaging Design",
+      "Brand Positioning"
+    ],
+    "description": "We build visual identity that tells your story and connects with your audience. Brand identity, logo and design systems — every detail considered to make your brand recognizable and ready to scale."
+  },
+  {
+    "id": "websites",
+    "label": "Web Development",
+    "image": "/img/imgcases/theytalk/tt-case-01.png",
+    "tags": [
+      "Custom Development",
+      "Webflow",
+      "Performance",
+      "React / Next.js",
+      "E-Commerce",
+      "Headless CMS",
+      "API Integrations",
+      "SEO Optimization",
+      "Web Animations",
+      "Technical Planning"
+    ],
+    "description": "Websites that load fast, rank well and convert. Designed and built around what your business actually needs. Modern technologies that give you full control and room to grow."
+  },
+  {
+    "id": "content-design",
+    "label": "Content Creation",
+    "image": "/img/imgcases/folkeuniversitetet/fu-case-02.png",
+    "tags": [
+      "Product Visuals",
+      "Social Media",
+      "Storytelling",
+      "Video",
+      "Copywriting",
+      "Motion Graphics",
+      "Photography",
+      "3D Illustration",
+      "Content Strategy",
+      "Campaign Assets"
+    ],
+    "description": "We help you define your voice and structure your content strategy. Product visuals, video, website content and social media. All produced for your business to drive action."
+  }
+]

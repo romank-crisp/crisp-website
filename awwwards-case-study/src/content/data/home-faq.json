@@ -1,0 +1,13 @@
+{
+    "title": "Frequent Questions",
+    "items": [
+        {
+            "question": "What services do you offer?",
+            "answer": "We offer a full range of digital services including strategy, design, and development."
+        },
+        {
+            "question": "How long does a project take?",
+            "answer": "Project timelines vary depending on scope, but typically range from 4-12 weeks."
+        }
+    ]
+}
