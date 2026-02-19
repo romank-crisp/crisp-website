@@ -17,7 +17,7 @@ interface WhereWeCanHelpProps {
     data: WhereWeCanHelpData;
 }
 
-export function WhereWeCanHelp({ data }: WhereWeCanHelpProps) {
+export function HomeWhereWeCanHelp({ data }: WhereWeCanHelpProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const lottieContainerRef = useRef<HTMLDivElement>(null);
     const ctaLottieRef = useRef<HTMLDivElement>(null);
@@ -28,20 +28,7 @@ export function WhereWeCanHelp({ data }: WhereWeCanHelpProps) {
     useEffect(() => {
         if (!lottieContainerRef.current) return;
 
-        // Determine which JSON to use based on brand color
-        const getBrandColorJson = () => {
-            const brandColor = getComputedStyle(document.documentElement)
-                .getPropertyValue('--color-brand')
-                .trim();
-
-            // Convert RGB values to hex for comparison
-            const rgbValues = brandColor.split(' ').map(v => parseInt(v));
-            const isRedBrand = rgbValues[0] === 224 && rgbValues[1] === 12 && rgbValues[2] === 51; // #E00C33
-
-            return isRedBrand ? '/img/home/home-1-brand1.json' : '/img/home/home-1-brand2.json';
-        };
-
-        const jsonPath = getBrandColorJson();
+        const jsonPath = "/img/home/home-1.json";
 
         // Load and initialize Lottie animation
         fetch(jsonPath)
@@ -212,7 +199,7 @@ export function WhereWeCanHelp({ data }: WhereWeCanHelpProps) {
             <div className="sticky top-0 h-screen overflow-hidden pointer-events-none z-0">
                 <div className="absolute inset-0 flex items-center justify-center">
                     {/* Removed mix-blend-screen to ensure clean layering */}
-                    <div className="scale-[1.5] w-[600px] h-[600px] transform-gpu opacity-50 md:opacity-100">
+                    <div className="scale-[1.8] w-[600px] h-[600px] transform-gpu opacity-50 md:opacity-100">
                         <div ref={lottieContainerRef} className="w-full h-full" />
                     </div>
                 </div>

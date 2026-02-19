@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Staatliches, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/layouts/SmoothScroll";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 import { Footer } from "@/components/layouts/Footer";
+import { CookieConsent } from "@/components/ui/CookieConsent";
 
 const staatliches = Staatliches({
   weight: "400",
@@ -49,10 +51,31 @@ export default async function RootLayout({
       <body
         className="antialiased bg-white text-black"
       >
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-4376JFKLDT"
+          strategy="lazyOnload"
+        />
+        <Script id="google-analytics" strategy="lazyOnload">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            
+            // Default consent to denied
+            gtag('consent', 'default', {
+              'ad_storage': 'denied',
+              'analytics_storage': 'denied'
+            });
+
+            gtag('js', new Date());
+
+            gtag('config', 'G-4376JFKLDT');
+          `}
+        </Script>
         <GlobalLayout footerData={footerData} navigationData={navigationData}>
           {children}
+          <CookieConsent />
         </GlobalLayout>
       </body>
-    </html >
+    </html>
   );
 }

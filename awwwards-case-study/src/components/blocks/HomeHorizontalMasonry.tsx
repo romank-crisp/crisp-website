@@ -29,7 +29,7 @@ interface HorizontalMasonryProps {
     className?: string;
 }
 
-export function HorizontalMasonry({ columns, className }: HorizontalMasonryProps) {
+export function HomeHorizontalMasonry({ columns, className }: HorizontalMasonryProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const stickyRef = useRef<HTMLDivElement>(null);
     const trackRef = useRef<HTMLDivElement>(null);

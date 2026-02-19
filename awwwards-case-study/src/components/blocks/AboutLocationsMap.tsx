@@ -5,11 +5,17 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { clsx } from "clsx";
 
-import { Location } from "@/content/locations";
+import { LocationData } from "@/content/locations";
 
-export const AboutLocationsMap = ({ data }: { data: Location[] }) => {
+export const AboutLocationsMap = ({ data }: { data: LocationData }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
+
+    // Default fallback in case data is structure is old/missing
+    const locations = data?.locations || [];
+    const headingFirstLine = data?.heading?.firstLine || ["Based", "in", "EU."];
+    const headingSecondLine = data?.heading?.secondLine || ["Deliver", "Globally"];
+    const description = data?.description || "Remote design studio building brands, products and websites that teams can ship.";
 
     useGSAP(() => {
         if (!containerRef.current) return;
@@ -78,7 +84,7 @@ export const AboutLocationsMap = ({ data }: { data: Location[] }) => {
             });
         }, "-=0.5");
 
-        // Text Mask Animation for "Based in EU. Deliver Globally"
+        // Text Mask Animation for Title
         const textElements = containerRef.current.querySelectorAll(".map-title-word");
 
         if (textElements.length > 0) {
@@ -137,7 +143,7 @@ export const AboutLocationsMap = ({ data }: { data: Location[] }) => {
                 {/* Mega Title */}
                 <h2 className="font-mega text-mega-h2 uppercase mb-16 md:mb-32 flex flex-col gap-2">
                     <span className="flex flex-wrap gap-x-[0.2em] text-white">
-                        {["Based", "in", "EU."].map((word, i) => (
+                        {headingFirstLine.map((word, i) => (
                             <span key={i} className="inline-block overflow-hidden">
                                 <span className="map-title-word inline-block translate-y-[110%] opacity-0">
                                     {word}
@@ -146,7 +152,7 @@ export const AboutLocationsMap = ({ data }: { data: Location[] }) => {
                         ))}
                     </span>
                     <span className="flex flex-wrap gap-x-[0.2em] text-brand">
-                        {["Deliver", "Globally"].map((word, i) => (
+                        {headingSecondLine.map((word, i) => (
                             <span key={i} className="inline-block overflow-hidden">
                                 <span className="map-title-word inline-block translate-y-[110%] opacity-0">
                                     {word}
@@ -158,7 +164,7 @@ export const AboutLocationsMap = ({ data }: { data: Location[] }) => {
 
                 {/* Description Text */}
                 <p className="font-text text-text-lg text-white/60 w-full md:max-w-[40%] mb-16 md:mb-24 leading-relaxed">
-                    Remote design studio building brands, products and websites that teams can ship.
+                    {description}
                 </p>
             </div>
 
@@ -170,8 +176,8 @@ export const AboutLocationsMap = ({ data }: { data: Location[] }) => {
                     className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible"
                 >
                     {CONNECTIONS.map(([start, end], i) => {
-                        const s = data.find(l => l.label === start);
-                        const e = data.find(l => l.label === end);
+                        const s = locations.find(l => l.label === start);
+                        const e = locations.find(l => l.label === end);
                         const isActive = hoveredCountry === start || hoveredCountry === end;
 
                         if (s && e) {
@@ -198,7 +204,7 @@ export const AboutLocationsMap = ({ data }: { data: Location[] }) => {
 
                 {/* Locations Layer */}
                 {/* Locations Layer */}
-                {data.map((loc) => {
+                {locations.map((loc) => {
                     const isActive = hoveredCountry === loc.label;
 
                     return (

@@ -1,5 +1,13 @@
-export interface LocationCity {
-    name: string;
+
+
+
+export interface LocationData {
+    locations: Location[];
+    heading: {
+        firstLine: string[]; // ["Based", "in", "EU."]
+        secondLine: string[]; // ["Deliver", "Globally"]
+    };
+    description: string;
 }
 
 export interface Location {

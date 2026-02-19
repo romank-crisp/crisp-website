@@ -1,4 +1,4 @@
-import { WhereWeCanHelp } from "@/components/blocks/WhereWeCanHelp";
+import { HomeWhereWeCanHelp as WhereWeCanHelp } from "@/components/blocks/HomeWhereWeCanHelp";
 import { readContent } from "@/lib/content";
 
 export default async function TestWhereWeCanHelpPage() {

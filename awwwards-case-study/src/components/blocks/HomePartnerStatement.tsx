@@ -14,7 +14,7 @@ interface PartnerStatementProps {
     data: PartnerStatementData;
 }
 
-export function PartnerStatement({ data }: PartnerStatementProps) {
+export function HomePartnerStatement({ data }: PartnerStatementProps) {
     const containerRef = useRef<HTMLElement>(null);
     const headingRef = useRef<HTMLHeadingElement>(null);
 

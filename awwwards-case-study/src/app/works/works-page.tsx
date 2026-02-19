@@ -1,5 +1,6 @@
 "use client";
 
+import { WorksData, WorksPageContent } from "@/types/work";
 import { WorkCard } from "@/components/ui/WorkCard";
 import { SharedClientLogos } from "@/components/blocks/SharedClientLogos";
 import { useBrand } from "@/context/BrandContext";
@@ -8,10 +9,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ClientLogo } from "@/content/clients";
 
 // Animated Works Heading Component
-function AnimatedWorksHeading() {
+function AnimatedWorksHeading({ phrases, staticText }: { phrases: string[], staticText: string }) {
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    const dynamicPhrases = [
+    const dynamicPhrases = phrases.length > 0 ? phrases : [
         "brands that scale.",
         "websites that convert.",
         "robust design systems.",
@@ -25,7 +26,7 @@ function AnimatedWorksHeading() {
         }, 3000); // Slower interval for better readability (2s -> 3s)
 
         return () => clearInterval(interval);
-    }, []);
+    }, [dynamicPhrases]);
 
     const wordVariants = {
         initial: { y: "110%", opacity: 0 },
@@ -86,43 +87,27 @@ function AnimatedWorksHeading() {
                     </motion.span>
                 </AnimatePresence>
             </span>
-            <span className="text-brand">delivered.</span>
+            <span className="text-brand">{staticText || "delivered."}</span>
         </h1>
     );
 }
 
-
-const WORKS = [
-    {
-        title: "Folkeuniversitetet",
-        tags: ["Branding", "Communication Materials", "Web Design"],
-        image: "/img/imgcases/folkeuniversitetet/fu-case-01.png",
-        video: "/img/imgcases/folkeuniversitetet/fu-showreel.webm",
-        poster: "/img/imgcases/folkeuniversitetet/fu-case-01.png",
-        href: "/works/folkeuniversitetet"
-    },
-    {
-        title: "CentroGreen",
-        tags: ["Visual Identity", "Web Design", "Animation"],
-        image: "/img/imgcases/centrogreen/cg-image-01.jpg",
-        video: "/img/imgcases/centrogreen/centrogreen-reel.webm",
-        poster: "/img/imgcases/centrogreen/cg-image-01.jpg",
-        href: "/works/centrogreen"
-    },
-    {
-        title: "TheyTalk",
-        tags: ["Platform", "Web Design", "Development"],
-        image: "/img/imgcases/theytalk/theytalk-01.png",
-        video: "/img/imgcases/theytalk/theytalk-full.webm",
-        poster: "/img/imgcases/theytalk/theytalk-01.png",
-        href: "/works/theytalk"
-    }
-];
-
-
-
-export function WorksPage({ clientsData }: { clientsData: ClientLogo[] }) {
+export function WorksPage({ clientsData, worksData, content }: { clientsData: ClientLogo[], worksData: WorksData, content?: WorksPageContent }) {
     const { brand } = useBrand();
+
+    // Use passed data or empty array to prevent crashes
+    const works = worksData || [];
+
+    // Fallbacks
+    const phrases = content?.heading?.phrases || [];
+    const staticText = content?.heading?.staticText || "delivered.";
+    const title = content?.subheading?.title || "Our Works";
+    const subItems = content?.subheading?.items || [
+        "Visual Design",
+        "Websites",
+        "User Experience",
+        "Content Design"
+    ];
 
     return (
         <main className="min-h-screen bg-white pt-[15vh] pb-32">
@@ -131,17 +116,16 @@ export function WorksPage({ clientsData }: { clientsData: ClientLogo[] }) {
                 <section className="mb-[15vh] grid grid-cols-1 md:grid-cols-12 gap-y-12 md:gap-x-8 items-center">
                     <div className="md:col-span-8">
                         <h4 className="font-heading text-sm font-bold uppercase tracking-widest mb-4 text-gray-500">
-                            Our Works
+                            {title}
                         </h4>
-                        <AnimatedWorksHeading />
+                        <AnimatedWorksHeading phrases={phrases} staticText={staticText} />
                     </div>
 
                     <div className="md:col-span-2 md:col-start-11 flex md:justify-end md:-translate-x-[10vw] transform">
                         <div className="font-text text-xl md:text-2xl leading-relaxed text-gray-400">
-                            <p>Visual Design</p>
-                            <p>Websites</p>
-                            <p>User Experience</p>
-                            <p>Content Design</p>
+                            {subItems.map((item, i) => (
+                                <p key={i}>{item}</p>
+                            ))}
                         </div>
                     </div>
                 </section>
@@ -150,7 +134,7 @@ export function WorksPage({ clientsData }: { clientsData: ClientLogo[] }) {
                 <section className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 mb-20 md:mb-32">
                     {/* Card 1: Folkeuniversitetet - 6 columns */}
                     <div className="md:col-span-6">
-                        <WorkCard {...WORKS[0]} />
+                        {works[0] && <WorkCard {...works[0]} />}
                     </div>
 
                     {/* Card 2: TheyTalk - 5 columns in 8-12 range with spinner on left */}
@@ -166,20 +150,23 @@ export function WorksPage({ clientsData }: { clientsData: ClientLogo[] }) {
                                 />
                             </div>
                             {/* Card */}
-                            <WorkCard {...WORKS[2]} />
+                            {works[2] && <WorkCard {...works[2]} />}
                         </div>
                     </div>
 
                     {/* Card 3: CentroGreen - Full width with max height 75vh */}
                     <div className="md:col-span-12 max-h-[75vh]">
-                        <WorkCard
-                            {...WORKS[1]}
-                            className="h-[75vh]"
-                        />
+                        {works[1] && (
+                            <WorkCard
+                                {...works[1]}
+                                className="h-[75vh]"
+                            />
+                        )}
                     </div>
                 </section>
 
             </div >
+
 
 
             {/* Client Logos */}

@@ -38,6 +38,15 @@ const MENU_GROUPS = [
                     { id: "clients", label: "Clients" },
                     { id: "team", label: "Team" },
                 ]
+            },
+            {
+                id: "works-group",
+                label: "Works Page",
+                icon: FileText,
+                children: [
+                    { id: "works", label: "Works List" },
+                    { id: "works-content", label: "Page Content" },
+                ]
             }
         ]
     },

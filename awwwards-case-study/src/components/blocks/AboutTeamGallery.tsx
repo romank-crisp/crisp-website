@@ -17,11 +17,11 @@ const TEAM_IMAGES = [
 ];
 
 const WIDTHS = [
-    "w-[280px] md:w-[380px]",
-    "w-[340px] md:w-[440px]",
-    "w-[300px] md:w-[400px]",
-    "w-[320px] md:w-[420px]",
-    "w-[260px] md:w-[360px]",
+    "w-[420px] md:w-[570px]",
+    "w-[510px] md:w-[660px]",
+    "w-[450px] md:w-[600px]",
+    "w-[480px] md:w-[630px]",
+    "w-[390px] md:w-[540px]",
 ];
 
 export const AboutTeamGallery = () => {
@@ -107,14 +107,14 @@ export const AboutTeamGallery = () => {
                     {galleryImages.map((src, index) => (
                         <div
                             key={index}
-                            className={`relative ${WIDTHS[index % WIDTHS.length]} h-[350px] md:h-[450px] flex-shrink-0 rounded-[8px] overflow-hidden transition-all duration-500 ease-out group-hover:opacity-30 hover:!opacity-100 hover:scale-125 hover:z-10`}
+                            className={`relative ${WIDTHS[index % WIDTHS.length]} h-[525px] md:h-[675px] flex-shrink-0 rounded-[8px] overflow-hidden transition-all duration-500 ease-out group-hover:opacity-30 hover:!opacity-100 hover:scale-125 hover:z-10`}
                         >
                             <Image
                                 src={src}
                                 alt={`Team member ${index + 1}`}
                                 fill
                                 className="object-cover"
-                                sizes="(max-width: 768px) 300px, 400px"
+                                sizes="(max-width: 768px) 510px, 660px"
                             />
                             {/* Optional overlay for better integration with dark bg */}
                             <div className="absolute inset-0 bg-black/10" />

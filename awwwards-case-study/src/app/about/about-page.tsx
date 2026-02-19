@@ -16,7 +16,7 @@ import { AboutTeamGallery } from "@/components/blocks/AboutTeamGallery";
 
 import { AboutHeroData } from "@/content/about";
 import { ClientLogo } from "@/content/clients";
-import { Location } from "@/content/locations";
+import { LocationData } from "@/content/locations";
 import { Service } from "@/content/services";
 import { TeamMember } from "@/content/team";
 
@@ -25,7 +25,7 @@ gsap.registerPlugin(ScrollTrigger);
 interface AboutPageProps {
     aboutData: AboutHeroData;
     clientsData: ClientLogo[];
-    locationsData: Location[];
+    locationsData: LocationData;
     servicesData: Service[];
     teamData: TeamMember[];
 }

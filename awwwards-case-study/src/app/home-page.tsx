@@ -10,9 +10,9 @@ import { SharedStatsBlock } from "@/components/blocks/SharedStatsBlock";
 import { SharedTestimonials } from "@/components/blocks/SharedTestimonials";
 import { SharedClientLogos } from "@/components/blocks/SharedClientLogos";
 import { SharedVideoScrollingCTA } from "@/components/blocks/SharedVideoScrollingCTA";
-import { HorizontalMasonry, MasonryColumn } from "@/components/blocks/HorizontalMasonry";
-import { WhereWeCanHelp } from "@/components/blocks/WhereWeCanHelp";
-import { PartnerStatement } from "@/components/blocks/PartnerStatement";
+import { HomeHorizontalMasonry, MasonryColumn } from "@/components/blocks/HomeHorizontalMasonry";
+import { HomeWhereWeCanHelp } from "@/components/blocks/HomeWhereWeCanHelp";
+import { HomePartnerStatement } from "@/components/blocks/HomePartnerStatement";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import {
@@ -340,7 +340,7 @@ export default function Home({
   return (
     <main ref={mainRef} className="min-h-screen bg-white pb-32 md:pb-0">
       {/* Horizontal Masonry Block */}
-      <HorizontalMasonry columns={masonryColumns} />
+      <HomeHorizontalMasonry columns={masonryColumns} />
 
       {/* Quote */}
       <div ref={quoteRef} className="relative z-10">
@@ -351,10 +351,10 @@ export default function Home({
       </div>
 
       {/* Where We Can Help */}
-      <WhereWeCanHelp data={servicesData} />
+      <HomeWhereWeCanHelp data={servicesData} />
 
       {/* Partner Statement */}
-      <PartnerStatement data={partnerData} />
+      <HomePartnerStatement data={partnerData} />
 
       {/* Client Logos */}
       <SharedClientLogos data={clientsData.clients} />
