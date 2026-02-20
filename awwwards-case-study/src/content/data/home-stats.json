@@ -1,16 +1,20 @@
 {
-    "stats": [
-        {
-            "value": "10+",
-            "label": "Years Experience"
-        },
-        {
-            "value": "50+",
-            "label": "Projects Delivered"
-        },
-        {
-            "value": "20+",
-            "label": "Awards Won"
-        }
-    ]
+  "stats": [
+    {
+      "value": "10+",
+      "label": "Years of Experience"
+    },
+    {
+      "value": "50+",
+      "label": "Projects Included"
+    },
+    {
+      "value": "5",
+      "label": "Awwwards Won"
+    },
+    {
+      "value": "100%",
+      "label": "Client Satisfaction"
+    }
+  ]
 }

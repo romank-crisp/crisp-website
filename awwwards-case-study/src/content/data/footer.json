@@ -1,45 +1,69 @@
 {
-    "columns": [
+  "columns": [
+    {
+      "links": [
         {
-            "links": [
-                {
-                    "label": "Work",
-                    "path": "/work"
-                },
-                {
-                    "label": "Services",
-                    "path": "/services"
-                },
-                {
-                    "label": "Agency",
-                    "path": "/agency"
-                },
-                {
-                    "label": "Contact",
-                    "path": "/contact"
-                }
-            ]
+          "label": "HOME",
+          "path": "/"
         },
         {
-            "links": [
-                {
-                    "label": "Instagram",
-                    "path": "https://instagram.com"
-                },
-                {
-                    "label": "LinkedIn",
-                    "path": "https://linkedin.com"
-                },
-                {
-                    "label": "Twitter",
-                    "path": "https://twitter.com"
-                }
-            ]
+          "label": "WORKS",
+          "path": "/works"
+        },
+        {
+          "label": "ABOUT",
+          "path": "/about"
         }
-    ],
-    "copyright": "© {year} Crisp Studio. All rights reserved.",
-    "bottomCta": {
-        "label": "Start a project",
-        "path": "/contact"
+      ]
+    },
+    {
+      "links": [
+        {
+          "label": "LINKED IN",
+          "path": "https://linkedin.com"
+        },
+        {
+          "label": "DRIBBLE",
+          "path": "https://dribbble.com"
+        },
+        {
+          "label": "BEHANCE",
+          "path": "https://behance.net"
+        }
+      ]
+    },
+    {
+      "links": [
+        {
+          "label": "PRIVACY POLICY",
+          "path": "/privacy"
+        },
+        {
+          "label": "DESIGN SYSTEM",
+          "path": "/design-system"
+        }
+      ]
+    },
+    {
+      "links": [
+        {
+          "label": "CALL US",
+          "path": "tel:+123456789"
+        },
+        {
+          "label": "BOOK A MEETING",
+          "path": "/contact"
+        },
+        {
+          "label": "WRITE US",
+          "path": "mailto:hello@crisp.studio"
+        }
+      ]
     }
+  ],
+  "copyright": "©{year} CRISP STUDIO. ALL RIGHTS RESERVED.",
+  "bottomCta": {
+    "label": "NEW BUSINESS INQUIRES CLICK HERE",
+    "path": "/contact"
+  }
 }
