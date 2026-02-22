@@ -75,6 +75,7 @@ export function InfiniteScrollPane({ data }: InfiniteScrollPaneProps) {
                     src: incomingItem.src !== undefined ? incomingItem.src : item.src,
                     text: incomingItem.text !== undefined ? incomingItem.text : item.text,
                     color: incomingItem.color !== undefined ? incomingItem.color : item.color,
+                    label: incomingItem.label !== undefined ? incomingItem.label : item.label,
                 };
             })
         );
