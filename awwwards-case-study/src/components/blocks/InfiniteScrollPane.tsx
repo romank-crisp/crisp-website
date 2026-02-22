@@ -185,7 +185,7 @@ export function InfiniteScrollPane({ data = ROWS_DATA }: InfiniteScrollPaneProps
                             return (
                                 <div
                                     key={idx}
-                                    className={`shrink-0 flex items-center justify-center overflow-hidden relative ${isPlaceholder ? '' : `rounded-[2rem] shadow-sm ${isText ? 'bg-brand' : colorClass}`}`}
+                                    className={`shrink-0 flex items-center justify-center overflow-hidden relative ${isPlaceholder ? '' : `rounded-[var(--corner-large)] shadow-sm ${isText ? 'bg-brand' : colorClass}`}`}
                                     style={{
                                         width: item.width,
                                         height: item.height,
