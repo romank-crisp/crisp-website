@@ -23,7 +23,7 @@ async function run() {
         const newData = {
             ...currentData,
             infiniteScroll: [
-                { type: "image", src: "/img/workspane/pane-01.mp4" },
+                { type: "image", src: "/img/workspane/pane-01.mp4", width: 800, height: 500, label: "Website Interactions Design" },
                 {
                     type: "text",
                     text: "One dedicated team for copy, design, and marketing. Consistent monthly output with zero management overhead."
@@ -32,17 +32,17 @@ async function run() {
                 { type: "image", src: "/img/workspane/pane-04.webm", label: "Animation Reel" },
                 { type: "image", src: "/img/workspane/pane03.mp4" },
                 { type: "image", src: "/img/workspane/pane-01.mp4" },
-                { type: "image", color: "bg-gray-100", label: "Pending Upload" }, // Placeholder with a background color and label
+                { type: "image", color: "bg-gray-100", label: "Pending Upload", width: 600, height: 400 }, // Placeholder with override
                 { type: "image", src: "/img/workspane/pane-04.webm" },
                 { type: "image", src: "/img/workspane/pane03.mp4" },
                 { type: "image", src: "/img/workspane/pane-01.mp4" },
-                { type: "image", src: "/img/workspane/pane-02.jpg", color: "#F0EFEF" }, // HEX background support
+                { type: "image", src: "/img/workspane/pane-02.jpg", color: "#F0EFEF" },
                 {
                     type: "text",
                     text: "Fixed monthly scope. You define the goals; we handle end-to-end execution for a consistent, multi-channel presence."
                 },
                 { type: "image", src: "/img/workspane/pane-04.webm" },
-                { type: "image", color: "bg-brand", label: "Branding" }, // Placeholder with the brand color and label
+                { type: "image", color: "bg-brand", label: "Branding" },
                 { type: "image", src: "/img/workspane/pane-01.mp4" },
                 { type: "image", src: "/img/workspane/pane-02.jpg" },
                 {
