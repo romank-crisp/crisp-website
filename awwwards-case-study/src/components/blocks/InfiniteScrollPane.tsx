@@ -257,7 +257,7 @@ export function InfiniteScrollPane({ data }: InfiniteScrollPaneProps) {
                                         </div>
                                     )}
                                     <span className="absolute bottom-6 right-6 font-mono text-sm tracking-widest font-bold text-white bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full z-10">
-                                        {item.width}x{item.height}
+                                        {item.label || `${item.width}x${item.height}`}
                                     </span>
                                 </div>
                             );
