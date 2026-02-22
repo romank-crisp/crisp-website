@@ -256,9 +256,11 @@ export function InfiniteScrollPane({ data }: InfiniteScrollPaneProps) {
                                             <p className="font-text text-text-lg text-white">{item.text}</p>
                                         </div>
                                     )}
-                                    <span className="absolute bottom-6 right-6 font-heading text-sm font-bold uppercase tracking-wider text-white bg-black/40 backdrop-blur-sm px-[16px] py-2 rounded-full z-10">
-                                        {item.label || `${item.width}x${item.height}`}
-                                    </span>
+                                    {!isText && (
+                                        <span className="absolute bottom-6 right-6 font-heading text-sm font-bold uppercase tracking-wider text-white bg-black/40 backdrop-blur-sm px-[16px] py-2 rounded-full z-10">
+                                            {item.label || `${item.width}x${item.height}`}
+                                        </span>
+                                    )}
                                 </div>
                             );
                         })}
