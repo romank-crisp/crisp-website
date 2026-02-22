@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 
 import { Testimonial } from "@/types/home";
+import { tokenizeText } from "@/components/ui/TextFormatter";
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
@@ -122,23 +123,32 @@ export const SharedTestimonials = ({
                         className="font-heading text-h1 leading-[1.1] font-medium tracking-tight word-wrapper flex flex-wrap gap-x-[0.2em] gap-y-[0.1em]"
                     >
                         {(() => {
-                            const parts = currentTestimonial.quote.split(/({.*?})/);
-                            return parts.map((part, i) => {
-                                if (part.startsWith('{') && part.endsWith('}')) {
-                                    // Highlighted content
-                                    const content = part.slice(1, -1);
-                                    const words = content.split(" ");
-                                    return words.map((word, wI) => (
-                                        <span key={`${currentIndex}-h-${i}-${wI}`} className="inline-block is-highlighted perspective-1000 will-change-transform">
-                                            {word}&nbsp;
+                            const tokens = tokenizeText(currentTestimonial.quote);
+                            return tokens.map((token, tIndex) => {
+                                const isHighlighted = token.type !== 'text';
+
+                                let tokenClass = "inline-block perspective-1000 will-change-transform";
+                                if (isHighlighted) {
+                                    tokenClass += " is-highlighted";
+                                }
+
+                                if (token.type === 'dark-gradient') tokenClass += " italic font-serif animate-gradient-text-dark px-1";
+                                else if (token.type === 'light-gradient') tokenClass += " italic font-serif animate-gradient-text px-1";
+                                else if (token.type === 'italic') tokenClass += " italic font-serif text-text px-1";
+
+                                if (isHighlighted) {
+                                    // Treat the whole highlighted phrase as a single block 
+                                    // to ensure the gradient spans the words and it animates synchronously
+                                    return (
+                                        <span key={`${currentIndex}-${tIndex}`} className={tokenClass}>
+                                            {token.content}
                                         </span>
-                                    ));
+                                    );
                                 } else {
-                                    // Regular content
-                                    const words = part.split(" ").filter(w => w.length > 0);
-                                    return words.map((word, wI) => (
-                                        <span key={`${currentIndex}-r-${i}-${wI}`} className="inline-block perspective-1000 will-change-transform">
-                                            {word}&nbsp;
+                                    const words = token.content.split(" ").filter(w => w.length > 0);
+                                    return words.map((word, wIndex) => (
+                                        <span key={`${currentIndex}-${tIndex}-${wIndex}`} className={tokenClass}>
+                                            {word}
                                         </span>
                                     ));
                                 }

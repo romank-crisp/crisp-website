@@ -1,0 +1,12 @@
+{
+  "title": "<title>Privacy Policy — Crisp Design Studio</title>",
+  "metaTags": [
+    "<meta name=\"description\" content=\"Privacy policy for Crisp design studio. Learn how we protect your data.\">",
+    "<meta name=\"robots\" content=\"index, follow\">"
+  ],
+  "openGraph": [
+    "<meta property=\"og:title\" content=\"Privacy Policy — Crisp Design Studio\">",
+    "<meta property=\"og:description\" content=\"Privacy policy for Crisp design studio.\">"
+  ],
+  "canonical": "<link rel=\"canonical\" href=\"https://crisp-studio.com/privacy-policy\">"
+}

@@ -126,6 +126,38 @@
     -webkit-text-stroke: 2px currentColor;
     letter-spacing: 2px;
   }
+
+  .animate-gradient-text {
+    background: linear-gradient(90deg, #ffffff, rgb(var(--color-brand)), #ffffff) !important;
+    background-size: 200% auto !important;
+    color: transparent !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    animation: textGradient 3s linear infinite;
+  }
+
+  .animate-gradient-text-dark {
+    background: linear-gradient(90deg, rgb(var(--color-text)), rgb(var(--color-brand)), rgb(var(--color-text))) !important;
+    background-size: 200% auto !important;
+    color: transparent !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    animation: textGradient 3s linear infinite;
+  }
+}
+
+@keyframes textGradient {
+  0% {
+    background-position: 0% center;
+  }
+
+  100% {
+    background-position: -200% center;
+  }
 }
 
 /* Lenis recommended styles */

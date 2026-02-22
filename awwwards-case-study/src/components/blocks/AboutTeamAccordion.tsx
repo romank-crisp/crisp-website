@@ -169,7 +169,7 @@ export const AboutTeamAccordion = ({ data }: { data: TeamMember[] }) => {
     };
 
     return (
-        <section className="pt-128 pb-64 px-16 md:px-64 bg-white">
+        <section className="pt-128 pb-64 bg-white">
             <div className="max-w-[1440px] w-full mx-auto">
                 <h2 className="font-mega text-mega-h2 mb-64 uppercase text-brand">
                     Meet the Team
@@ -198,11 +198,11 @@ export const AboutTeamAccordion = ({ data }: { data: TeamMember[] }) => {
                                             <span className="font-heading text-2xl md:text-h1 text-left flex-shrink-0" style={{ color: "var(--color-text)" }}>
                                                 {member.name}
                                             </span>
-                                            {member.name === "Iryna Chubur" && (
+                                            {member.inlineLogoUrl && (
                                                 <div className="flex md:hidden items-center">
                                                     <Image
-                                                        src="/img/client-logos/client-logo-03-swissprofessionals-small.svg"
-                                                        alt="Swiss Professionals"
+                                                        src={member.inlineLogoUrl}
+                                                        alt={`${member.name} logo`}
                                                         width={80}
                                                         height={26}
                                                         className="h-6 w-auto object-contain opacity-60 grayscale"
@@ -215,11 +215,11 @@ export const AboutTeamAccordion = ({ data }: { data: TeamMember[] }) => {
                                             {member.position}
                                         </span>
 
-                                        {member.name === "Iryna Chubur" && (
+                                        {member.inlineLogoUrl && (
                                             <div className="hidden md:flex ml-[100px] items-center self-center">
                                                 <Image
-                                                    src="/img/client-logos/client-logo-03-swissprofessionals-small.svg"
-                                                    alt="Swiss Professionals"
+                                                    src={member.inlineLogoUrl}
+                                                    alt={`${member.name} logo`}
                                                     width={120}
                                                     height={40}
                                                     className="h-10 w-auto object-contain opacity-60 grayscale hover:grayscale-0 transition-all duration-300"

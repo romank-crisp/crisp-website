@@ -8,12 +8,13 @@ export interface MasonryCell {
     height: string;
     className: string;
     // We will store the "type" of content here, and render accordingly in the component
-    contentType: 'hero-text' | 'video' | 'distortion-image' | 'lottie' | 'image' | 'empty';
+    contentType: 'hero-text' | 'video' | 'distortion-image' | 'lottie' | 'image' | 'empty' | 'spline';
     contentProps?: {
         src?: string;
         alt?: string;
         lottieSrc?: string;
         videoSrc?: string;
+        splineUrl?: string;
     };
 }
 

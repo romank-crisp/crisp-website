@@ -78,10 +78,9 @@
           "id": "cell-4-1",
           "height": "60vh",
           "className": "bg-text/5 text-text border-r border-b border-black/5 p-0",
-          "contentType": "image",
+          "contentType": "video",
           "contentProps": {
-            "src": "/img/home-hero/home-hero-04-01.png",
-            "alt": "Hero Part 4-1"
+            "videoSrc": "/img/home-hero/home-here-06.webm"
           }
         },
         {

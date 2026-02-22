@@ -1,87 +1,175 @@
 "use client";
 
-import React, { useRef, useState, useEffect, useMemo } from "react";
-import { motion, useMotionValue, useAnimationFrame, wrap } from "framer-motion";
+import React, { useRef, useState, useEffect, useMemo, memo } from "react";
+import { motion, useMotionValue, useAnimationFrame, wrap, useInView } from "framer-motion";
 import { InfiniteScrollItem, InfiniteScrollContentItem } from "@/types/work";
 import Lottie from "lottie-react";
 
-function DynamicLottie({ url }: { url: string }) {
+const DynamicLottie = memo(({ url, isVisible }: { url: string; isVisible: boolean }) => {
     const [data, setData] = useState<any>(null);
+    const lottieRef = useRef<any>(null);
+
     useEffect(() => {
         if (!url) return;
         fetch(url).then(r => r.json()).then(setData).catch(console.error);
     }, [url]);
 
-    if (!data) return null;
-    return <Lottie animationData={data} loop={true} className="w-full h-full" />;
-}
+    useEffect(() => {
+        if (lottieRef.current) {
+            if (isVisible) {
+                lottieRef.current.play();
+            } else {
+                lottieRef.current.pause();
+            }
+        }
+    }, [isVisible]);
 
-const ROWS_DATA: InfiniteScrollItem[][] = [
-    // Row 1 - Height 500
+    if (!data) return null;
+    return (
+        <Lottie
+            lottieRef={lottieRef}
+            animationData={data}
+            loop={true}
+            autoplay={isVisible}
+            className="w-full h-full"
+        />
+    );
+});
+
+DynamicLottie.displayName = "DynamicLottie";
+
+export const ScrollItem = memo(({ item }: { item: InfiniteScrollItem }) => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    // Use a small amount of margin to start playing before it's fully visible
+    const isVisible = useInView(containerRef, { margin: "20% 0px 20% 0px" });
+
+    const isPlaceholder = item.type === "image" && !item.src;
+    const isText = item.type === "text";
+    const hasCustomColor = item.color?.startsWith('#') || item.color?.startsWith('rgb') || item.color?.startsWith('hsl');
+    const colorClass = hasCustomColor ? '' : item.color;
+
+    useEffect(() => {
+        if (videoRef.current) {
+            if (isVisible) {
+                videoRef.current.play().catch(() => {
+                    // Autoplay might be blocked until user interaction
+                });
+            } else {
+                videoRef.current.pause();
+            }
+        }
+    }, [isVisible]);
+
+    return (
+        <div
+            ref={containerRef}
+            id={item.id}
+            className={`shrink-0 flex items-center justify-center overflow-hidden relative ${isPlaceholder ? '' : `rounded-[var(--corner-large)] shadow-sm ${isText ? 'bg-brand' : colorClass}`}`}
+            style={{
+                width: item.width,
+                height: item.height,
+                ...(!isPlaceholder && !isText && hasCustomColor ? { backgroundColor: item.color } : {}),
+                willChange: "transform"
+            }}
+        >
+            {item.type === "image" ? (
+                <>
+                    {item.src ? (
+                        item.src.endsWith('.mp4') || item.src.endsWith('.webm') ? (
+                            <video
+                                ref={videoRef}
+                                src={item.src}
+                                muted
+                                loop
+                                playsInline
+                                preload="metadata"
+                                className="absolute inset-0 w-full h-full object-cover"
+                            />
+                        ) : item.src.endsWith('.json') ? (
+                            <div className="absolute inset-0 w-full h-full flex items-center justify-center p-8">
+                                <DynamicLottie url={item.src} isVisible={isVisible} />
+                            </div>
+                        ) : (
+                            <img
+                                src={item.src}
+                                alt={item.label}
+                                loading="lazy"
+                                className="absolute inset-0 w-full h-full object-cover"
+                            />
+                        )
+                    ) : (
+                        <div className="absolute inset-0 bg-gray-200/50 flex flex-col items-center justify-center">
+                            <span className="font-heading text-sm font-bold uppercase tracking-wider text-gray-400 mb-2">{item.label}</span>
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 opacity-50">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                        </div>
+                    )}
+                </>
+            ) : (
+                <div className="p-32 h-full flex items-center justify-center text-center">
+                    <p className="font-text text-text-lg text-white">{item.text}</p>
+                </div>
+            )}
+            {!isText && (
+                <span className="absolute bottom-6 right-6 font-heading text-sm font-bold uppercase tracking-wider text-white bg-black/40 backdrop-blur-sm px-[16px] py-2 rounded-full z-10">
+                    {item.label || `${item.width}x${item.height}`}
+                </span>
+            )}
+        </div>
+    );
+});
+
+ScrollItem.displayName = "ScrollItem";
+
+export const ROWS_DATA: InfiniteScrollItem[][] = [
+    // Fallback data if no JSON is available or structured correctly
     [
         { id: '1-1', type: "image", width: 800, height: 500, color: "bg-gray-200", label: "image-1", src: "/img/workspane/pane-01-cardblock.mp4" },
-        {
-            id: '1-2', type: "text", width: 700, height: 500, color: "bg-brand", label: "text-1",
-            text: "One dedicated team for copy, design, and marketing. Consistent monthly output with zero management overhead."
-        },
-        { id: '1-3', type: "image", width: 1000, height: 500, color: "bg-gray-300", label: "image-2", src: "/img/workspane/pane-02-melanoma.jpg" },
-        { id: '1-4', type: "image", width: 600, height: 500, color: "bg-gray-200", label: "image-3", src: "/img/workspane/pane-03-lingu.mp4" },
-        { id: '1-5', type: "image", width: 900, height: 500, color: "bg-red-50", label: "image-4", src: "/img/workspane/pane-04-lung.webm" },
-        { id: '1-6', type: "image", width: 800, height: 500, color: "bg-gray-100", label: "image-5", src: "/img/workspane/pane-05-aiflower.webm" },
-    ],
-    // Row 2 - Height 700
-    [
-        { id: '2-1', type: "image", width: 600, height: 700, color: "bg-brand", label: "image-6", src: "/img/workspane/pane-07-discconnector.json" },
-        { id: '2-2', type: "image", width: 1000, height: 700, color: "bg-gray-200", label: "image-7", src: "/img/workspane/pane-06-donut.webm" },
-        { id: '2-3', type: "image", width: 800, height: 700, color: "bg-[#3B1C95]", label: "image-8", src: "/img/workspane/pane-08-route.json" },
-        { id: '2-4', type: "image", width: 700, height: 700, color: "bg-brand/10", label: "image-9", src: "/img/workspane/pane-01-cardblock.mp4" },
-        { id: '2-5', type: "image", width: 800, height: 700, color: "bg-gray-300", label: "image-10" },
-        {
-            id: '2-6', type: "text", width: 900, height: 700, color: "bg-brand", label: "text-2",
-            text: "Fixed monthly scope. You define the goals; we handle end-to-end execution for a consistent, multi-channel presence."
-        },
-    ],
-    // Row 3 - Height 560
-    [
-        { id: '3-1', type: "image", width: 900, height: 560, color: "bg-gray-300", label: "image-11", src: "/img/workspane/pane-04-lung.webm" },
-        { id: '3-2', type: "image", width: 800, height: 560, color: "bg-brand", label: "image-12" },
-        { id: '3-3', type: "image", width: 600, height: 560, color: "bg-gray-200", label: "image-13", src: "/img/workspane/pane-05-aiflower.webm" },
-        { id: '3-4', type: "image", width: 1000, height: 560, color: "bg-gray-100", label: "image-14", src: "/img/workspane/pane-02-melanoma.jpg" },
-        {
-            id: '3-5', type: "text", width: 700, height: 560, color: "bg-brand", label: "text-3",
-            text: "Human expertise scaled by AI. Models accelerate research, while our team protects and refines your brand voice."
-        },
-        { id: '3-6', type: "image", width: 800, height: 560, color: "bg-gray-200", label: "image-16", src: "/img/workspane/pane-03-lingu.mp4" },
+        { id: '1-2', type: "text", width: 700, height: 500, color: "bg-brand", label: "text-1", text: "One dedicated team for copy, design, and marketing. Consistent monthly output with zero management overhead." },
     ]
 ];
 
 interface InfiniteScrollPaneProps {
     data?: InfiniteScrollContentItem[];
+    id?: string;
 }
 
-export function InfiniteScrollPane({ data }: InfiniteScrollPaneProps) {
+export function InfiniteScrollPane({ data, id = "infinite-scroll" }: InfiniteScrollPaneProps) {
     const mappedData = useMemo(() => {
         if (!data || data.length === 0) return ROWS_DATA;
 
-        let dataIndex = 0;
-        return ROWS_DATA.map(row =>
-            row.map(item => {
-                const incomingItem = data[dataIndex % data.length];
-                dataIndex++;
+        // Group the incoming JSON items by their "row" field
+        const rowsMap = new Map<number, any[]>();
 
-                return {
-                    ...item,
-                    type: incomingItem.type || item.type,
-                    src: incomingItem.src !== undefined ? incomingItem.src : item.src,
-                    text: incomingItem.text !== undefined ? incomingItem.text : item.text,
-                    color: incomingItem.color !== undefined ? incomingItem.color : item.color,
-                    label: incomingItem.label !== undefined ? incomingItem.label : item.label,
-                    width: incomingItem.width !== undefined ? incomingItem.width : item.width,
-                    // Height is explicitly omitted to ensure the layout matrix remains stable
-                };
-            })
-        );
+        data.forEach((item) => {
+            const rowNumber = item.row || 1;
+            if (!rowsMap.has(rowNumber)) {
+                rowsMap.set(rowNumber, []);
+            }
+
+            rowsMap.get(rowNumber)!.push({
+                ...item,
+                id: item.id || `item-${Math.random()}`,
+                width: item.width || 600,
+                height: item.height || 500,
+            });
+        });
+
+        // Sort items per row based on "slot"
+        const sortedRows = Array.from(rowsMap.keys()).sort((a, b) => a - b);
+        const mappedRows = sortedRows.map(rowNum => {
+            const items = rowsMap.get(rowNum)!;
+            return items.sort((a, b) => (a.slot || 0) - (b.slot || 0));
+        });
+
+        return mappedRows.length > 0 ? mappedRows : ROWS_DATA;
     }, [data]);
+
     const x = useMotionValue(0);
     const y = useMotionValue(0);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -128,7 +216,7 @@ export function InfiniteScrollPane({ data }: InfiniteScrollPaneProps) {
 
         // Auto-scroll speed
         const autoSpeed = -0.7;
-        const timeScale = delta / 16.666;
+        const timeScale = Math.min(delta / 16.666, 2); // Cap delta to avoid jumps after tab blur
 
         if (!isDragging.current) {
             velocity.current.x *= Math.pow(0.95, timeScale);
@@ -151,8 +239,17 @@ export function InfiniteScrollPane({ data }: InfiniteScrollPaneProps) {
         }
     });
 
+    // Extract layout arrays once to avoid inline mapping during render
+    const fullLayout = useMemo(() => {
+        return Array(copies).fill(mappedData).flat().map((row, rowIdx) => ({
+            id: rowIdx,
+            items: Array(copies).fill(row).flat()
+        }));
+    }, [mappedData, copies]);
+
     return (
         <section
+            id={id}
             className="relative w-full h-[150vh] min-h-[600px] bg-white overflow-hidden flex items-center justify-center select-none"
             onMouseEnter={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
@@ -179,7 +276,7 @@ export function InfiniteScrollPane({ data }: InfiniteScrollPaneProps) {
             <motion.div
                 className="flex flex-col gap-4 md:gap-8 px-4 cursor-grab active:cursor-grabbing w-max items-start"
                 ref={containerRef}
-                style={{ x, y }}
+                style={{ x, y, willChange: "transform" }}
                 onPanStart={() => {
                     isDragging.current = true;
                     velocity.current = { x: 0, y: 0 };
@@ -201,69 +298,12 @@ export function InfiniteScrollPane({ data }: InfiniteScrollPaneProps) {
             >
                 {Array(copies).fill(mappedData).flat().map((row, rowIdx) => (
                     <div key={rowIdx} className="flex gap-4 md:gap-8 flex-nowrap">
-                        {Array(copies).fill(row).flat().map((item, idx) => {
-                            const isPlaceholder = item.type === "image" && !item.src;
-                            const isText = item.type === "text";
-                            const hasCustomColor = item.color?.startsWith('#') || item.color?.startsWith('rgb') || item.color?.startsWith('hsl');
-                            const colorClass = hasCustomColor ? '' : item.color;
-
-                            return (
-                                <div
-                                    key={idx}
-                                    className={`shrink-0 flex items-center justify-center overflow-hidden relative ${isPlaceholder ? '' : `rounded-[var(--corner-large)] shadow-sm ${isText ? 'bg-brand' : colorClass}`}`}
-                                    style={{
-                                        width: item.width,
-                                        height: item.height,
-                                        ...(!isPlaceholder && !isText && hasCustomColor ? { backgroundColor: item.color } : {})
-                                    }}
-                                >
-                                    {item.type === "image" ? (
-                                        <>
-                                            {item.src ? (
-                                                item.src.endsWith('.mp4') || item.src.endsWith('.webm') ? (
-                                                    <video
-                                                        src={item.src}
-                                                        autoPlay
-                                                        muted
-                                                        loop
-                                                        playsInline
-                                                        className="absolute inset-0 w-full h-full object-cover"
-                                                    />
-                                                ) : item.src.endsWith('.json') ? (
-                                                    <div className="absolute inset-0 w-full h-full flex items-center justify-center p-8">
-                                                        <DynamicLottie url={item.src} />
-                                                    </div>
-                                                ) : (
-                                                    <img
-                                                        src={item.src}
-                                                        alt={item.label}
-                                                        className="absolute inset-0 w-full h-full object-cover"
-                                                    />
-                                                )
-                                            ) : (
-                                                <div className="absolute inset-0 bg-gray-200/50 flex flex-col items-center justify-center">
-                                                    <span className="font-heading text-sm font-bold uppercase tracking-wider text-gray-400 mb-2">{item.label}</span>
-                                                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 opacity-50">
-                                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                                        <polyline points="21 15 16 10 5 21"></polyline>
-                                                    </svg>
-                                                </div>
-                                            )}
-                                        </>
-                                    ) : (
-                                        <div className="p-32 h-full flex items-center justify-center text-center">
-                                            <p className="font-text text-text-lg text-white">{item.text}</p>
-                                        </div>
-                                    )}
-                                    {!isText && (
-                                        <span className="absolute bottom-6 right-6 font-heading text-sm font-bold uppercase tracking-wider text-white bg-black/40 backdrop-blur-sm px-[16px] py-2 rounded-full z-10">
-                                            {item.label || `${item.width}x${item.height}`}
-                                        </span>
-                                    )}
-                                </div>
-                            );
-                        })}
+                        {Array(copies).fill(row).flat().map((item, idx) => (
+                            <ScrollItem
+                                key={idx}
+                                item={{ ...item, id: `${rowIdx}-${idx}-${item.id}` }}
+                            />
+                        ))}
                     </div>
                 ))}
             </motion.div>

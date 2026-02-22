@@ -30,6 +30,7 @@ import {
 import { SharedFAQ } from "@/components/blocks/SharedFAQ";
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
+const SplineScene = dynamic(() => import("@/components/blocks/HomeHeroSpline").then((mod) => mod.HomeHeroSpline), { ssr: false });
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -325,6 +326,10 @@ export default function Home({
               className="object-cover"
             />
           </div>
+        );
+      } else if (cell.contentType === 'spline' && cell.contentProps?.splineUrl) {
+        content = (
+          <SplineScene sceneUrl={cell.contentProps.splineUrl} />
         );
       }
 

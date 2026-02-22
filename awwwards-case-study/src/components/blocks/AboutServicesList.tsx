@@ -8,16 +8,49 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Tag } from "@/components/ui/Tag";
-import { Service } from "@/content/services";
-import { PhysicsPills } from "@/components/ui/PhysicsPills";
+import { ServicesData } from "@/content/services";
 import { useContactForm } from "@/context/ContactFormContext";
+import Lottie from "lottie-react";
+import brandingAnimation from "../../../public/img/about-services-branding.json";
+import webAnimation from "../../../public/img/about-services-web.json";
+import contentAnimation from "../../../public/img/about-services-conten.json";
+import { TextFormatter } from "@/components/ui/TextFormatter";
+import { useEffect } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export const AboutServicesList = ({ data }: { data: Service[] }) => {
+const serviceAnimations = [brandingAnimation, webAnimation, contentAnimation];
+
+function DynamicLottie({ url, fallback }: { url?: string, fallback: any }) {
+    const [data, setData] = useState(fallback);
+    useEffect(() => {
+        if (url) {
+            fetch(url).then(r => r.json()).then(setData).catch(() => setData(fallback));
+        } else {
+            setData(fallback);
+        }
+    }, [url, fallback]);
+
+    if (!data) return null;
+    return <Lottie animationData={data} loop={true} />;
+}
+
+export const AboutServicesList = ({ data }: { data: ServicesData }) => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const [activeIndex, setActiveIndex] = useState(0);
+    const desktopContainerRef = useRef<HTMLDivElement>(null);
+    const finaleRef = useRef<HTMLDivElement>(null);
+    const blocksRef = useRef<(HTMLDivElement | null)[]>([]);
+
+    // For mobile accordion
+    const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
+    // For desktop scrolling
+    const [desktopActiveIndex, setDesktopActiveIndex] = useState(0);
+
     const { openContactForm } = useContactForm();
+
+    // Fallback: If cache returns array, treat it as items. If object, grab title and items.
+    const items = Array.isArray(data) ? data : data?.items || [];
+    const title = Array.isArray(data) ? ["OUR", "CAPABILITIES"] : data?.title || ["OUR", "CAPABILITIES"];
 
     useGSAP(() => {
         if (!containerRef.current) return;
@@ -43,13 +76,38 @@ export const AboutServicesList = ({ data }: { data: Service[] }) => {
                 }
             );
         }
+
+        // Setup scroll triggers for desktop layout to sync active tab
+        blocksRef.current.forEach((block, index) => {
+            if (block) {
+                ScrollTrigger.create({
+                    trigger: block,
+                    start: "top center",
+                    end: "bottom center",
+                    onToggle: (self) => {
+                        if (self.isActive) {
+                            setDesktopActiveIndex(index);
+                        }
+                    }
+                });
+            }
+        });
+
     }, { scope: containerRef });
 
+    const scrollToBlock = (index: number) => {
+        setDesktopActiveIndex(index);
+        const block = blocksRef.current[index];
+        if (block) {
+            block.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    };
+
     return (
-        <section ref={containerRef} className="w-full py-48 md:py-64 text-white relative z-10 mb-32 md:mb-48">
-            <div className="max-w-[1400px] mx-auto px-16 md:px-64">
-                <h2 className="font-mega text-mega-h2 uppercase mb-32 md:mb-48 text-brand flex flex-wrap gap-x-[0.2em]">
-                    {["OUR", "CAPABILITIES"].map((word, i) => (
+        <section ref={containerRef} className="w-full pt-48 md:pt-64 pb-0 text-white relative z-10">
+            <div className="max-w-[1400px] mx-auto">
+                <h2 className="font-mega text-mega-h2 uppercase mb-16 md:mb-32 text-brand flex flex-wrap gap-x-[0.2em]">
+                    {title.map((word, i) => (
                         <span key={i} className="inline-block overflow-hidden">
                             <span className="services-title-word inline-block translate-y-[110%] opacity-0">
                                 {word}
@@ -59,76 +117,86 @@ export const AboutServicesList = ({ data }: { data: Service[] }) => {
                 </h2>
 
                 {/* Desktop Layout */}
-                <div className="hidden lg:flex items-start gap-48">
+                <div ref={desktopContainerRef} className="hidden lg:flex items-start gap-48 relative">
 
-                    {/* Left Column: Navigation Tabs — fixed width, sticky */}
-                    <div className="w-[360px] shrink-0 flex flex-col gap-8 items-start sticky top-[20vh] self-start">
-                        {data.map((service, index) => (
+                    {/* Left Column: Navigation Tabs — sticky position */}
+                    <div className="w-[360px] shrink-0 flex flex-col gap-10 sticky top-[30vh]">
+                        {items.map((service, index) => (
                             <button
                                 key={service.id}
-                                onClick={() => setActiveIndex(index)}
-                                onMouseEnter={() => setActiveIndex(index)}
+                                onClick={() => scrollToBlock(index)}
                                 className={clsx(
                                     "font-heading text-h1 transition-all duration-300 text-left w-full",
-                                    activeIndex === index
+                                    desktopActiveIndex === index
                                         ? "opacity-100 translate-x-4"
-                                        : "opacity-30 hover:opacity-60"
+                                        : "opacity-30 hover:opacity-100 hover:translate-x-2"
                                 )}
+                                style={
+                                    desktopActiveIndex === index
+                                        ? { color: "rgb(var(--color-brand))" }
+                                        : undefined
+                                }
                             >
                                 {service.label}
                             </button>
                         ))}
                     </div>
 
-                    {/* Right Column: Physics — flex-1 takes all remaining space */}
-                    <div className="flex-1 min-w-0 relative min-h-[600px]">
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={activeIndex}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
-                                transition={{ duration: 0.3 }}
-                                className="w-full"
-                            >
-                                {/* Physics Container — description lives inside at top */}
-                                <div className="relative w-full h-[625px] rounded-2xl overflow-hidden">
-                                    {/* Description overlay — top-left, 64px padding, full width, white */}
-                                    <div className="absolute top-0 left-0 z-20 p-[64px] w-full pointer-events-none">
-                                        <p className="font-text text-text-lg text-white opacity-90 leading-relaxed w-full">
-                                            {data[activeIndex].description}
+                    {/* Right Column: Scrollable Service Blocks + Finale Physics Container */}
+                    <div className="w-[70%] min-w-0 flex flex-col z-0">
+                        {/* Service Blocks with huge gaps to enforce scrolling */}
+                        <div className="flex flex-col gap-[10vh] mb-[10vh]">
+                            {items.map((service, index) => (
+                                <div
+                                    key={service.id}
+                                    ref={el => { blocksRef.current[index] = el; }}
+                                    className="relative flex items-center w-full min-h-[40vh] py-[5vh]"
+                                >
+                                    {/* Sub-Column Left: Lottie */}
+                                    <div className="w-[50%] relative z-10 mix-blend-screen opacity-90 pointer-events-none -ml-16">
+                                        <DynamicLottie
+                                            url={service.animationUrl}
+                                            fallback={serviceAnimations[index % serviceAnimations.length]}
+                                        />
+                                    </div>
+
+                                    {/* Sub-Column Right: Description */}
+                                    <div className="w-[50%] relative z-20 pointer-events-none">
+                                        <p className="font-text text-text-lg text-white opacity-90 leading-relaxed text-left">
+                                            <TextFormatter text={service.description} />
                                         </p>
                                     </div>
-                                    <PhysicsPills
-                                        tags={data[activeIndex].tags}
-                                        onTagClick={openContactForm}
-                                    />
                                 </div>
-                            </motion.div>
-                        </AnimatePresence>
-                    </div>
+                            ))}
+                        </div>
 
+                    </div>
                 </div>
 
-                {/* Mobile Layout: Accordion */}
+                {/* Mobile Layout: Accordion (Unchanged behavior basically, just uses mobileActiveIndex) */}
                 <div className="flex flex-col gap-4 lg:hidden">
-                    {data.map((service, index) => {
-                        const isActive = activeIndex === index;
+                    {items.map((service, index) => {
+                        const isActive = mobileActiveIndex === index;
                         return (
                             <div key={service.id} className="border-b border-white/10 last:border-0">
                                 <button
-                                    onClick={() => setActiveIndex(isActive ? -1 : index)}
-                                    className="w-full py-6 flex items-center justify-between text-left"
+                                    onClick={() => setMobileActiveIndex(isActive ? -1 : index)}
+                                    className="w-full py-6 flex items-center justify-between text-left transition-colors duration-300"
+                                    style={
+                                        isActive
+                                            ? { color: "rgb(var(--color-brand))" }
+                                            : undefined
+                                    }
                                 >
                                     <span className={clsx(
                                         "font-heading text-2xl transition-opacity duration-300",
-                                        isActive ? "opacity-100 text-brand" : "opacity-60 text-white"
+                                        isActive ? "opacity-100" : "opacity-60 text-white"
                                     )}>
                                         {service.label}
                                     </span>
                                     <span className={clsx(
                                         "text-2xl transition-transform duration-300",
-                                        isActive ? "rotate-45 text-brand" : "text-white/40"
+                                        isActive ? "rotate-45" : "text-white/40"
                                     )}>
                                         +
                                     </span>
@@ -136,20 +204,24 @@ export const AboutServicesList = ({ data }: { data: Service[] }) => {
 
                                 <div className={clsx(
                                     "overflow-hidden transition-all duration-500 ease-in-out",
-                                    isActive ? "max-h-[800px] opacity-100 pb-8" : "max-h-0 opacity-0"
+                                    isActive ? "max-h-[800px] opacity-100 pb-0" : "max-h-0 opacity-0"
                                 )}>
                                     <div className="flex flex-col gap-6">
-                                        {/* Physics Container — description at top */}
-                                        <div className="relative w-full aspect-[16/10] md:h-[375px] rounded-lg overflow-hidden">
-                                            <div className="absolute top-0 left-0 z-20 p-[32px] pointer-events-none">
+                                        <div className="relative w-full rounded-lg overflow-hidden bg-white/5 p-6">
+                                            <div className="relative z-20 mb-6">
                                                 <p className="font-text text-sm text-white opacity-90 leading-relaxed">
-                                                    {service.description}
+                                                    <TextFormatter text={service.description} />
                                                 </p>
                                             </div>
-                                            <PhysicsPills
-                                                tags={service.tags}
-                                                onTagClick={openContactForm}
-                                            />
+                                            <div className="flex flex-wrap gap-2 relative z-20">
+                                                {service.tags.map((tag: string) => (
+                                                    <button key={tag} onClick={() => openContactForm()}>
+                                                        <Tag className="border-white/20 text-white hover:bg-white hover:text-black hover:border-white cursor-pointer w-full h-full">
+                                                            {tag}
+                                                        </Tag>
+                                                    </button>
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -159,6 +231,5 @@ export const AboutServicesList = ({ data }: { data: Service[] }) => {
                 </div>
             </div>
         </section>
-
     );
 }

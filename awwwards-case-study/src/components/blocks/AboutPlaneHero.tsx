@@ -106,7 +106,7 @@ export function AboutPlaneHero({ data }: { data: AboutHeroData }) {
                     <div className="relative w-full max-w-[1200px] aspect-[16/9] mx-auto overflow-hidden opacity-30">
                         <video
                             ref={videoRef}
-                            src="/img/about-plane-fixed.mp4"
+                            src={data.videoDesktop || "/img/about-plane-fixed.mp4"}
                             className="w-full h-full object-contain object-bottom"
                             muted
                             playsInline

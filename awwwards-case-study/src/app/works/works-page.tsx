@@ -2,12 +2,16 @@
 
 import { WorksData, WorksPageContent } from "@/types/work";
 import { WorkCard } from "@/components/ui/WorkCard";
-import { SharedClientLogos } from "@/components/blocks/SharedClientLogos";
+import { PhysicsPills } from "@/components/ui/PhysicsPills";
+import { CaseStudyTextReveal } from "@/components/blocks/CaseStudyTextReveal";
+import { InfiniteScrollPane } from "@/components/blocks/InfiniteScrollPane";
 import { useBrand } from "@/context/BrandContext";
+import { useContactForm } from "@/context/ContactFormContext";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ClientLogo } from "@/content/clients";
 
+import { WorksSteps } from "@/components/blocks/WorksSteps";
 // Animated Works Heading Component
 function AnimatedWorksHeading({ phrases, staticText }: { phrases: string[], staticText: string }) {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -94,23 +98,31 @@ function AnimatedWorksHeading({ phrases, staticText }: { phrases: string[], stat
 
 export function WorksPage({ clientsData, worksData, content }: { clientsData: ClientLogo[], worksData: WorksData, content?: WorksPageContent }) {
     const { brand } = useBrand();
+    const { openContactForm } = useContactForm();
 
     // Use passed data or empty array to prevent crashes
     const works = worksData || [];
+    const baseTags = [
+        "Web Design", "Development", "Branding", "Visual Identity",
+        "UX/UI Design", "Content Strategy", "E-commerce", "Animation",
+        "Motion Graphics", "3D Design", "Design Systems", "Platform",
+        "Copywriting", "SEO", "Art Direction", "Digital Product"
+    ];
+    // Combine base tags with any unique tags from works, ensuring no duplicates
+    const allTags = Array.from(new Set([...baseTags, ...works.flatMap(work => work.tags || [])]))
+        .sort(() => Math.random() - 0.5);
 
     // Fallbacks
+    // Fallbacks to empty/safe defaults instead of hardcoded content to enforce JSON source of truth.
     const phrases = content?.heading?.phrases || [];
-    const staticText = content?.heading?.staticText || "delivered.";
-    const title = content?.subheading?.title || "Our Works";
-    const subItems = content?.subheading?.items || [
-        "Visual Design",
-        "Websites",
-        "User Experience",
-        "Content Design"
-    ];
+    const staticText = content?.heading?.staticText || "";
+    const title = content?.subheading?.title || "";
+    const subItems = content?.subheading?.items || [];
+    const bottomText = content?.bottomText || "";
+    const spinnerUrl = content?.spinnerUrl || "/img/spinner-crisp.svg";
 
     return (
-        <main className="min-h-screen bg-white pt-[15vh] pb-32">
+        <main className="min-h-screen bg-white pt-[15vh]">
             <div className="max-w-[1440px] mx-auto px-6 md:px-12">
                 {/* ... keeping this part unchanged if I don't select it ... */}
                 <section className="mb-[15vh] grid grid-cols-1 md:grid-cols-12 gap-y-12 md:gap-x-8 items-center">
@@ -130,47 +142,82 @@ export function WorksPage({ clientsData, worksData, content }: { clientsData: Cl
                     </div>
                 </section>
 
-                {/* Works Grid - 12 Columns */}
-                <section className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 mb-20 md:mb-32">
-                    {/* Card 1: Folkeuniversitetet - 6 columns */}
-                    <div className="md:col-span-6">
-                        {works[0] && <WorkCard {...works[0]} />}
-                    </div>
+                {/* Works Grid - Repeated Pattern */}
+                <section className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
+                    {works.map((work, index) => {
+                        const patternIndex = index % 3;
 
-                    {/* Card 2: TheyTalk - 5 columns in 8-12 range with spinner on left */}
-                    <div className="md:col-span-5 md:col-start-8 relative">
-                        <div className="relative w-full">
-                            {/* Spinner - positioned on left, stacked on top */}
-                            <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-[200px] h-[200px] z-10">
-                                <img
-                                    src="/img/spinner-crisp.svg"
-                                    alt="Decoration"
-                                    className="w-full h-full object-contain animate-spin"
-                                    style={{ animationDuration: '8s' }}
-                                />
-                            </div>
-                            {/* Card */}
-                            {works[2] && <WorkCard {...works[2]} />}
-                        </div>
-                    </div>
-
-                    {/* Card 3: CentroGreen - Full width with max height 75vh */}
-                    <div className="md:col-span-12 max-h-[75vh]">
-                        {works[1] && (
-                            <WorkCard
-                                {...works[1]}
-                                className="h-[75vh]"
-                            />
-                        )}
-                    </div>
+                        if (patternIndex === 0) {
+                            // Layout A: Left aligned, 6 columns
+                            return (
+                                <div key={index} className="md:col-span-6">
+                                    <WorkCard {...work} />
+                                </div>
+                            );
+                        } else if (patternIndex === 1) {
+                            // Layout B: Right aligned, 5 columns, with spinner decor
+                            return (
+                                <div key={index} className="md:col-span-5 md:col-start-8 relative mt-12 md:mt-0">
+                                    <div className="relative w-full">
+                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-[120px] h-[120px] md:w-[200px] md:h-[200px] z-10 pointer-events-none">
+                                            <img
+                                                src={spinnerUrl}
+                                                alt=""
+                                                className="w-full h-full object-contain animate-spin"
+                                                style={{ animationDuration: '8s' }}
+                                            />
+                                        </div>
+                                        <WorkCard {...work} />
+                                    </div>
+                                </div>
+                            );
+                        } else {
+                            // Layout C: Full width
+                            return (
+                                <div key={index} className="md:col-span-12 max-h-[75vh] mt-12 md:mt-0">
+                                    <WorkCard
+                                        {...work}
+                                        className="h-[75vh]"
+                                    />
+                                </div>
+                            );
+                        }
+                    })}
                 </section>
 
-            </div >
+                <div className="mt-[15vh] mb-[15vh]">
+                    <CaseStudyTextReveal
+                        text={bottomText}
+                        className="font-text text-2xl md:text-4xl text-black leading-tight max-w-4xl"
+                    />
+                </div>
+            </div>
 
+            <InfiniteScrollPane id="infinite-scroll-pane" data={content?.infiniteScroll} />
 
+            {/* Mega Heading */}
+            <div className="max-w-[1440px] mx-auto px-6 md:px-12 mt-[10vh]">
+                <h2 className="font-mega text-mega-h2 text-text uppercase leading-none pt-0">
+                    Design matters. <br />
+                    <span className="text-brand">Craft what endures.</span>
+                </h2>
+            </div>
 
-            {/* Client Logos */}
-            <SharedClientLogos data={clientsData} />
-        </main >
+            {/* Combined Steps & Physics Section */}
+            <div className="relative w-full h-[70vh] min-h-[700px] flex items-center justify-center overflow-hidden mb-0">
+                {/* Background Physics */}
+                <PhysicsPills
+                    tags={allTags}
+                    onTagClick={openContactForm}
+                />
+
+                {/* Foreground Steps - Positioned on top */}
+                <div className="relative z-10 w-full pointer-events-none -translate-y-[100px]">
+                    <div className="pointer-events-auto">
+                        <WorksSteps steps={content?.steps || []} />
+                    </div>
+                </div>
+            </div>
+        </main>
     );
 }

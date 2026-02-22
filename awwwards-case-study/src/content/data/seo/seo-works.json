@@ -1,0 +1,12 @@
+{
+  "title": "<title>Our Works — Crisp Case Studies</title>",
+  "metaTags": [
+    "<meta name=\"description\" content=\"Explore our portfolio of brands, websites, and systems. See how we deliver results for our clients.\">",
+    "<meta name=\"robots\" content=\"index, follow\">"
+  ],
+  "openGraph": [
+    "<meta property=\"og:title\" content=\"Our Works — Crisp Case Studies\">",
+    "<meta property=\"og:description\" content=\"Explore our portfolio of brands, websites, and systems.\">"
+  ],
+  "canonical": "<link rel=\"canonical\" href=\"https://crisp-studio.com/works\">"
+}

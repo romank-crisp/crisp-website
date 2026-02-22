@@ -11,9 +11,6 @@ export default function AdminPage() {
     const [currentData, setCurrentData] = useState<any>(null);
     const [loading, setLoading] = useState(false);
 
-    // Confirm-before-save state
-    const [pendingSave, setPendingSave] = useState<{ data: any; filename: string } | null>(null);
-
     // Toast State
     const [toast, setToast] = useState<{ message: string; type: ToastType; visible: boolean }>({
         message: "",
@@ -49,20 +46,11 @@ export default function AdminPage() {
         loadTabContent();
     }, [activeTab]);
 
-    // Step 1: Show confirmation dialog
-    const handleSaveRequest = (data: any) => {
+    const handleSave = async (data: any) => {
         const filename = getFilename(activeTab);
-        setPendingSave({ data, filename });
-    };
-
-    // Step 2: User confirmed — actually write to GCS
-    const handleConfirmSave = async () => {
-        if (!pendingSave) return;
-        const { data, filename } = pendingSave;
-        setPendingSave(null);
         try {
             await updateContent(filename, data);
-            setToast({ message: "Changes saved successfully", type: "success", visible: true });
+            setToast({ message: "Successfully saved", type: "success", visible: true });
             setCurrentData(data);
         } catch (error) {
             console.error("Failed to save", error);
@@ -108,7 +96,7 @@ export default function AdminPage() {
                                                             : "/"
                                     }
                                     initialData={currentData || {}}
-                                    onSave={async (_, data) => { handleSaveRequest(data); }}
+                                    onSave={async (_, data) => { handleSave(data); }}
                                 />
                             )}
                         </div>
@@ -116,37 +104,6 @@ export default function AdminPage() {
                 </div>
             </div>
 
-            {/* Confirm Save Modal */}
-            {pendingSave && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-                    <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4">
-                        <h2 className="font-heading text-h3 mb-2">Confirm Save</h2>
-                        <p className="text-gray-500 mb-1 text-sm">
-                            You are about to overwrite production data on Google Cloud Storage:
-                        </p>
-                        <p className="font-mono text-sm text-brand font-bold mb-6 bg-gray-50 rounded-lg px-3 py-2">
-                            data/{pendingSave.filename}
-                        </p>
-                        <p className="text-gray-400 text-xs mb-6">
-                            ⚠️ This will immediately affect the live website. Make sure your changes are correct.
-                        </p>
-                        <div className="flex gap-3">
-                            <button
-                                onClick={() => setPendingSave(null)}
-                                className="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-colors"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={handleConfirmSave}
-                                className="flex-1 px-4 py-3 rounded-xl bg-brand text-white font-medium hover:opacity-90 transition-opacity"
-                            >
-                                Save to Production
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

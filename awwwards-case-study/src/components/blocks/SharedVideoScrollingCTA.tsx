@@ -91,7 +91,7 @@ export const SharedVideoScrollingCTA = () => {
                 >
                     <video
                         ref={videoRef}
-                        src="/img/bottomvideo.webm"
+                        src="/img/showreel-cta.webm"
                         autoPlay
                         muted
                         loop

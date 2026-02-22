@@ -79,26 +79,24 @@ const files = {
             },
             {
                 id: "col-4",
-                width: "45vw",
+                width: "31.5vw",
                 cells: [
                     {
                         id: "cell-4-1",
                         height: "60vh",
                         className: "bg-text/5 text-text border-r border-b border-black/5 p-0",
-                        contentType: "image",
+                        contentType: "video",
                         contentProps: {
-                            src: "/img/home-hero/home-hero-04-01.png",
-                            alt: "Hero Part 4-1"
+                            videoSrc: "/img/home-hero/home-here-06.webm"
                         }
                     },
                     {
                         id: "cell-4-2",
                         height: "40vh",
-                        className: "bg-brand text-white border-r border-black/5 p-0",
-                        contentType: "image",
+                        className: "bg-brand text-white border-r border-black/5 p-0 overflow-hidden relative",
+                        contentType: "spline",
                         contentProps: {
-                            src: "/img/home-hero/home-hero-04-02.png",
-                            alt: "Hero Part 4-2"
+                            splineUrl: "/spline/scr_25/scene.splinecode"
                         }
                     }
                 ]

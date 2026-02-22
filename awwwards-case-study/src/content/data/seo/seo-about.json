@@ -1,0 +1,15 @@
+{
+  "title": "<title>About Crisp — Digital studio that delivers craft, not concepts</title>",
+  "metaTags": [
+    "<meta name=\"description\" content=\"Founded in 2007. We build brands, launch great websites, and keep the story going through content across channels. Expertise. Experience. Efficiency.\">",
+    "<meta name=\"robots\" content=\"index, follow\">"
+  ],
+  "openGraph": [
+    "<meta property=\"og:type\" content=\"website\">",
+    "<meta property=\"og:title\" content=\"About Crisp — Digital studio that delivers craft, not concepts\">",
+    "<meta property=\"og:description\" content=\"Founded in 2007. We build brands, launch great websites, and keep the story going through content across channels. Expertise. Experience. Efficiency.\">",
+    "<meta property=\"og:url\" content=\"https://crisp-studio.com/about-us/\">",
+    "<meta property=\"og:image\" content=\"https://crisp-studio.com/about-us/\">"
+  ],
+  "canonical": "<link rel=\"canonical\" href=\"https://crisp-studio.com/about-us/\">"
+}

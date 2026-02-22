@@ -36,6 +36,29 @@ const WORKS = [
     }
 ];
 
+const WORKS_CONTENT = {
+    heading: {
+        phrases: [
+            "brands that scale.",
+            "websites that convert.",
+            "robust design systems.",
+            "omnichannel content.",
+            "rock-solid design."
+        ],
+        staticText: "delivered."
+    },
+    subheading: {
+        title: "Our Works",
+        items: [
+            "Visual Design",
+            "Websites",
+            "User Experience",
+            "Content Design"
+        ]
+    },
+    bottomText: "No project is too small. From pitch decks to campaign assets, from website refinements to AI landing pages — we handle your everyday design needs. <em class=\"italic font-serif animate-gradient-text-dark px-1\">Packages start at 40h per month.</em>"
+};
+
 async function seedWorks() {
     console.log("Seeding works.json...");
     try {
@@ -43,6 +66,11 @@ async function seedWorks() {
         const filePath = path.join(DATA_PREFIX, filename);
         await storage.bucket(BUCKET_NAME).file(filePath).save(JSON.stringify(WORKS, null, 2));
         console.log(`Successfully uploaded ${filename} to ${BUCKET_NAME}/${filePath}`);
+
+        const contentFilename = "works-content.json";
+        const contentFilePath = path.join(DATA_PREFIX, contentFilename);
+        await storage.bucket(BUCKET_NAME).file(contentFilePath).save(JSON.stringify(WORKS_CONTENT, null, 2));
+        console.log(`Successfully uploaded ${contentFilename} to ${BUCKET_NAME}/${contentFilePath}`);
     } catch (error) {
         console.error("Error seeding works:", error);
         process.exit(1);

@@ -1,0 +1,12 @@
+{
+  "title": "<title>Contact Crisp — Let's Work Together</title>",
+  "metaTags": [
+    "<meta name=\"description\" content=\"Get in touch with Crisp design studio. Let's discuss your project and how we can help.\">",
+    "<meta name=\"robots\" content=\"index, follow\">"
+  ],
+  "openGraph": [
+    "<meta property=\"og:title\" content=\"Contact Crisp — Let's Work Together\">",
+    "<meta property=\"og:description\" content=\"Get in touch with Crisp design studio.\">"
+  ],
+  "canonical": "<link rel=\"canonical\" href=\"https://crisp-studio.com/contact\">"
+}

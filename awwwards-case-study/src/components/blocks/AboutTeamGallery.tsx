@@ -9,14 +9,14 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const TEAM_IMAGES = [
-    "/img/teampic/teampic-01.jpg",
-    "/img/teampic/teampic-02.jpg",
-    "/img/teampic/teampic-03.jpg",
-    "/img/teampic/teampic-04.jpg",
-    "/img/teampic/teampic-05.jpg",
-    "/img/teampic/teampic-06.jpg",
-    "/img/teampic/teampic-07.jpg",
-    "/img/teampic/teampic-08.jpg",
+    "/img/teampic/team-gallery-1.JPG",
+    "/img/teampic/team-gallery-2.JPG",
+    "/img/teampic/team-gallery-3.JPG",
+    "/img/teampic/team-gallery-4.JPG",
+    "/img/teampic/team-gallery-5.JPG",
+    "/img/teampic/team-gallery-6.JPG",
+    "/img/teampic/team-gallery-7.JPG",
+    "/img/teampic/team-gallery-8.JPG",
 ];
 
 const WIDTHS = [

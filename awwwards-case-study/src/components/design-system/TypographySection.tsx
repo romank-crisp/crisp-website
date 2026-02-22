@@ -68,6 +68,29 @@ export function TypographySection() {
                         ))}
                     </div>
                 </div>
+
+                {/* Italic Formats */}
+                <div className="space-y-24 mt-32 border-t border-text/10 pt-32">
+                    <div className="grid gap-32">
+                        {[
+                            { label: "Default Italic (*text*)", class: "italic font-serif text-text px-1", text: "The quick brown fox jumps over the lazy dog." },
+                            { label: "Animated Gradient White-Red (**text**)", class: "italic font-serif animate-gradient-text px-1 bg-[#180C2A] py-2", text: "The quick brown fox jumps over the lazy dog." },
+                            { label: "Animated Gradient Dark-Red (***text***)", class: "italic font-serif animate-gradient-text-dark px-1", text: "The quick brown fox jumps over the lazy dog." },
+                        ].map((item, i) => (
+                            <div key={i} className="flex flex-col gap-8">
+                                <div className="flex items-center gap-12">
+                                    <span className="font-text text-sm opacity-40 uppercase tracking-widest">{item.label}</span>
+                                    <code className="text-xs font-mono text-brand bg-brand/5 px-6 py-2 rounded">
+                                        {item.class.replace(" bg-[#180C2A] py-2", "") /* Remove bg helper from code display */}
+                                    </code>
+                                </div>
+                                <p className="font-text text-text-lg">
+                                    <em className={item.class}>{item.text}</em>
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
         </div>
     );

@@ -17,7 +17,7 @@ import { AboutTeamGallery } from "@/components/blocks/AboutTeamGallery";
 import { AboutHeroData } from "@/content/about";
 import { ClientLogo } from "@/content/clients";
 import { LocationData } from "@/content/locations";
-import { Service } from "@/content/services";
+import { ServicesData } from "@/content/services";
 import { TeamMember } from "@/content/team";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -26,7 +26,7 @@ interface AboutPageProps {
     aboutData: AboutHeroData;
     clientsData: ClientLogo[];
     locationsData: LocationData;
-    servicesData: Service[];
+    servicesData: ServicesData;
     teamData: TeamMember[];
 }
 
@@ -43,7 +43,7 @@ export default function AboutPage({ aboutData, clientsData, locationsData, servi
         ScrollTrigger.create({
             trigger: darkSectionRef.current,
             start: "top 75%",
-            end: "bottom 60%",
+            end: "bottom 70%",
             onEnter: () => {
                 gsap.to(mainRef.current, {
                     backgroundColor: "rgb(var(--color-text))",
@@ -84,7 +84,7 @@ export default function AboutPage({ aboutData, clientsData, locationsData, servi
                 <SharedClientLogos data={clientsData} />
             </div>
             {/* Wrapper for Dark Mode Sections */}
-            <div ref={darkSectionRef} className="relative z-10 pb-[200px] space-y-[100px] md:space-y-[200px]">
+            <div ref={darkSectionRef} className="relative z-10 space-y-[100px] md:space-y-[200px]">
                 <AboutLocationsMap data={locationsData} />
 
                 {/* Team Gallery - Infinite Scroll */}

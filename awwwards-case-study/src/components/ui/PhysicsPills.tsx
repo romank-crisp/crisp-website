@@ -9,16 +9,7 @@ interface PhysicsPillsProps {
     onTagClick?: () => void;
 }
 
-// Stable per-tag color — white to light desaturated blue
-function tagColor(i: number, seed: number) {
-    // Use seeded pseudo-random so color is stable on re-render but varies per tag
-    const t = ((i * 2654435761 + seed) % 100) / 100;
-    const sat = Math.round(t * 25);
-    const light = Math.round(100 - t * 12);
-    return `hsl(210 ${sat}% ${light}%)`;
-}
-
-export function PhysicsPills({ tags, onTagClick }: PhysicsPillsProps) {
+export const PhysicsPills = React.memo(({ tags, onTagClick }: PhysicsPillsProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const wrapperRefs = useRef<(HTMLDivElement | null)[]>([]);
     const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
@@ -46,9 +37,11 @@ export function PhysicsPills({ tags, onTagClick }: PhysicsPillsProps) {
             }
         });
 
-        const engine = Matter.Engine.create();
+        const engine = Matter.Engine.create({
+            enableSleeping: true // Stops bodies from shaking when rested
+        });
         const world = engine.world;
-        engine.gravity.y = 0.4;
+        engine.gravity.y = 0.8; // Moderate gravity for smooth acceleration
 
         const W = 150;
         let width = container.clientWidth;
@@ -56,24 +49,28 @@ export function PhysicsPills({ tags, onTagClick }: PhysicsPillsProps) {
 
         const wallOpts = { isStatic: true, render: { visible: false } };
         const ground = Matter.Bodies.rectangle(width / 2, height + W / 2, width + W * 2, W, wallOpts);
-        const leftWall = Matter.Bodies.rectangle(-W / 2, height / 2, W, height * 3, wallOpts);
-        const rightWall = Matter.Bodies.rectangle(width + W / 2, height / 2, W, height * 3, wallOpts);
+        // Place walls at exactly 50px from left and right edges
+        const leftWall = Matter.Bodies.rectangle(50 - W / 2, height / 2, W, height * 3, wallOpts);
+        const rightWall = Matter.Bodies.rectangle(width - 50 + W / 2, height / 2, W, height * 3, wallOpts);
         Matter.World.add(world, [ground, leftWall, rightWall]);
 
         const bodies = tags.map((_, i) => {
             const dim = dims[i] ?? { width: 160, height: 64 };
-            const startX = Math.random() * Math.max(width - dim.width, 80) + dim.width / 2;
-            const startY = -(Math.random() * 600 + 80);
-            const density = 0.001 + Math.random() * 0.004;
-            const frictionAir = 0.06 + Math.random() * 0.10;
+            // Ensure they drop within the 50px safety gaps
+            const startX = 50 + dim.width / 2 + Math.random() * Math.max(width - 100 - dim.width, 0);
+            const startY = Math.random() * 100; // Start inside/near top so fade-in from 0 opacity is visible
+            // Easing and bounce feel
+            const density = 0.001 + Math.random() * 0.002;
+            const frictionAir = 0.03 + Math.random() * 0.03; // Light air friction
             return Matter.Bodies.rectangle(startX, startY, dim.width, dim.height, {
-                restitution: 0.08, friction: 0.02, frictionAir, density,
-                angle: (Math.random() - 0.5) * 0.2,
+                restitution: 0.5 + Math.random() * 0.2, // High bounce
+                friction: 0.2, // Moderate friction
+                frictionAir,
+                density,
+                angle: (Math.random() - 0.5) * 0.4,
                 chamfer: { radius: dim.height / 2 },
             });
         });
-
-        Matter.World.add(world, bodies);
 
         const mouse = Matter.Mouse.create(container);
         const mouseConstraint = Matter.MouseConstraint.create(engine, {
@@ -84,26 +81,46 @@ export function PhysicsPills({ tags, onTagClick }: PhysicsPillsProps) {
         Matter.World.add(world, mouseConstraint);
 
         const runner = Matter.Runner.create();
-        Matter.Runner.run(runner, engine);
-
         const staggerTimeouts: ReturnType<typeof setTimeout>[] = [];
-        bodies.forEach((body, i) => {
-            const tid = setTimeout(() => {
-                Matter.World.add(world, body);
-                const el = wrapperRefs.current[i];
-                if (el) el.style.opacity = "1";
-            }, i * 80);
-            staggerTimeouts.push(tid);
-        });
+
+        let isVisible = false;
+        let hasTriggered = false;
+        const observer = new IntersectionObserver((entries) => {
+            isVisible = entries[0].isIntersecting;
+
+            // Trigger animation only when scrolled into view
+            if (isVisible && !hasTriggered) {
+                hasTriggered = true;
+
+                Matter.Runner.run(runner, engine);
+
+                bodies.forEach((body, i) => {
+                    const tid = setTimeout(() => {
+                        Matter.World.add(world, body);
+                        const el = wrapperRefs.current[i];
+                        if (el) el.style.opacity = "1";
+                    }, i * 80);
+                    staggerTimeouts.push(tid);
+                });
+            }
+        }, { threshold: 0.2 });
+        observer.observe(container);
 
         let animFrameId: number;
         const loop = () => {
-            bodies.forEach((body, i) => {
-                const el = wrapperRefs.current[i];
-                if (el && body) {
-                    el.style.transform = `translate(${body.position.x}px, ${body.position.y}px) rotate(${body.angle}rad)`;
-                }
-            });
+            if (isVisible) {
+                bodies.forEach((body, i) => {
+                    const el = wrapperRefs.current[i];
+                    if (el && body) {
+                        // Use translate3d to force GPU hardware acceleration
+                        // Round slightly to avoid fractional pixel layout jumping
+                        const x = body.position.x.toFixed(2);
+                        const y = body.position.y.toFixed(2);
+                        const angle = body.angle.toFixed(4);
+                        el.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle}rad)`;
+                    }
+                });
+            }
             animFrameId = requestAnimationFrame(loop);
         };
         loop();
@@ -112,11 +129,11 @@ export function PhysicsPills({ tags, onTagClick }: PhysicsPillsProps) {
             width = container.clientWidth;
             height = container.clientHeight;
             Matter.Body.setPosition(ground, { x: width / 2, y: height + W / 2 });
-            Matter.Body.setPosition(leftWall, { x: -W / 2, y: height / 2 });
-            Matter.Body.setPosition(rightWall, { x: width + W / 2, y: height / 2 });
+            Matter.Body.setPosition(leftWall, { x: 50 - W / 2, y: height / 2 });
+            Matter.Body.setPosition(rightWall, { x: width - 50 + W / 2, y: height / 2 });
             Matter.Body.setVertices(ground, Matter.Bodies.rectangle(width / 2, height + W / 2, width + W * 2, W, wallOpts).vertices);
-            Matter.Body.setVertices(leftWall, Matter.Bodies.rectangle(-W / 2, height / 2, W, height * 3, wallOpts).vertices);
-            Matter.Body.setVertices(rightWall, Matter.Bodies.rectangle(width + W / 2, height / 2, W, height * 3, wallOpts).vertices);
+            Matter.Body.setVertices(leftWall, Matter.Bodies.rectangle(50 - W / 2, height / 2, W, height * 3, wallOpts).vertices);
+            Matter.Body.setVertices(rightWall, Matter.Bodies.rectangle(width - 50 + W / 2, height / 2, W, height * 3, wallOpts).vertices);
         };
         window.addEventListener("resize", handleResize);
 
@@ -124,6 +141,7 @@ export function PhysicsPills({ tags, onTagClick }: PhysicsPillsProps) {
             staggerTimeouts.forEach(clearTimeout);
             window.removeEventListener("resize", handleResize);
             cancelAnimationFrame(animFrameId);
+            observer.disconnect();
             Matter.Runner.stop(runner);
             Matter.Engine.clear(engine);
             Matter.World.clear(world, false);
@@ -135,20 +153,19 @@ export function PhysicsPills({ tags, onTagClick }: PhysicsPillsProps) {
     return (
         <div
             ref={containerRef}
-            className="absolute inset-0 overflow-hidden cursor-grab active:cursor-grabbing pointer-events-auto z-10 bg-white/5"
+            className="absolute inset-0 overflow-hidden cursor-grab active:cursor-grabbing pointer-events-auto z-0"
         >
             {tags.map((tag, i) => {
                 const isHovered = hoveredIdx === i;
-                const bg = isHovered
-                    ? "rgb(var(--color-brand))"
-                    : tagColor(i, seed);
-                const textColor = isHovered ? "#fff" : "#000";
+                const bg = "rgb(var(--color-brand))";
+                const textColor = "#fff";
+                const borderColor = "transparent";
 
                 return (
                     <div
                         key={`${tag}-${i}`}
                         ref={el => { wrapperRefs.current[i] = el; }}
-                        className="absolute top-0 left-0"
+                        className="absolute top-0 left-0 transition-opacity duration-700 ease-out"
                         style={{
                             opacity: 0,
                             transformOrigin: "center center",
@@ -164,10 +181,16 @@ export function PhysicsPills({ tags, onTagClick }: PhysicsPillsProps) {
                             className={clsx(
                                 "inline-flex items-center justify-center rounded-full shadow-md select-none",
                                 "font-heading text-sm font-bold uppercase tracking-wider whitespace-nowrap",
-                                "px-12 py-6 transition-colors duration-200",
+                                "px-[24px] py-3 transition-all duration-300",
                                 onTagClick && "cursor-pointer"
                             )}
-                            style={{ background: bg, color: textColor }}
+                            style={{
+                                background: bg,
+                                color: textColor,
+                                border: `solid 2px ${borderColor}`,
+                                transform: isHovered ? "scale(1.25)" : "scale(1)",
+                                zIndex: isHovered ? 20 : 10
+                            }}
                         >
                             {tag}
                         </div>
@@ -176,4 +199,6 @@ export function PhysicsPills({ tags, onTagClick }: PhysicsPillsProps) {
             })}
         </div>
     );
-}
+});
+PhysicsPills.displayName = "PhysicsPills";
+

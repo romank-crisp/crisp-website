@@ -6,7 +6,7 @@ const storage = new Storage();
 const BUCKET_NAME = "crisp-website-485112_cloudbuild";
 const DATA_PREFIX = "data";
 
-export async function readContent(filename: string) {
+export async function readContent(filename: string, revalidate: number = 3600) {
     return unstable_cache(
         async () => {
             try {
@@ -21,7 +21,7 @@ export async function readContent(filename: string) {
         [`content-${filename}`],
         {
             tags: [`content-${filename}`],
-            revalidate: 3600 // 1 hour
+            revalidate
         }
     )();
 }

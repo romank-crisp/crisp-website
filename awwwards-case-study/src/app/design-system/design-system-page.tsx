@@ -22,18 +22,12 @@ export default function DesignSystemPage() {
     ];
 
     return (
-        <main className="min-h-screen bg-white text-text p-32 md:p-64 pt-160">
+        <main className="min-h-screen bg-white text-text p-32 md:p-64 pt-[15vh]">
 
 
             <div className="flex flex-col gap-32 mb-64 border-b border-text/10 pb-32">
                 <div>
-                    <h1
-                        className="font-mega text-mega-h1 uppercase mb-8 text-brand"
-                        style={{
-                            WebkitTextStrokeWidth: '4px',
-                            WebkitTextStrokeColor: 'currentColor',
-                        }}
-                    >
+                    <h1 className="font-heading text-h1 uppercase mb-8 text-brand">
                         Design<br />System
                     </h1>
                     <p className="font-text text-xl md:text-2xl opacity-60 max-w-2xl">
