@@ -19,23 +19,23 @@ function DynamicLottie({ url }: { url: string }) {
 const ROWS_DATA: InfiniteScrollItem[][] = [
     // Row 1 - Height 500
     [
-        { id: '1-1', type: "image", width: 800, height: 500, color: "bg-gray-200", label: "image-1", src: "/img/workspane/pane-01.mp4" },
+        { id: '1-1', type: "image", width: 800, height: 500, color: "bg-gray-200", label: "image-1", src: "/img/workspane/pane-01-cardblock.mp4" },
         {
             id: '1-2', type: "text", width: 700, height: 500, color: "bg-brand", label: "text-1",
             text: "One dedicated team for copy, design, and marketing. Consistent monthly output with zero management overhead."
         },
-        { id: '1-3', type: "image", width: 1000, height: 500, color: "bg-gray-300", label: "image-2", src: "/img/workspane/pane-02.jpg" },
-        { id: '1-4', type: "image", width: 600, height: 500, color: "bg-gray-200", label: "image-3", src: "/img/workspane/pane-04.webm" },
-        { id: '1-5', type: "image", width: 900, height: 500, color: "bg-red-50", label: "image-4", src: "/img/workspane/pane03.mp4" },
-        { id: '1-6', type: "image", width: 800, height: 500, color: "bg-gray-100", label: "image-5", src: "/img/workspane/pane-01.mp4" },
+        { id: '1-3', type: "image", width: 1000, height: 500, color: "bg-gray-300", label: "image-2", src: "/img/workspane/pane-02-melanoma.jpg" },
+        { id: '1-4', type: "image", width: 600, height: 500, color: "bg-gray-200", label: "image-3", src: "/img/workspane/pane-03-lingu.mp4" },
+        { id: '1-5', type: "image", width: 900, height: 500, color: "bg-red-50", label: "image-4", src: "/img/workspane/pane-04-lung.webm" },
+        { id: '1-6', type: "image", width: 800, height: 500, color: "bg-gray-100", label: "image-5", src: "/img/workspane/pane-05-aiflower.webm" },
     ],
     // Row 2 - Height 700
     [
-        { id: '2-1', type: "image", width: 600, height: 700, color: "bg-blue-50", label: "image-6", src: "/img/workspane/pane-02.jpg" },
-        { id: '2-2', type: "image", width: 1000, height: 700, color: "bg-gray-200", label: "image-7", src: "/img/workspane/pane-04.webm" },
-        { id: '2-3', type: "image", width: 800, height: 700, color: "bg-gray-100", label: "image-8", src: "/img/workspane/pane03.mp4" },
-        { id: '2-4', type: "image", width: 700, height: 700, color: "bg-brand/10", label: "image-9", src: "/img/workspane/pane-01.mp4" },
-        { id: '2-5', type: "image", width: 800, height: 700, color: "bg-gray-300", label: "image-10", src: "/img/workspane/pane-02.jpg" },
+        { id: '2-1', type: "image", width: 600, height: 700, color: "bg-brand", label: "image-6", src: "/img/workspane/pane-07-discconnector.json" },
+        { id: '2-2', type: "image", width: 1000, height: 700, color: "bg-gray-200", label: "image-7", src: "/img/workspane/pane-06-donut.webm" },
+        { id: '2-3', type: "image", width: 800, height: 700, color: "bg-[#3B1C95]", label: "image-8", src: "/img/workspane/pane-08-route.json" },
+        { id: '2-4', type: "image", width: 700, height: 700, color: "bg-brand/10", label: "image-9", src: "/img/workspane/pane-01-cardblock.mp4" },
+        { id: '2-5', type: "image", width: 800, height: 700, color: "bg-gray-300", label: "image-10" },
         {
             id: '2-6', type: "text", width: 900, height: 700, color: "bg-brand", label: "text-2",
             text: "Fixed monthly scope. You define the goals; we handle end-to-end execution for a consistent, multi-channel presence."
@@ -43,15 +43,15 @@ const ROWS_DATA: InfiniteScrollItem[][] = [
     ],
     // Row 3 - Height 560
     [
-        { id: '3-1', type: "image", width: 900, height: 560, color: "bg-gray-300", label: "image-11", src: "/img/workspane/pane-04.webm" },
-        { id: '3-2', type: "image", width: 800, height: 560, color: "bg-red-50", label: "image-12", src: "/img/workspane/pane03.mp4" },
-        { id: '3-3', type: "image", width: 600, height: 560, color: "bg-gray-200", label: "image-13", src: "/img/workspane/pane-01.mp4" },
-        { id: '3-4', type: "image", width: 1000, height: 560, color: "bg-gray-100", label: "image-14", src: "/img/workspane/pane-02.jpg" },
+        { id: '3-1', type: "image", width: 900, height: 560, color: "bg-gray-300", label: "image-11", src: "/img/workspane/pane-04-lung.webm" },
+        { id: '3-2', type: "image", width: 800, height: 560, color: "bg-brand", label: "image-12" },
+        { id: '3-3', type: "image", width: 600, height: 560, color: "bg-gray-200", label: "image-13", src: "/img/workspane/pane-05-aiflower.webm" },
+        { id: '3-4', type: "image", width: 1000, height: 560, color: "bg-gray-100", label: "image-14", src: "/img/workspane/pane-02-melanoma.jpg" },
         {
             id: '3-5', type: "text", width: 700, height: 560, color: "bg-brand", label: "text-3",
             text: "Human expertise scaled by AI. Models accelerate research, while our team protects and refines your brand voice."
         },
-        { id: '3-6', type: "image", width: 800, height: 560, color: "bg-gray-200", label: "image-16", src: "/img/workspane/pane03.mp4" },
+        { id: '3-6', type: "image", width: 800, height: 560, color: "bg-gray-200", label: "image-16", src: "/img/workspane/pane-03-lingu.mp4" },
     ]
 ];
 

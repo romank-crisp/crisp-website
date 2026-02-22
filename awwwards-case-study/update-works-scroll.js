@@ -23,33 +23,33 @@ async function run() {
         const newData = {
             ...currentData,
             infiniteScroll: [
-                { type: "image", src: "/img/workspane/pane-01.mp4", width: 800, label: "Website Interactions Design" },
+                { type: "image", src: "/img/workspane/pane-01-cardblock.mp4", label: "Card Interactions" },
                 {
                     type: "text",
                     text: "One dedicated team for copy, design, and marketing. Consistent monthly output with zero management overhead."
                 },
-                { type: "image", src: "/img/workspane/pane-02.jpg" },
-                { type: "image", src: "/img/workspane/pane-04.webm", label: "Animation Reel" },
-                { type: "image", src: "/img/workspane/pane03.mp4" },
-                { type: "image", src: "/img/workspane/pane-01.mp4" },
-                { type: "image", color: "bg-gray-100", label: "Pending Upload", width: 600 },
-                { type: "image", src: "/img/workspane/pane-04.webm" },
-                { type: "image", src: "/img/workspane/pane03.mp4" },
-                { type: "image", src: "/img/workspane/pane-01.mp4" },
-                { type: "image", src: "/img/workspane/pane-02.jpg", color: "#F0EFEF" },
+                { type: "image", src: "/img/workspane/pane-02-melanoma.jpg", label: "Melanoma Awareness" },
+                { type: "image", src: "/img/workspane/pane-03-lingu.mp4", label: "Language App UX" },
+                { type: "image", src: "/img/workspane/pane-04-lung.webm", label: "Medical Visuals" },
+                { type: "image", src: "/img/workspane/pane-05-aiflower.webm", label: "Generative AI Art" },
+                { type: "image", src: "/img/workspane/pane-07-discconnector.json", color: "bg-brand", label: "Connector Animation" },
+                { type: "image", src: "/img/workspane/pane-06-donut.webm", label: "3D Motion Design" },
+                { type: "image", src: "/img/workspane/pane-08-route.json", color: "#3B1C95", label: "Route Planner UI" },
+                { type: "image", src: "/img/workspane/pane-01-cardblock.mp4", label: "Finance Dashboard" },
+                { type: "image", color: "bg-gray-100", label: "Design System Specs" },
                 {
                     type: "text",
                     text: "Fixed monthly scope. You define the goals; we handle end-to-end execution for a consistent, multi-channel presence."
                 },
-                { type: "image", src: "/img/workspane/pane-04.webm" },
-                { type: "image", color: "bg-brand", label: "Branding" },
-                { type: "image", src: "/img/workspane/pane-01.mp4" },
-                { type: "image", src: "/img/workspane/pane-02.jpg" },
+                { type: "image", src: "/img/workspane/pane-04-lung.webm", label: "Healthcare Portal" },
+                { type: "image", color: "bg-brand", label: "Brand Strategy" },
+                { type: "image", src: "/img/workspane/pane-05-aiflower.webm", label: "Campaign Assets" },
+                { type: "image", src: "/img/workspane/pane-02-melanoma.jpg", label: "Social Media Banner" },
                 {
                     type: "text",
                     text: "Human expertise scaled by AI. Models accelerate research, while our team protects and refines your brand voice."
                 },
-                { type: "image", src: "/img/workspane/pane03.mp4" }
+                { type: "image", src: "/img/workspane/pane-03-lingu.mp4", label: "Mobile App Presentation" }
             ]
         };
 
