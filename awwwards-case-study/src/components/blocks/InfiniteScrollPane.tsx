@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useMemo } from "react";
 import { motion, useMotionValue, useAnimationFrame, wrap } from "framer-motion";
-import { InfiniteScrollItem } from "@/types/work";
+import { InfiniteScrollItem, InfiniteScrollContentItem } from "@/types/work";
 import Lottie from "lottie-react";
 
 function DynamicLottie({ url }: { url: string }) {
@@ -22,7 +22,7 @@ const ROWS_DATA: InfiniteScrollItem[][] = [
         { id: '1-1', type: "image", width: 800, height: 500, color: "bg-gray-200", label: "image-1", src: "/img/workspane/pane-01.mp4" },
         {
             id: '1-2', type: "text", width: 700, height: 500, color: "bg-brand", label: "text-1",
-            text: "“Crisp truly understands how to translate complex business requirements into sleek, beautiful digital experiences that just work.”"
+            text: "One dedicated team for copy, design, and marketing. Consistent monthly output with zero management overhead."
         },
         { id: '1-3', type: "image", width: 1000, height: 500, color: "bg-gray-300", label: "image-2", src: "/img/workspane/pane-02.jpg" },
         { id: '1-4', type: "image", width: 600, height: 500, color: "bg-gray-200", label: "image-3", src: "/img/workspane/pane-04.webm" },
@@ -38,7 +38,7 @@ const ROWS_DATA: InfiniteScrollItem[][] = [
         { id: '2-5', type: "image", width: 800, height: 700, color: "bg-gray-300", label: "image-10", src: "/img/workspane/pane-02.jpg" },
         {
             id: '2-6', type: "text", width: 900, height: 700, color: "bg-brand", label: "text-2",
-            text: "“The team completely overhauled our design system. We are now able to ship new features twice as fast with zero visual bugs.”"
+            text: "Fixed monthly scope. You define the goals; we handle end-to-end execution for a consistent, multi-channel presence."
         },
     ],
     // Row 3 - Height 560
@@ -47,16 +47,38 @@ const ROWS_DATA: InfiniteScrollItem[][] = [
         { id: '3-2', type: "image", width: 800, height: 560, color: "bg-red-50", label: "image-12", src: "/img/workspane/pane03.mp4" },
         { id: '3-3', type: "image", width: 600, height: 560, color: "bg-gray-200", label: "image-13", src: "/img/workspane/pane-01.mp4" },
         { id: '3-4', type: "image", width: 1000, height: 560, color: "bg-gray-100", label: "image-14", src: "/img/workspane/pane-02.jpg" },
-        { id: '3-5', type: "image", width: 700, height: 560, color: "bg-blue-50", label: "image-15", src: "/img/workspane/pane-04.webm" },
+        {
+            id: '3-5', type: "text", width: 700, height: 560, color: "bg-brand", label: "text-3",
+            text: "Human expertise scaled by AI. Models accelerate research, while our team protects and refines your brand voice."
+        },
         { id: '3-6', type: "image", width: 800, height: 560, color: "bg-gray-200", label: "image-16", src: "/img/workspane/pane03.mp4" },
     ]
 ];
 
 interface InfiniteScrollPaneProps {
-    data?: InfiniteScrollItem[][];
+    data?: InfiniteScrollContentItem[];
 }
 
-export function InfiniteScrollPane({ data = ROWS_DATA }: InfiniteScrollPaneProps) {
+export function InfiniteScrollPane({ data }: InfiniteScrollPaneProps) {
+    const mappedData = useMemo(() => {
+        if (!data || data.length === 0) return ROWS_DATA;
+
+        let dataIndex = 0;
+        return ROWS_DATA.map(row =>
+            row.map(item => {
+                const incomingItem = data[dataIndex % data.length];
+                dataIndex++;
+
+                return {
+                    ...item,
+                    type: incomingItem.type || item.type,
+                    src: incomingItem.src !== undefined ? incomingItem.src : item.src,
+                    text: incomingItem.text !== undefined ? incomingItem.text : item.text,
+                    color: incomingItem.color !== undefined ? incomingItem.color : item.color,
+                };
+            })
+        );
+    }, [data]);
     const x = useMotionValue(0);
     const y = useMotionValue(0);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -174,7 +196,7 @@ export function InfiniteScrollPane({ data = ROWS_DATA }: InfiniteScrollPaneProps
                     };
                 }}
             >
-                {Array(copies).fill(data).flat().map((row, rowIdx) => (
+                {Array(copies).fill(mappedData).flat().map((row, rowIdx) => (
                     <div key={rowIdx} className="flex gap-4 md:gap-8 flex-nowrap">
                         {Array(copies).fill(row).flat().map((item, idx) => {
                             const isPlaceholder = item.type === "image" && !item.src;
