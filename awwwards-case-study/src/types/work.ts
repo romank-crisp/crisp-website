@@ -26,7 +26,6 @@ export interface InfiniteScrollContentItem {
     color?: string; // Hex color for lottie/text background
     label?: string; // Optional override for the dimension label
     width?: number; // Optional override layout width
-    height?: number; // Optional override layout height
 }
 
 export interface WorksPageContent {

@@ -23,7 +23,7 @@ async function run() {
         const newData = {
             ...currentData,
             infiniteScroll: [
-                { type: "image", src: "/img/workspane/pane-01.mp4", width: 800, height: 500, label: "Website Interactions Design" },
+                { type: "image", src: "/img/workspane/pane-01.mp4", width: 800, label: "Website Interactions Design" },
                 {
                     type: "text",
                     text: "One dedicated team for copy, design, and marketing. Consistent monthly output with zero management overhead."
@@ -32,7 +32,7 @@ async function run() {
                 { type: "image", src: "/img/workspane/pane-04.webm", label: "Animation Reel" },
                 { type: "image", src: "/img/workspane/pane03.mp4" },
                 { type: "image", src: "/img/workspane/pane-01.mp4" },
-                { type: "image", color: "bg-gray-100", label: "Pending Upload", width: 600, height: 400 }, // Placeholder with override
+                { type: "image", color: "bg-gray-100", label: "Pending Upload", width: 600 },
                 { type: "image", src: "/img/workspane/pane-04.webm" },
                 { type: "image", src: "/img/workspane/pane03.mp4" },
                 { type: "image", src: "/img/workspane/pane-01.mp4" },
