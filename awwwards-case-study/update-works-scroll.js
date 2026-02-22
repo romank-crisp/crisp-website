@@ -23,17 +23,17 @@ async function run() {
         const newData = {
             ...currentData,
             infiniteScroll: [
-                { type: "image", src: "/img/workspane/pane-01.mp4" },
+                { type: "image", src: "/img/workspane/pane-01.mp4", label: "Hero Video" },
                 {
                     type: "text",
                     text: "One dedicated team for copy, design, and marketing. Consistent monthly output with zero management overhead."
                 },
-                { type: "image", src: "/img/workspane/pane-02.jpg" },
-                { type: "image", src: "/img/workspane/pane-04.webm" },
+                { type: "image", src: "/img/workspane/pane-02.jpg", label: "Static 02" },
+                { type: "image", src: "", label: "Placeholder Dark", color: "bg-gray-800" },
                 { type: "image", src: "/img/workspane/pane03.mp4" },
                 { type: "image", src: "/img/workspane/pane-01.mp4" },
                 { type: "image", src: "/img/workspane/pane-02.jpg" },
-                { type: "image", src: "/img/workspane/pane-04.webm" },
+                { type: "image", src: "", label: "Placeholder Teal", color: "bg-teal-200" },
                 { type: "image", src: "/img/workspane/pane03.mp4" },
                 { type: "image", src: "/img/workspane/pane-01.mp4" },
                 { type: "image", src: "/img/workspane/pane-02.jpg" },
@@ -41,7 +41,7 @@ async function run() {
                     type: "text",
                     text: "Fixed monthly scope. You define the goals; we handle end-to-end execution for a consistent, multi-channel presence."
                 },
-                { type: "image", src: "/img/workspane/pane-04.webm" },
+                { type: "image", src: "", label: "Placeholder Red", color: "bg-red-400" },
                 { type: "image", src: "/img/workspane/pane03.mp4" },
                 { type: "image", src: "/img/workspane/pane-01.mp4" },
                 { type: "image", src: "/img/workspane/pane-02.jpg" },
