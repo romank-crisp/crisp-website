@@ -242,7 +242,7 @@ export function InfiniteScrollPane({ data }: InfiniteScrollPaneProps) {
                                                 )
                                             ) : (
                                                 <div className="absolute inset-0 bg-gray-200/50 flex flex-col items-center justify-center">
-                                                    <span className="font-mono text-sm tracking-widest font-bold text-gray-400 mb-2 uppercase">{item.label}</span>
+                                                    <span className="font-heading text-sm font-bold uppercase tracking-wider text-gray-400 mb-2">{item.label}</span>
                                                     <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 opacity-50">
                                                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                                                         <circle cx="8.5" cy="8.5" r="1.5"></circle>
@@ -256,7 +256,7 @@ export function InfiniteScrollPane({ data }: InfiniteScrollPaneProps) {
                                             <p className="font-text text-text-lg text-white">{item.text}</p>
                                         </div>
                                     )}
-                                    <span className="absolute bottom-6 right-6 font-mono text-sm tracking-widest font-bold text-white bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full z-10">
+                                    <span className="absolute bottom-6 right-6 font-heading text-sm font-bold uppercase tracking-wider text-white bg-black/40 backdrop-blur-sm px-4 py-2 rounded-full z-10">
                                         {item.label || `${item.width}x${item.height}`}
                                     </span>
                                 </div>
