@@ -176,60 +176,67 @@ export function InfiniteScrollPane({ data = ROWS_DATA }: InfiniteScrollPaneProps
             >
                 {Array(copies).fill(data).flat().map((row, rowIdx) => (
                     <div key={rowIdx} className="flex gap-4 md:gap-8 flex-nowrap">
-                        {Array(copies).fill(row).flat().map((item, idx) => (
-                            <div
-                                key={idx}
-                                className={`shrink-0 flex items-center justify-center overflow-hidden relative ${item.type === "image" && !item.src ? '' : `rounded-[2rem] shadow-sm ${item.color?.startsWith('#') || item.color?.startsWith('rgb') || item.color?.startsWith('hsl') ? '' : item.color}`}`}
-                                style={{
-                                    width: item.width,
-                                    height: item.height,
-                                    ...(item.type === "image" && !item.src ? {} : (item.color?.startsWith('#') || item.color?.startsWith('rgb') || item.color?.startsWith('hsl') ? { backgroundColor: item.color } : {}))
-                                }}
-                            >
-                                {item.type === "image" ? (
-                                    <>
-                                        {item.src ? (
-                                            item.src.endsWith('.mp4') || item.src.endsWith('.webm') ? (
-                                                <video
-                                                    src={item.src}
-                                                    autoPlay
-                                                    muted
-                                                    loop
-                                                    playsInline
-                                                    className="absolute inset-0 w-full h-full object-cover"
-                                                />
-                                            ) : item.src.endsWith('.json') ? (
-                                                <div className="absolute inset-0 w-full h-full flex items-center justify-center p-8">
-                                                    <DynamicLottie url={item.src} />
-                                                </div>
+                        {Array(copies).fill(row).flat().map((item, idx) => {
+                            const isPlaceholder = item.type === "image" && !item.src;
+                            const isText = item.type === "text";
+                            const hasCustomColor = item.color?.startsWith('#') || item.color?.startsWith('rgb') || item.color?.startsWith('hsl');
+                            const colorClass = hasCustomColor ? '' : item.color;
+
+                            return (
+                                <div
+                                    key={idx}
+                                    className={`shrink-0 flex items-center justify-center overflow-hidden relative ${isPlaceholder ? '' : `rounded-[2rem] shadow-sm ${isText ? 'bg-brand' : colorClass}`}`}
+                                    style={{
+                                        width: item.width,
+                                        height: item.height,
+                                        ...(!isPlaceholder && !isText && hasCustomColor ? { backgroundColor: item.color } : {})
+                                    }}
+                                >
+                                    {item.type === "image" ? (
+                                        <>
+                                            {item.src ? (
+                                                item.src.endsWith('.mp4') || item.src.endsWith('.webm') ? (
+                                                    <video
+                                                        src={item.src}
+                                                        autoPlay
+                                                        muted
+                                                        loop
+                                                        playsInline
+                                                        className="absolute inset-0 w-full h-full object-cover"
+                                                    />
+                                                ) : item.src.endsWith('.json') ? (
+                                                    <div className="absolute inset-0 w-full h-full flex items-center justify-center p-8">
+                                                        <DynamicLottie url={item.src} />
+                                                    </div>
+                                                ) : (
+                                                    <img
+                                                        src={item.src}
+                                                        alt={item.label}
+                                                        className="absolute inset-0 w-full h-full object-cover"
+                                                    />
+                                                )
                                             ) : (
-                                                <img
-                                                    src={item.src}
-                                                    alt={item.label}
-                                                    className="absolute inset-0 w-full h-full object-cover"
-                                                />
-                                            )
-                                        ) : (
-                                            <div className="absolute inset-0 bg-gray-200/50 flex flex-col items-center justify-center">
-                                                <span className="font-mono text-sm tracking-widest font-bold text-gray-400 mb-2 uppercase">{item.label}</span>
-                                                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 opacity-50">
-                                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                                    <polyline points="21 15 16 10 5 21"></polyline>
-                                                </svg>
-                                            </div>
-                                        )}
-                                    </>
-                                ) : (
-                                    <div className="p-32 h-full flex items-center justify-center text-center">
-                                        <p className="font-text text-text-lg text-white">{item.text}</p>
-                                    </div>
-                                )}
-                                <span className="absolute bottom-6 right-6 font-mono text-sm tracking-widest font-bold opacity-30">
-                                    {item.width}x{item.height}
-                                </span>
-                            </div>
-                        ))}
+                                                <div className="absolute inset-0 bg-gray-200/50 flex flex-col items-center justify-center">
+                                                    <span className="font-mono text-sm tracking-widest font-bold text-gray-400 mb-2 uppercase">{item.label}</span>
+                                                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 opacity-50">
+                                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                                        <polyline points="21 15 16 10 5 21"></polyline>
+                                                    </svg>
+                                                </div>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <div className="p-32 h-full flex items-center justify-center text-center">
+                                            <p className="font-text text-text-lg text-white">{item.text}</p>
+                                        </div>
+                                    )}
+                                    <span className="absolute bottom-6 right-6 font-mono text-sm tracking-widest font-bold text-white bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full z-10">
+                                        {item.width}x{item.height}
+                                    </span>
+                                </div>
+                            );
+                        })}
                     </div>
                 ))}
             </motion.div>
