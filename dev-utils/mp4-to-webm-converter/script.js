@@ -21,6 +21,7 @@ const convertAnotherBtn = document.getElementById('convertAnotherBtn');
 const progressText = document.getElementById('progressText');
 const progressFill = document.getElementById('progressFill');
 const successFileName = document.getElementById('successFileName');
+const removeAudioCheckbox = document.getElementById('removeAudio');
 
 // Quality Buttons
 const qualityBtns = document.querySelectorAll('.quality-btn');
@@ -44,10 +45,10 @@ function setupEventListeners() {
     dropZone.addEventListener('dragover', handleDragOver);
     dropZone.addEventListener('dragleave', handleDragLeave);
     dropZone.addEventListener('drop', handleDrop);
-    
+
     // File Input
     fileInput.addEventListener('change', handleFileSelect);
-    
+
     // Quality Buttons
     qualityBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -56,13 +57,13 @@ function setupEventListeners() {
             selectedQuality = btn.dataset.quality;
         });
     });
-    
+
     // Action Buttons
     changeFileBtn.addEventListener('click', resetToUpload);
     convertBtn.addEventListener('click', handleConvert);
     downloadBtn.addEventListener('click', handleDownload);
     convertAnotherBtn.addEventListener('click', resetToUpload);
-    
+
     // Output Name Input
     outputNameInput.addEventListener('input', (e) => {
         outputFileName = e.target.value;
@@ -83,7 +84,7 @@ function handleDragLeave(e) {
 function handleDrop(e) {
     e.preventDefault();
     dropZone.classList.remove('drag-over');
-    
+
     const files = e.dataTransfer.files;
     if (files.length > 0) {
         handleFile(files[0]);
@@ -105,18 +106,18 @@ function handleFile(file) {
         alert('Please select an MP4 file');
         return;
     }
-    
+
     selectedFile = file;
-    
+
     // Update UI
     fileName.textContent = file.name;
     fileSize.textContent = formatFileSize(file.size);
-    
+
     // Set default output name (remove .mp4 extension)
     const defaultName = file.name.replace(/\.mp4$/i, '');
     outputFileName = defaultName;
     outputNameInput.value = defaultName;
-    
+
     // Show settings section
     showSection('settings');
 }
@@ -136,8 +137,8 @@ function showSection(section) {
     settingsSection.classList.add('hidden');
     progressSection.classList.add('hidden');
     successSection.classList.add('hidden');
-    
-    switch(section) {
+
+    switch (section) {
         case 'upload':
             uploadSection.classList.remove('hidden');
             break;
@@ -159,6 +160,7 @@ function resetToUpload() {
     outputFileName = '';
     fileInput.value = '';
     outputNameInput.value = '';
+    removeAudioCheckbox.checked = false;
     showSection('upload');
 }
 
@@ -168,57 +170,58 @@ async function handleConvert() {
         alert('Please select a file first');
         return;
     }
-    
+
     if (!outputFileName.trim()) {
         alert('Please enter an output file name');
         return;
     }
-    
+
     // Show progress section
     showSection('progress');
     progressText.textContent = 'Preparing conversion...';
     progressFill.style.width = '10%';
-    
+
     try {
         // Create FormData
         const formData = new FormData();
         formData.append('file', selectedFile);
         formData.append('quality', selectedQuality);
         formData.append('outputName', outputFileName);
-        
+        formData.append('removeAudio', removeAudioCheckbox.checked);
+
         // Update progress
         progressText.textContent = 'Converting video...';
         progressFill.style.width = '50%';
-        
+
         // Send to server for conversion
         const response = await fetch('/convert', {
             method: 'POST',
             body: formData
         });
-        
+
         if (!response.ok) {
             throw new Error('Conversion failed');
         }
-        
+
         // Update progress
         progressFill.style.width = '90%';
         progressText.textContent = 'Finalizing...';
-        
+
         // Get the converted file
         const blob = await response.blob();
-        
+
         // Store the blob for download
         window.convertedBlob = blob;
-        
+
         // Update progress
         progressFill.style.width = '100%';
-        
+
         // Show success
         setTimeout(() => {
             successFileName.textContent = `${outputFileName}.webm`;
             showSection('success');
         }, 500);
-        
+
     } catch (error) {
         console.error('Conversion error:', error);
         alert('Conversion failed. Please make sure the server is running.');
@@ -232,7 +235,7 @@ function handleDownload() {
         alert('No file to download');
         return;
     }
-    
+
     // Create download link
     const url = URL.createObjectURL(window.convertedBlob);
     const a = document.createElement('a');

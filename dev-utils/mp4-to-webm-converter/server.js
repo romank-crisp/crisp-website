@@ -58,6 +58,7 @@ app.post('/convert', upload.single('file'), async (req, res) => {
     const inputPath = req.file.path;
     const quality = req.body.quality || 'medium';
     const outputName = req.body.outputName || 'output';
+    const removeAudio = req.body.removeAudio === 'true';
 
     // Save to Desktop instead of local outputs folder
     const desktopPath = path.join(os.homedir(), 'Desktop');
@@ -74,9 +75,10 @@ app.post('/convert', upload.single('file'), async (req, res) => {
     console.log(`Converting: ${req.file.originalname}`);
     console.log(`Quality: ${quality} (CRF: ${settings.crf}, Bitrate: ${settings.bitrate})`);
     console.log(`Output: ${outputName}.webm`);
+    console.log(`Remove Audio: ${removeAudio}`);
 
     try {
-        await convertToWebM(inputPath, outputPath, settings);
+        await convertToWebM(inputPath, outputPath, settings, removeAudio);
 
         // Send the converted file
         res.download(outputPath, `${outputName}.webm`, (err) => {
@@ -98,19 +100,26 @@ app.post('/convert', upload.single('file'), async (req, res) => {
 });
 
 // Convert video to WebM
-function convertToWebM(inputPath, outputPath, settings) {
+function convertToWebM(inputPath, outputPath, settings, removeAudio) {
     return new Promise((resolve, reject) => {
+        let outputOptions = [
+            '-c:v libvpx-vp9',           // VP9 codec for video
+            '-crf ' + settings.crf,       // Quality (lower = better)
+            '-b:v ' + settings.bitrate,   // Target bitrate
+            '-cpu-used 2',                // Encoding speed (0-5, higher = faster but less efficient)
+            '-row-mt 1',                  // Enable row-based multithreading
+            '-threads 0'                  // Use all available CPU threads
+        ];
+
+        if (removeAudio) {
+            outputOptions.push('-an');    // Disable audio recording
+        } else {
+            outputOptions.push('-c:a libopus'); // Opus codec for audio
+            outputOptions.push('-b:a 128k');    // Audio bitrate
+        }
+
         ffmpeg(inputPath)
-            .outputOptions([
-                '-c:v libvpx-vp9',           // VP9 codec for video
-                '-crf ' + settings.crf,       // Quality (lower = better)
-                '-b:v ' + settings.bitrate,   // Target bitrate
-                '-c:a libopus',               // Opus codec for audio
-                '-b:a 128k',                  // Audio bitrate
-                '-cpu-used 2',                // Encoding speed (0-5, higher = faster but less efficient)
-                '-row-mt 1',                  // Enable row-based multithreading
-                '-threads 0'                  // Use all available CPU threads
-            ])
+            .outputOptions(outputOptions)
             .output(outputPath)
             .on('start', (commandLine) => {
                 console.log('FFmpeg command:', commandLine);

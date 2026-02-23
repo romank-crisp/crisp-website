@@ -189,6 +189,7 @@ export function WorksPage({ clientsData, worksData, content }: { clientsData: Cl
                 id: item.id || `item-${Math.random()}`,
                 width: item.width || 600,
                 height: item.height || 500,
+                src: item.src ? getAssetUrl(item.src) : undefined,
             });
         });
 
