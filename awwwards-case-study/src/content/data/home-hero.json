@@ -31,7 +31,7 @@
           "className": "bg-text/5 text-text border-r border-b border-black/5 p-0",
           "contentType": "video",
           "contentProps": {
-            "videoSrc": "/img/home-hero/home-01.webm"
+            "videoSrc": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-01.webm"
           }
         },
         {
@@ -40,7 +40,7 @@
           "className": "bg-brand border-r border-black/5 p-0 overflow-hidden",
           "contentType": "distortion-image",
           "contentProps": {
-            "src": "/img/home-hero/home-hero-03.png",
+            "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
             "alt": "Hero Illustration"
           }
         }
@@ -56,7 +56,7 @@
           "className": "bg-brand text-white border-r border-b border-black/5 p-0 flex items-center justify-center",
           "contentType": "lottie",
           "contentProps": {
-            "lottieSrc": "/img/home-hero/home-hero-04.json"
+            "lottieSrc": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-04.json"
           }
         },
         {
@@ -65,7 +65,7 @@
           "className": "bg-white text-text border-r border-black/5 p-0",
           "contentType": "video",
           "contentProps": {
-            "videoSrc": "/img/home-hero/home-hero-03.webm"
+            "videoSrc": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.webm"
           }
         }
       ]
@@ -80,7 +80,7 @@
           "className": "bg-text/5 text-text border-r border-b border-black/5 p-0",
           "contentType": "video",
           "contentProps": {
-            "videoSrc": "/img/home-hero/home-here-06.webm"
+            "videoSrc": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-here-06.webm"
           }
         },
         {
@@ -89,7 +89,7 @@
           "className": "bg-brand text-white border-r border-black/5 p-0",
           "contentType": "image",
           "contentProps": {
-            "src": "/img/home-hero/home-hero-04-02.png",
+            "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-04-02.png",
             "alt": "Hero Part 4-2"
           }
         }

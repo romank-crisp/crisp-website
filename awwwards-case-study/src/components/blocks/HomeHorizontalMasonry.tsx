@@ -1,11 +1,13 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { getAssetUrl } from '@/lib/utils';
 import { useGSAP } from "@gsap/react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import Spline from "@splinetool/react-spline";
 
 function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -29,7 +31,56 @@ interface HorizontalMasonryProps {
     className?: string;
 }
 
-export function HomeHorizontalMasonry({ columns, className }: HorizontalMasonryProps) {
+export function HomeHorizontalMasonry({ columns: initialColumns, className }: HorizontalMasonryProps) {
+    // Inject interactive & video components into specific grid cells
+    const columns = useMemo(() => {
+        return initialColumns.map((col, colIdx) => ({
+            ...col,
+            cells: col.cells.map((cell, cellIdx) => {
+                // 3rd row (column index 2), bottom block (index 1) -> Spline Scene
+                if (colIdx === 2 && cellIdx === 1) {
+                    return {
+                        ...cell,
+                        content: (
+                            <div className="absolute inset-0 w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing [&>div]:!h-full [&>div]:!w-full [&>div>canvas]:!w-full [&>div>canvas]:!h-full [&>div>canvas]:object-cover">
+                                <Spline scene="/spline/scene.splinecode" />
+                            </div>
+                        )
+                    };
+                }
+
+                // 4th row (column index 3), upper block (index 0) -> home-hero-03.webm
+                if (colIdx === 3 && cellIdx === 0) {
+                    return {
+                        ...cell,
+                        content: (
+                            <div className="relative w-full h-full">
+                                <video
+                                    src={getAssetUrl("/img/home-hero/home-hero-03.webm")}
+                                    autoPlay
+                                    loop
+                                    muted
+                                    playsInline
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                        )
+                    };
+                }
+
+                // 4th row (column index 3), bottom block (index 1) -> Blank
+                if (colIdx === 3 && cellIdx === 1) {
+                    return {
+                        ...cell,
+                        content: <div className="w-full h-full bg-transparent" />
+                    };
+                }
+
+                return cell;
+            })
+        }));
+    }, [initialColumns]);
+
     const containerRef = useRef<HTMLDivElement>(null);
     const stickyRef = useRef<HTMLDivElement>(null);
     const trackRef = useRef<HTMLDivElement>(null);
@@ -128,10 +179,13 @@ export function HomeHorizontalMasonry({ columns, className }: HorizontalMasonryP
                         ref={trackRef}
                         className="flex flex-row h-full w-fit items-stretch will-change-transform"
                     >
-                        {columns.map((col) => (
+                        {columns.map((col, colIdx) => (
                             <div
                                 key={col.id}
-                                className="flex flex-col h-full shrink-0 relative"
+                                className={cn(
+                                    "flex flex-col h-full shrink-0 relative",
+                                    colIdx > 0 && "-ml-[0.5px]" // overlap columns visually to prevent 1px gap
+                                )}
                                 style={{ width: col.width }}
                             >
                                 {col.cells.map((cell) => (
@@ -139,6 +193,7 @@ export function HomeHorizontalMasonry({ columns, className }: HorizontalMasonryP
                                         key={cell.id}
                                         className={cn(
                                             "masonry-cell relative w-full flex flex-col justify-center overflow-hidden",
+                                            "scale-[1.005] -mb-[0.5px]", // minor scaling / margin to hide inner gap rounding
                                             cell.className
                                         )}
                                         style={{ height: cell.height }}

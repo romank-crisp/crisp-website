@@ -2,19 +2,19 @@
   "testimonials": [
     {
       "quote": "Crisp transformed our digital presence with a {stunning website} that perfectly captures our brand essence. Their attention to detail and creative approach exceeded all expectations.",
-      "logo": "/img/client-logos/client-logo-15-lingu.svg",
+      "logo": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-15-lingu.svg",
       "name": "Maria Schmidt",
       "position": "CEO, Lingu"
     },
     {
       "quote": "Working with Crisp was an absolute pleasure. They delivered a {sustainable, user-friendly platform} that truly reflects our commitment to environmental responsibility.",
-      "logo": "/img/client-logos/client-logo-09-centrogreen.svg",
+      "logo": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-09-centrogreen.svg",
       "name": "Thomas Green",
       "position": "Founder, Centrogreen"
     },
     {
       "quote": "The team's ability to understand our vision and translate it into a {powerful digital experience} was remarkable. Our platform engagement increased by 300% after launch.",
-      "logo": "/img/imgcases/theytalk/tt-logo-top.svg",
+      "logo": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/imgcases/theytalk/tt-logo-top.svg",
       "name": "Sarah Anderson",
       "position": "Head of Product, TheyTalk"
     }

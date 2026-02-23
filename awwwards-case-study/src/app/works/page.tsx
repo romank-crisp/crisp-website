@@ -1,4 +1,5 @@
 import { WorksPage } from './works-page';
+import { getAssetUrl } from "@/lib/utils";
 import { readContent } from '@/lib/content';
 import { parseSeoData } from "@/lib/seo";
 import { SeoData } from "@/types/seo";
@@ -14,7 +15,7 @@ export async function generateMetadata() {
             title: "Our Works - Crisp Studio",
             description: "Explore our portfolio of award-winning digital projects.",
             openGraph: {
-                images: ["/img/og-works.jpg"]
+                images: [getAssetUrl("/img/og-works.jpg")]
             }
         };
     }

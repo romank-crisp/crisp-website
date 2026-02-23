@@ -2,52 +2,52 @@
   "clients": [
     {
       "name": "Lingu",
-      "src": "/img/client-logos/client-logo-15-lingu.svg",
+      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-15-lingu.svg",
       "url": null
     },
     {
       "name": "Centrogreen",
-      "src": "/img/client-logos/client-logo-09-centrogreen.svg",
+      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-09-centrogreen.svg",
       "url": null
     },
     {
       "name": "Folkeuniversitetet",
-      "src": "/img/client-logos/client-logo-14-folkeuniversitetet.svg",
+      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-14-folkeuniversitetet.svg",
       "url": null
     },
     {
       "name": "Moply",
-      "src": "/img/client-logos/client-logo-01-moply.svg",
+      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-01-moply.svg",
       "url": null
     },
     {
       "name": "Reono",
-      "src": "/img/client-logos/client-logo-02-reono.svg",
+      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-02-reono.svg",
       "url": null
     },
     {
       "name": "Swiss Professionals",
-      "src": "/img/client-logos/client-logo-03-swissprofessionals-small.svg",
+      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-03-swissprofessionals-small.svg",
       "url": null
     },
     {
       "name": "SparkSales",
-      "src": "/img/client-logos/client-logo-04-sparksales.svg",
+      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-04-sparksales.svg",
       "url": null
     },
     {
       "name": "Fresh",
-      "src": "/img/client-logos/client-logo-08-fresh.svg",
+      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-08-fresh.svg",
       "url": null
     },
     {
       "name": "Entrilia",
-      "src": "/img/client-logos/client-logo-12-entrilia.svg",
+      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-12-entrilia.svg",
       "url": null
     },
     {
       "name": "LastMile",
-      "src": "/img/client-logos/client-logo-13-lastmile.svg",
+      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-13-lastmile.svg",
       "url": null
     }
   ]

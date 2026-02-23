@@ -79,7 +79,7 @@ const files = {
             },
             {
                 id: "col-4",
-                width: "31.5vw",
+                width: "45vw",
                 cells: [
                     {
                         id: "cell-4-1",
@@ -93,10 +93,11 @@ const files = {
                     {
                         id: "cell-4-2",
                         height: "40vh",
-                        className: "bg-brand text-white border-r border-black/5 p-0 overflow-hidden relative",
-                        contentType: "spline",
+                        className: "bg-brand text-white border-r border-black/5 p-0",
+                        contentType: "image",
                         contentProps: {
-                            splineUrl: "/spline/scr_25/scene.splinecode"
+                            src: "/img/home-hero/home-hero-04-02.png",
+                            alt: "Hero Part 4-2"
                         }
                     }
                 ]

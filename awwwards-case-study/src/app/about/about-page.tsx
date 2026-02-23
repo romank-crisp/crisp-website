@@ -42,8 +42,8 @@ export default function AboutPage({ aboutData, clientsData, locationsData, servi
 
         ScrollTrigger.create({
             trigger: darkSectionRef.current,
-            start: "top 75%",
-            end: "bottom 70%",
+            start: "top 20%",
+            end: "bottom 30%",
             onEnter: () => {
                 gsap.to(mainRef.current, {
                     backgroundColor: "rgb(var(--color-text))",

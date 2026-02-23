@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { ContactForm } from "@/components/forms/ContactForm";
 import Image from "next/image";
 import gsap from "gsap";
+import { getAssetUrl } from "@/lib/utils";
 import { useGSAP } from "@gsap/react";
 import { Calendar, Mail, MessageSquare, X } from "lucide-react";
 import { useContactForm } from "@/context/ContactFormContext";
@@ -202,7 +203,7 @@ export function ContactOverlay() {
                     className="absolute top-24 right-24 md:top-48 md:right-48 w-32 h-32 md:w-64 md:h-64 flex items-center justify-center bg-black border border-white/10 rounded-full hover:scale-110 hover:bg-neutral-900 transition-all duration-500 group z-[110] shadow-2xl"
                 >
                     <Image
-                        src="/img/icons/cross.svg"
+                        src={getAssetUrl("/img/icons/cross.svg")}
                         alt="Close"
                         width={20}
                         height={20}
@@ -253,7 +254,7 @@ export function ContactOverlay() {
                         className="absolute inset-0 w-full h-full object-cover cursor-pointer"
                         onClick={handleInteractionReset}
                     >
-                        <source src="/img/crisp-chucha.webm" type="video/webm" />
+                        <source src={getAssetUrl("/img/crisp-chucha.webm")} type="video/webm" />
                     </video>
 
                     {/* Circle Actions */}

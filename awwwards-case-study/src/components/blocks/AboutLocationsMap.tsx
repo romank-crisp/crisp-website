@@ -163,7 +163,7 @@ export const AboutLocationsMap = ({ data }: { data: LocationData }) => {
                 </h2>
 
                 {/* Description Text */}
-                <p className="font-text text-text-lg text-white/60 w-full md:max-w-[40%] mb-16 md:mb-24 leading-relaxed">
+                <p className="font-text text-text-lg text-white/60 w-full md:max-w-[50%] mb-16 md:mb-24 leading-relaxed">
                     {description}
                 </p>
             </div>

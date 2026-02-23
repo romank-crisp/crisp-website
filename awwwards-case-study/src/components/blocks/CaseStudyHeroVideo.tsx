@@ -4,7 +4,9 @@ import React, { useRef, useState } from "react";
 import { Play } from "lucide-react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import Link from "next/link";
 import Image from "next/image";
+import { getAssetUrl } from "@/lib/utils";
 
 import { HeroVideoProps } from "@/types/case-study";
 
@@ -183,7 +185,7 @@ export function CaseStudyHeroVideo({
                                 className="w-64 h-64 flex items-center justify-center bg-black border border-white/10 rounded-full hover:scale-110 hover:bg-neutral-900 transition-all duration-500 group shadow-2xl"
                             >
                                 <Image
-                                    src="/img/icons/cross.svg"
+                                    src={getAssetUrl("/img/icons/cross.svg")}
                                     alt="Close"
                                     width={20}
                                     height={20}
@@ -197,7 +199,7 @@ export function CaseStudyHeroVideo({
                             className="absolute right-24 md:right-48 bottom-0 w-64 h-64 flex items-center justify-center bg-black border border-white/10 rounded-full hover:scale-110 hover:bg-neutral-900 transition-all duration-500 pointer-events-auto group shadow-2xl"
                         >
                             <Image
-                                src={isMuted ? "/img/icons/volume-off.svg" : "/img/icons/volume.svg"}
+                                src={getAssetUrl(isMuted ? "/img/icons/volume-off.svg" : "/img/icons/volume.svg")}
                                 alt="Toggle Sound"
                                 width={24}
                                 height={24}

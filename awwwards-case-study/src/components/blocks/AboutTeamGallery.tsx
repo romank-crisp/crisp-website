@@ -8,15 +8,17 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+import { getAssetUrl } from "@/lib/utils";
+
 const TEAM_IMAGES = [
-    "/img/teampic/team-gallery-1.JPG",
-    "/img/teampic/team-gallery-2.JPG",
-    "/img/teampic/team-gallery-3.JPG",
-    "/img/teampic/team-gallery-4.JPG",
-    "/img/teampic/team-gallery-5.JPG",
-    "/img/teampic/team-gallery-6.JPG",
-    "/img/teampic/team-gallery-7.JPG",
-    "/img/teampic/team-gallery-8.JPG",
+    getAssetUrl("/img/teampic/team-gallery-1.JPG"),
+    getAssetUrl("/img/teampic/team-gallery-2.JPG"),
+    getAssetUrl("/img/teampic/team-gallery-3.JPG"),
+    getAssetUrl("/img/teampic/team-gallery-4.JPG"),
+    getAssetUrl("/img/teampic/team-gallery-5.JPG"),
+    getAssetUrl("/img/teampic/team-gallery-6.JPG"),
+    getAssetUrl("/img/teampic/team-gallery-7.JPG"),
+    getAssetUrl("/img/teampic/team-gallery-8.JPG"),
 ];
 
 const WIDTHS = [

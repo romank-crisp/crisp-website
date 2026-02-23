@@ -96,7 +96,7 @@ gcloud run services describe crisp-website \
 
 ## 🪣 Google Cloud Storage Operations
 
-> ⚠️ **CRITICAL**: The bucket `gs://crisp-website-485112_cloudbuild/data/` contains live production content. Never overwrite with generated data.
+> ⚠️ **CRITICAL**: The bucket `gs://crisp-website-485112_cloudbuild/data/` contains live production content. NEVER NEVER NEVER NEVER NEVER NEVER overwrite it with generated data or local JSON files. The local files are often stale, and pushing them will destroy the user's recent GCS-based Admin edits.
 
 ```bash
 # List all data files
@@ -247,7 +247,7 @@ node upload_json.js
 
 - **NEVER** push to `main` without a passing build
 - **NEVER** skip Docker platform flag (`--platform linux/amd64`) for Cloud Run
-- **NEVER** delete GCS files without confirming a backup exists
+- **NEVER** push local JSON data to GCS. NEVER NEVER NEVER NEVER NEVER NEVER overwrite the live database from local data.
 - **ALWAYS** tag releases after successful deployment
 - **ALWAYS** use versioned image tags (git SHA), not just `latest`
 

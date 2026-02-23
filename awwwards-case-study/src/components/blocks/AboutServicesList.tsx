@@ -11,21 +11,27 @@ import { Tag } from "@/components/ui/Tag";
 import { ServicesData } from "@/content/services";
 import { useContactForm } from "@/context/ContactFormContext";
 import Lottie from "lottie-react";
-import brandingAnimation from "../../../public/img/about-services-branding.json";
-import webAnimation from "../../../public/img/about-services-web.json";
-import contentAnimation from "../../../public/img/about-services-conten.json";
 import { TextFormatter } from "@/components/ui/TextFormatter";
 import { useEffect } from "react";
+import { getAssetUrl } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const serviceAnimations = [brandingAnimation, webAnimation, contentAnimation];
+const serviceAnimations = [
+    getAssetUrl("/img/about-services-branding.json"),
+    getAssetUrl("/img/about-services-web.json"),
+    getAssetUrl("/img/about-services-conten.json")
+];
 
 function DynamicLottie({ url, fallback }: { url?: string, fallback: any }) {
-    const [data, setData] = useState(fallback);
+    const [data, setData] = useState<any>(typeof fallback !== 'string' ? fallback : null);
+
     useEffect(() => {
-        if (url) {
-            fetch(url).then(r => r.json()).then(setData).catch(() => setData(fallback));
+        const fetchUrl = url || (typeof fallback === 'string' ? fallback : null);
+        if (fetchUrl) {
+            fetch(fetchUrl).then(r => r.json()).then(setData).catch(() => {
+                if (typeof fallback !== 'string') setData(fallback);
+            });
         } else {
             setData(fallback);
         }
@@ -45,6 +51,7 @@ export const AboutServicesList = ({ data }: { data: ServicesData }) => {
     const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
     // For desktop scrolling
     const [desktopActiveIndex, setDesktopActiveIndex] = useState(0);
+    const [isPastEnd, setIsPastEnd] = useState(false);
 
     const { openContactForm } = useContactForm();
 
@@ -80,6 +87,7 @@ export const AboutServicesList = ({ data }: { data: ServicesData }) => {
         // Setup scroll triggers for desktop layout to sync active tab
         blocksRef.current.forEach((block, index) => {
             if (block) {
+                const isLast = index === items.length - 1;
                 ScrollTrigger.create({
                     trigger: block,
                     start: "top center",
@@ -87,7 +95,11 @@ export const AboutServicesList = ({ data }: { data: ServicesData }) => {
                     onToggle: (self) => {
                         if (self.isActive) {
                             setDesktopActiveIndex(index);
+                            if (isLast) setIsPastEnd(false);
                         }
+                    },
+                    onLeave: () => {
+                        if (isLast) setIsPastEnd(true);
                     }
                 });
             }
@@ -104,7 +116,7 @@ export const AboutServicesList = ({ data }: { data: ServicesData }) => {
     };
 
     return (
-        <section ref={containerRef} className="w-full pt-48 md:pt-64 pb-0 text-white relative z-10">
+        <section ref={containerRef} className="w-full pt-48 md:pt-64 pb-[100px] text-white relative z-10">
             <div className="max-w-[1400px] mx-auto">
                 <h2 className="font-mega text-mega-h2 uppercase mb-16 md:mb-32 text-brand flex flex-wrap gap-x-[0.2em]">
                     {title.map((word, i) => (
@@ -127,12 +139,12 @@ export const AboutServicesList = ({ data }: { data: ServicesData }) => {
                                 onClick={() => scrollToBlock(index)}
                                 className={clsx(
                                     "font-heading text-h1 transition-all duration-300 text-left w-full",
-                                    desktopActiveIndex === index
+                                    desktopActiveIndex === index && !(isPastEnd && index === items.length - 1)
                                         ? "opacity-100 translate-x-4"
                                         : "opacity-30 hover:opacity-100 hover:translate-x-2"
                                 )}
                                 style={
-                                    desktopActiveIndex === index
+                                    desktopActiveIndex === index && !(isPastEnd && index === items.length - 1)
                                         ? { color: "rgb(var(--color-brand))" }
                                         : undefined
                                 }
@@ -145,12 +157,12 @@ export const AboutServicesList = ({ data }: { data: ServicesData }) => {
                     {/* Right Column: Scrollable Service Blocks + Finale Physics Container */}
                     <div className="w-[70%] min-w-0 flex flex-col z-0">
                         {/* Service Blocks with huge gaps to enforce scrolling */}
-                        <div className="flex flex-col gap-[10vh] mb-[10vh]">
+                        <div className="flex flex-col gap-[5vh] mb-0">
                             {items.map((service, index) => (
                                 <div
                                     key={service.id}
                                     ref={el => { blocksRef.current[index] = el; }}
-                                    className="relative flex items-center w-full min-h-[40vh] py-[5vh]"
+                                    className="relative flex items-center w-full min-h-[25vh] py-[2vh]"
                                 >
                                     {/* Sub-Column Left: Lottie */}
                                     <div className="w-[50%] relative z-10 mix-blend-screen opacity-90 pointer-events-none -ml-16">

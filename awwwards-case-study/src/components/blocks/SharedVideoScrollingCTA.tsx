@@ -5,6 +5,7 @@ import { useContactForm } from "@/context/ContactFormContext";
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { getAssetUrl } from "@/lib/utils";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/Button";
 import { Calendar, Mail, MessageCircle } from "lucide-react";
@@ -91,7 +92,7 @@ export const SharedVideoScrollingCTA = () => {
                 >
                     <video
                         ref={videoRef}
-                        src="/img/showreel-cta.webm"
+                        src={getAssetUrl("/img/showreel-cta.webm")}
                         autoPlay
                         muted
                         loop

@@ -2,6 +2,7 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
+import { getAssetUrl } from "@/lib/utils";
 import { clsx } from "clsx";
 
 interface ColorCircleProps {
@@ -109,11 +110,11 @@ export function FolkeuniversitetDesignSystem() {
                             className="w-full h-full transition-colors duration-500 ease-out"
                             style={{
                                 backgroundColor: activeColor,
-                                maskImage: 'url(/img/imgcases/folkeuniversitetet/fu-owl.svg)',
+                                maskImage: `url(${getAssetUrl('/img/imgcases/folkeuniversitetet/fu-owl.svg')})`,
                                 maskSize: 'contain',
                                 maskPosition: 'center',
                                 maskRepeat: 'no-repeat',
-                                WebkitMaskImage: 'url(/img/imgcases/folkeuniversitetet/fu-owl.svg)',
+                                WebkitMaskImage: `url(${getAssetUrl('/img/imgcases/folkeuniversitetet/fu-owl.svg')})`,
                                 WebkitMaskSize: 'contain',
                                 WebkitMaskPosition: 'center',
                                 WebkitMaskRepeat: 'no-repeat'

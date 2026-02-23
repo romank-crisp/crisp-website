@@ -1,17 +1,61 @@
 "use client";
 
-import { WorksData, WorksPageContent } from "@/types/work";
+import { WorksData, WorksPageContent, InfiniteScrollItem } from "@/types/work";
 import { WorkCard } from "@/components/ui/WorkCard";
 import { PhysicsPills } from "@/components/ui/PhysicsPills";
 import { CaseStudyTextReveal } from "@/components/blocks/CaseStudyTextReveal";
+import { getAssetUrl } from "@/lib/utils";
 import { InfiniteScrollPane } from "@/components/blocks/InfiniteScrollPane";
 import { useBrand } from "@/context/BrandContext";
 import { useContactForm } from "@/context/ContactFormContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ClientLogo } from "@/content/clients";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 
 import { WorksSteps } from "@/components/blocks/WorksSteps";
+
+gsap.registerPlugin(ScrollTrigger);
+
+function AnimatedMegaHeading() {
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    useGSAP(() => {
+        gsap.fromTo(".works-mega-word",
+            { y: "110%", opacity: 0 },
+            {
+                y: "0%",
+                opacity: 1,
+                duration: 0.8,
+                stagger: 0.08,
+                ease: "circ.out",
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: "top 85%",
+                }
+            }
+        );
+    }, { scope: containerRef });
+
+    return (
+        <div ref={containerRef} className="max-w-[1440px] mx-auto px-6 md:px-12 mt-[15vh]">
+            <h2 className="font-mega text-mega-h2 text-text uppercase leading-none pt-0 px-[3px] py-[3px] flex flex-col items-start xl:whitespace-nowrap">
+                <span className="flex flex-wrap gap-x-[0.25em]">
+                    <span className="inline-block overflow-hidden"><span className="works-mega-word inline-block">Design</span></span>
+                    <span className="inline-block overflow-hidden"><span className="works-mega-word inline-block">matters.</span></span>
+                </span>
+                <span className="flex flex-wrap gap-x-[0.25em] text-brand">
+                    <span className="inline-block overflow-hidden"><span className="works-mega-word inline-block">Craft</span></span>
+                    <span className="inline-block overflow-hidden"><span className="works-mega-word inline-block">what</span></span>
+                    <span className="inline-block overflow-hidden"><span className="works-mega-word inline-block">endures.</span></span>
+                </span>
+            </h2>
+        </div>
+    );
+}
+
 // Animated Works Heading Component
 function AnimatedWorksHeading({ phrases, staticText }: { phrases: string[], staticText: string }) {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -119,7 +163,43 @@ export function WorksPage({ clientsData, worksData, content }: { clientsData: Cl
     const title = content?.subheading?.title || "";
     const subItems = content?.subheading?.items || [];
     const bottomText = content?.bottomText || "";
-    const spinnerUrl = content?.spinnerUrl || "/img/spinner-crisp.svg";
+    const spinnerUrl = content?.spinnerUrl || getAssetUrl("/img/spinner-crisp.svg");
+
+    const infiniteScrollItems = useMemo(() => {
+        const data = content?.infiniteScroll;
+        const fallbackData: InfiniteScrollItem[][] = [
+            [
+                { id: '1-1', type: "image", width: 800, height: 500, color: "bg-gray-200", label: "image-1", src: getAssetUrl("/img/workspane/pane-01-cardblock.mp4") },
+                { id: '1-2', type: "text", width: 700, height: 500, color: "bg-brand", label: "text-1", text: "One dedicated team for copy, design, and marketing. Consistent monthly output with zero management overhead." },
+            ]
+        ];
+
+        if (!data || data.length === 0) return fallbackData;
+
+        const rowsMap = new Map<number, any[]>();
+
+        data.forEach((item) => {
+            const rowNumber = item.row || 1;
+            if (!rowsMap.has(rowNumber)) {
+                rowsMap.set(rowNumber, []);
+            }
+
+            rowsMap.get(rowNumber)!.push({
+                ...item,
+                id: item.id || `item-${Math.random()}`,
+                width: item.width || 600,
+                height: item.height || 500,
+            });
+        });
+
+        const sortedRows = Array.from(rowsMap.keys()).sort((a, b) => a - b);
+        const mappedRows = sortedRows.map(rowNum => {
+            const items = rowsMap.get(rowNum)!;
+            return items.sort((a, b) => (a.slot || 0) - (b.slot || 0));
+        });
+
+        return mappedRows.length > 0 ? mappedRows : fallbackData;
+    }, [content?.infiniteScroll]);
 
     return (
         <main className="min-h-screen bg-white pt-[15vh]">
@@ -193,15 +273,10 @@ export function WorksPage({ clientsData, worksData, content }: { clientsData: Cl
                 </div>
             </div>
 
-            <InfiniteScrollPane id="infinite-scroll-pane" data={content?.infiniteScroll} />
+            <InfiniteScrollPane id="infinite-scroll-pane" items={infiniteScrollItems} />
 
             {/* Mega Heading */}
-            <div className="max-w-[1440px] mx-auto px-6 md:px-12 mt-[10vh]">
-                <h2 className="font-mega text-mega-h2 text-text uppercase leading-none pt-0">
-                    Design matters. <br />
-                    <span className="text-brand">Craft what endures.</span>
-                </h2>
-            </div>
+            <AnimatedMegaHeading />
 
             {/* Combined Steps & Physics Section */}
             <div className="relative w-full h-[70vh] min-h-[700px] flex items-center justify-center overflow-hidden mb-0">

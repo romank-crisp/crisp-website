@@ -15,6 +15,7 @@ import { HomeWhereWeCanHelp } from "@/components/blocks/HomeWhereWeCanHelp";
 import { HomePartnerStatement } from "@/components/blocks/HomePartnerStatement";
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import { getAssetUrl } from "@/lib/utils";
 import {
   HomeHeroData,
   WhereWeCanHelpData,
@@ -30,7 +31,6 @@ import {
 import { SharedFAQ } from "@/components/blocks/SharedFAQ";
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
-const SplineScene = dynamic(() => import("@/components/blocks/HomeHeroSpline").then((mod) => mod.HomeHeroSpline), { ssr: false });
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -125,7 +125,7 @@ function DistortionImage({ src, alt }: { src?: string; alt?: string }) {
         style={{ transformStyle: "preserve-3d" }}
       >
         <Image
-          src={src || "/img/home-hero/home-hero-03.png"}
+          src={src || getAssetUrl("/img/home-hero/home-hero-03.png")}
           alt={alt || "Hero Illustration"}
           fill
           className="object-contain object-bottom"
@@ -326,10 +326,6 @@ export default function Home({
               className="object-cover"
             />
           </div>
-        );
-      } else if (cell.contentType === 'spline' && cell.contentProps?.splineUrl) {
-        content = (
-          <SplineScene sceneUrl={cell.contentProps.splineUrl} />
         );
       }
 

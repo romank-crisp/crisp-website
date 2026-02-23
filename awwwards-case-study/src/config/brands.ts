@@ -9,11 +9,13 @@ export interface BrandConfig {
     contactUrl: string;
 }
 
+import { getAssetUrl } from "@/lib/utils";
+
 export const BRANDS: Record<BrandKey, BrandConfig> = {
     crisp: {
         key: 'crisp',
         name: 'Crisp',
-        logo: '/img/crisp-logo.svg',
+        logo: getAssetUrl('/img/crisp-logo.svg'),
         color: '#E00C33', // 224 12 51
         logoScale: 1,
         contactUrl: '/contact'
@@ -21,7 +23,7 @@ export const BRANDS: Record<BrandKey, BrandConfig> = {
     grownow: {
         key: 'grownow',
         name: 'Grownow',
-        logo: '/img/grownow.svg',
+        logo: getAssetUrl('/img/grownow.svg'),
         color: '#5327BB', // 83 39 187
         logoScale: 1.2,
         contactUrl: '/contact' // Or different if needed

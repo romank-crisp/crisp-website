@@ -11,6 +11,9 @@ if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
 }
 
+import { useContactForm } from "@/context/ContactFormContext";
+import { getAssetUrl } from "@/lib/utils";
+
 import { WhereWeCanHelpData } from "@/types/home";
 
 interface WhereWeCanHelpProps {
@@ -28,7 +31,7 @@ export function HomeWhereWeCanHelp({ data }: WhereWeCanHelpProps) {
     useEffect(() => {
         if (!lottieContainerRef.current) return;
 
-        const jsonPath = "/img/home/home-1.json";
+        const jsonPath = getAssetUrl("/img/home/home-1.json");
 
         // Load and initialize Lottie animation
         fetch(jsonPath)
@@ -65,7 +68,7 @@ export function HomeWhereWeCanHelp({ data }: WhereWeCanHelpProps) {
     useEffect(() => {
         if (!ctaLottieRef.current) return;
 
-        fetch("/img/home/home-2.json")
+        fetch(getAssetUrl("/img/home/home-2.json"))
             .then((res) => res.json())
             .then((animationData) => {
                 if (ctaAnimationRef.current) {

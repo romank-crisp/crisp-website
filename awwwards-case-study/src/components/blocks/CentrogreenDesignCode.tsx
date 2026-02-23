@@ -3,15 +3,17 @@
 import { useRef, useState, useEffect } from "react";
 import { clsx } from "clsx";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
+import Image from "next/image";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { getAssetUrl } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
 
 // Lottie Assets
-const lottieLettersPath = "/img/imgcases/centrogreen/centrogreen-letters.json";
-const lottieTypographyPath = "/img/imgcases/centrogreen/centrogreeen-typography.json";
+const lottieLettersPath = getAssetUrl("/img/imgcases/centrogreen/centrogreen-letters.json");
+const lottieTypographyPath = getAssetUrl("/img/imgcases/centrogreen/centrogreeen-typography.json");
 
 // Color Palette Data
 const colors = [

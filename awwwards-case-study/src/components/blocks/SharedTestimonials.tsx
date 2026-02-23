@@ -69,9 +69,9 @@ export const SharedTestimonials = ({
         });
         gsap.set(metaRef.current, { opacity: 0, y: 15 });
 
-        // Phase 1: Reveal all to 0.6 using 3D tumble
+        // Phase 1: Reveal all to 1.0 using 3D tumble
         tl.to(words, {
-            opacity: 0.6,
+            opacity: 1,
             y: 0,
             scale: 1,
             rotationX: 0,
@@ -84,7 +84,7 @@ export const SharedTestimonials = ({
             },
             ease: "power3.out"
         })
-            // Phase 2: Highlight the specific group to 1.0
+            // Phase 2: Handle specific group timing if needed (opacity is already 1, but we keep the timeline structure)
             .to(highlightGroup, {
                 opacity: 1,
                 duration: 0.4,
