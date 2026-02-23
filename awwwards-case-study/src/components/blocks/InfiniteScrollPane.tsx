@@ -5,14 +5,22 @@ import { motion, useMotionValue, useAnimationFrame, wrap, useInView } from "fram
 import { InfiniteScrollItem, InfiniteScrollContentItem } from "@/types/work";
 import Lottie from "lottie-react";
 
+const globalLottieCache = new Map<string, any>();
+
 const DynamicLottie = memo(({ url, isVisible }: { url: string; isVisible: boolean }) => {
-    const [data, setData] = useState<any>(null);
+    const [data, setData] = useState<any>(globalLottieCache.get(url) || null);
     const lottieRef = useRef<any>(null);
 
     useEffect(() => {
-        if (!url) return;
-        fetch(url).then(r => r.json()).then(setData).catch(console.error);
-    }, [url]);
+        if (!url || data) return;
+        fetch(url)
+            .then(r => r.json())
+            .then(json => {
+                globalLottieCache.set(url, json);
+                setData(json);
+            })
+            .catch(console.error);
+    }, [url, data]);
 
     useEffect(() => {
         if (lottieRef.current) {
@@ -84,7 +92,7 @@ export const ScrollItem = memo(({ item }: { item: InfiniteScrollItem }) => {
                                 muted
                                 loop
                                 playsInline
-                                preload="metadata"
+                                preload="auto"
                                 className="absolute inset-0 w-full h-full object-cover"
                             />
                         ) : item.src.endsWith('.json') ? (
@@ -95,7 +103,7 @@ export const ScrollItem = memo(({ item }: { item: InfiniteScrollItem }) => {
                             <img
                                 src={item.src}
                                 alt={item.label}
-                                loading="lazy"
+                                loading="eager"
                                 className="absolute inset-0 w-full h-full object-cover"
                             />
                         )
@@ -126,50 +134,12 @@ export const ScrollItem = memo(({ item }: { item: InfiniteScrollItem }) => {
 
 ScrollItem.displayName = "ScrollItem";
 
-export const ROWS_DATA: InfiniteScrollItem[][] = [
-    // Fallback data if no JSON is available or structured correctly
-    [
-        { id: '1-1', type: "image", width: 800, height: 500, color: "bg-gray-200", label: "image-1", src: "/img/workspane/pane-01-cardblock.mp4" },
-        { id: '1-2', type: "text", width: 700, height: 500, color: "bg-brand", label: "text-1", text: "One dedicated team for copy, design, and marketing. Consistent monthly output with zero management overhead." },
-    ]
-];
-
 interface InfiniteScrollPaneProps {
-    data?: InfiniteScrollContentItem[];
+    items: InfiniteScrollItem[][];
     id?: string;
 }
 
-export function InfiniteScrollPane({ data, id = "infinite-scroll" }: InfiniteScrollPaneProps) {
-    const mappedData = useMemo(() => {
-        if (!data || data.length === 0) return ROWS_DATA;
-
-        // Group the incoming JSON items by their "row" field
-        const rowsMap = new Map<number, any[]>();
-
-        data.forEach((item) => {
-            const rowNumber = item.row || 1;
-            if (!rowsMap.has(rowNumber)) {
-                rowsMap.set(rowNumber, []);
-            }
-
-            rowsMap.get(rowNumber)!.push({
-                ...item,
-                id: item.id || `item-${Math.random()}`,
-                width: item.width || 600,
-                height: item.height || 500,
-            });
-        });
-
-        // Sort items per row based on "slot"
-        const sortedRows = Array.from(rowsMap.keys()).sort((a, b) => a - b);
-        const mappedRows = sortedRows.map(rowNum => {
-            const items = rowsMap.get(rowNum)!;
-            return items.sort((a, b) => (a.slot || 0) - (b.slot || 0));
-        });
-
-        return mappedRows.length > 0 ? mappedRows : ROWS_DATA;
-    }, [data]);
-
+export function InfiniteScrollPane({ items, id = "infinite-scroll" }: InfiniteScrollPaneProps) {
     const x = useMotionValue(0);
     const y = useMotionValue(0);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -180,18 +150,8 @@ export function InfiniteScrollPane({ data, id = "infinite-scroll" }: InfiniteScr
     const targetMultiplier = useRef({ x: 1, y: 0 }); // Default horizontal scroll only
     const currentMultiplier = useRef({ x: 1, y: 0 });
 
-    // Add state for number of copies based on window width
-    const [copies, setCopies] = useState(2);
+    const copies = 3;
     const initialized = useRef(false);
-
-    useEffect(() => {
-        const handleResize = () => {
-            setCopies(window.innerWidth > 1900 ? 3 : 2);
-        };
-        handleResize();
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
 
     useEffect(() => {
         const updateDims = () => {
@@ -240,12 +200,14 @@ export function InfiniteScrollPane({ data, id = "infinite-scroll" }: InfiniteScr
     });
 
     // Extract layout arrays once to avoid inline mapping during render
+    // Extract layout arrays once to avoid inline mapping during render
     const fullLayout = useMemo(() => {
-        return Array(copies).fill(mappedData).flat().map((row, rowIdx) => ({
+        if (!items || items.length === 0) return [];
+        return Array(copies).fill(items).flat().map((row, rowIdx) => ({
             id: rowIdx,
             items: Array(copies).fill(row).flat()
         }));
-    }, [mappedData, copies]);
+    }, [items, copies]);
 
     return (
         <section
@@ -296,12 +258,12 @@ export function InfiniteScrollPane({ data, id = "infinite-scroll" }: InfiniteScr
                     };
                 }}
             >
-                {Array(copies).fill(mappedData).flat().map((row, rowIdx) => (
-                    <div key={rowIdx} className="flex gap-4 md:gap-8 flex-nowrap">
-                        {Array(copies).fill(row).flat().map((item, idx) => (
+                {fullLayout.map((row) => (
+                    <div key={row.id} className="flex gap-4 md:gap-8 flex-nowrap">
+                        {row.items.map((item, idx) => (
                             <ScrollItem
-                                key={idx}
-                                item={{ ...item, id: `${rowIdx}-${idx}-${item.id}` }}
+                                key={`${row.id}-${idx}`}
+                                item={{ ...item, id: `${row.id}-${idx}-${item.id}` }}
                             />
                         ))}
                     </div>
