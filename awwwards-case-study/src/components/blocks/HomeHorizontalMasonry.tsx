@@ -5,9 +5,12 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { getAssetUrl } from '@/lib/utils';
 import { useGSAP } from "@gsap/react";
-import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import Spline from "@splinetool/react-spline";
+import dynamic from "next/dynamic";
+import { clsx, type ClassValue } from "clsx";
+
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -29,6 +32,15 @@ export type MasonryColumn = {
 interface HorizontalMasonryProps {
     columns: MasonryColumn[];
     className?: string;
+}
+
+function LottieClientPlayer({ src }: { src: string }) {
+    const [data, setData] = useState<any>(null);
+    useEffect(() => {
+        fetch(src).then(r => r.json()).then(setData).catch(console.error);
+    }, [src]);
+    if (!data) return <div className="w-full h-full" />;
+    return <Lottie animationData={data} loop autoplay style={{ width: "100%", height: "100%" }} />;
 }
 
 export function HomeHorizontalMasonry({ columns: initialColumns, className }: HorizontalMasonryProps) {
@@ -53,6 +65,7 @@ export function HomeHorizontalMasonry({ columns: initialColumns, className }: Ho
                 if (colIdx === 3 && cellIdx === 0) {
                     return {
                         ...cell,
+                        height: "40vh",
                         content: (
                             <div className="relative w-full h-full">
                                 <video
@@ -68,11 +81,16 @@ export function HomeHorizontalMasonry({ columns: initialColumns, className }: Ho
                     };
                 }
 
-                // 4th row (column index 3), bottom block (index 1) -> Blank
+                // 4th row (column index 3), bottom block (index 1) -> Lottie
                 if (colIdx === 3 && cellIdx === 1) {
                     return {
                         ...cell,
-                        content: <div className="w-full h-full bg-transparent" />
+                        height: "60vh",
+                        content: (
+                            <div className="w-full h-full flex items-center justify-center p-8">
+                                <LottieClientPlayer src="/img/home-hero/home-hero-05.json" />
+                            </div>
+                        )
                     };
                 }
 
