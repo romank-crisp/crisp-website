@@ -116,7 +116,7 @@ export const AboutServicesList = ({ data }: { data: ServicesData }) => {
     };
 
     return (
-        <section ref={containerRef} className="w-full pt-48 md:pt-64 pb-[100px] text-white relative z-10">
+        <section ref={containerRef} className="w-full pt-48 md:pt-64 pb-[100px] text-white relative z-10 px-16 md:px-64 lg:px-0">
             <div className="max-w-[1400px] mx-auto">
                 <h2 className="font-mega text-mega-h2 uppercase mb-16 md:mb-32 text-brand flex flex-wrap gap-x-[0.2em]">
                     {title.map((word, i) => (
@@ -185,56 +185,26 @@ export const AboutServicesList = ({ data }: { data: ServicesData }) => {
                     </div>
                 </div>
 
-                {/* Mobile Layout: Accordion (Unchanged behavior basically, just uses mobileActiveIndex) */}
-                <div className="flex flex-col gap-4 lg:hidden">
+                {/* Mobile Layout: Stacked List with Dividers */}
+                <div className="flex flex-col lg:hidden mt-16">
                     {items.map((service, index) => {
-                        const isActive = mobileActiveIndex === index;
                         return (
-                            <div key={service.id} className="border-b border-white/10 last:border-0">
-                                <button
-                                    onClick={() => setMobileActiveIndex(isActive ? -1 : index)}
-                                    className="w-full py-6 flex items-center justify-between text-left transition-colors duration-300"
-                                    style={
-                                        isActive
-                                            ? { color: "rgb(var(--color-brand))" }
-                                            : undefined
-                                    }
-                                >
-                                    <span className={clsx(
-                                        "font-heading text-2xl transition-opacity duration-300",
-                                        isActive ? "opacity-100" : "opacity-60 text-white"
-                                    )}>
-                                        {service.label}
-                                    </span>
-                                    <span className={clsx(
-                                        "text-2xl transition-transform duration-300",
-                                        isActive ? "rotate-45" : "text-white/40"
-                                    )}>
-                                        +
-                                    </span>
-                                </button>
+                            <div key={service.id} className="border-b border-white/20 last:border-0 py-12 md:py-16">
+                                <h3 className="font-heading text-h3 text-brand mb-8 md:mb-12">
+                                    {service.label}
+                                </h3>
 
-                                <div className={clsx(
-                                    "overflow-hidden transition-all duration-500 ease-in-out",
-                                    isActive ? "max-h-[800px] opacity-100 pb-0" : "max-h-0 opacity-0"
-                                )}>
-                                    <div className="flex flex-col gap-6">
-                                        <div className="relative w-full rounded-lg overflow-hidden bg-white/5 p-6">
-                                            <div className="relative z-20 mb-6">
-                                                <p className="font-text text-sm text-white opacity-90 leading-relaxed">
-                                                    <TextFormatter text={service.description} />
-                                                </p>
-                                            </div>
-                                            <div className="flex flex-wrap gap-2 relative z-20">
-                                                {service.tags.map((tag: string) => (
-                                                    <button key={tag} onClick={() => openContactForm()}>
-                                                        <Tag className="border-white/20 text-white hover:bg-white hover:text-black hover:border-white cursor-pointer w-full h-full">
-                                                            {tag}
-                                                        </Tag>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
+                                <div className="flex flex-col gap-6 w-full pb-6">
+                                    <div className="relative w-[80%] mx-auto aspect-square mb-8 mix-blend-screen opacity-90 pointer-events-none">
+                                        <DynamicLottie
+                                            url={service.animationUrl}
+                                            fallback={serviceAnimations[index % serviceAnimations.length]}
+                                        />
+                                    </div>
+                                    <div className="relative z-20">
+                                        <p className="font-text text-text-lg text-white opacity-90 leading-relaxed text-left">
+                                            <TextFormatter text={service.description} />
+                                        </p>
                                     </div>
                                 </div>
                             </div>

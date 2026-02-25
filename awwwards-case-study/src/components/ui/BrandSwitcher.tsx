@@ -6,13 +6,20 @@ import { RefreshCcw } from "lucide-react";
 import { Tag } from "@/components/ui/Tag";
 
 export function BrandSwitcher() {
-    const { brand, setBrand, currentBrandKey } = useBrand();
-    // No longer checking for query params, always visible
+    const { setBrand, currentBrandKey } = useBrand();
+    const [visible, setVisible] = useState(false);
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        setVisible(params.get("switch") === "on");
+    }, []);
 
     const toggleBrand = () => {
         const nextBrand = currentBrandKey === 'crisp' ? 'grownow' : 'crisp';
         setBrand(nextBrand);
     };
+
+    if (!visible) return null;
 
     return (
         <div

@@ -116,8 +116,8 @@ export const SharedTestimonials = ({
         >
             <div className="max-w-[1475px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-16 lg:gap-x-24 items-center px-16 md:px-64">
 
-                {/* Left Column: Quote & Author Info */}
-                <div className="lg:col-span-8 flex flex-col gap-24">
+                {/* Desktop View: Auto-playing Quote & Author Info */}
+                <div className="hidden md:flex lg:col-span-8 flex-col gap-24">
                     <div
                         ref={quoteRef}
                         className="font-heading text-h1 leading-[1.1] font-medium tracking-tight word-wrapper flex flex-wrap gap-x-[0.2em] gap-y-[0.1em]"
@@ -166,8 +166,48 @@ export const SharedTestimonials = ({
                     </div>
                 </div>
 
+                {/* Mobile View: Horizontal Snap Slider */}
+                <div className="md:hidden lg:col-span-8 flex overflow-x-auto snap-x snap-mandatory gap-8 -mx-16 px-16 pb-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]" style={{ width: 'calc(100% + 32px)' }}>
+                    {testimonials.map((testimonial, idx) => (
+                        <div key={idx} className="shrink-0 w-[85vw] snap-center flex flex-col gap-16">
+                            <div className="font-heading text-h3 leading-[1.1] font-medium tracking-tight flex flex-wrap gap-x-[0.2em] gap-y-[0.1em]">
+                                {(() => {
+                                    const tokens = tokenizeText(testimonial.quote);
+                                    return tokens.map((token, tIndex) => {
+                                        const isHighlighted = token.type !== 'text';
+                                        let tokenClass = "inline-block";
+
+                                        if (token.type === 'dark-gradient') tokenClass += " italic font-serif animate-gradient-text-dark px-1";
+                                        else if (token.type === 'light-gradient') tokenClass += " italic font-serif animate-gradient-text px-1";
+                                        else if (token.type === 'italic') tokenClass += " italic font-serif text-text px-1";
+
+                                        if (isHighlighted) {
+                                            return (
+                                                <span key={`mob-${idx}-${tIndex}`} className={tokenClass}>
+                                                    {token.content}
+                                                </span>
+                                            );
+                                        } else {
+                                            const words = token.content.split(" ").filter(w => w.length > 0);
+                                            return words.map((word, wIndex) => (
+                                                <span key={`mob-${idx}-${tIndex}-${wIndex}`} className={tokenClass}>
+                                                    {word}
+                                                </span>
+                                            ));
+                                        }
+                                    });
+                                })()}
+                            </div>
+                            <div className="flex items-center gap-3 font-text text-text-md">
+                                <span className="font-semibold text-brand">{testimonial.name}</span>
+                                <span className="text-text/40">{testimonial.position}</span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
                 {/* Right Column: Empty to maintain space */}
-                <div className="lg:col-span-4" />
+                <div className="hidden lg:col-span-4 lg:block" />
             </div>
         </section>
     );

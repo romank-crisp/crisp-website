@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect, useMemo } from "react";
+import dynamic from "next/dynamic";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { getAssetUrl } from '@/lib/utils';
@@ -8,9 +9,34 @@ import { useGSAP } from "@gsap/react";
 import { twMerge } from "tailwind-merge";
 import Spline from "@splinetool/react-spline";
 import { clsx, type ClassValue } from "clsx";
+import { HomeAnimatedText } from "./HomeAnimatedText";
+
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
+}
+
+function HomeLottieBottom({ src }: { src: string }) {
+    const [animationData, setAnimationData] = useState<unknown>(null);
+
+    useEffect(() => {
+        fetch(src)
+            .then((res) => res.json())
+            .then((data) => setAnimationData(data))
+            .catch((err) => console.error("Failed to load Lottie:", err));
+    }, [src]);
+
+    if (!animationData) return null;
+
+    return (
+        <Lottie
+            animationData={animationData}
+            loop
+            autoplay
+            style={{ height: "100%", width: "auto", display: "block" }}
+        />
+    );
 }
 
 export type MasonryCell = {
@@ -51,7 +77,31 @@ export function HomeHorizontalMasonry({ columns: initialColumns, className }: Ho
                     };
                 }
 
+                // 4col (column index 3), upper block (index 0) -> Animated Text
+                if (colIdx === 3 && cellIdx === 0) {
+                    return {
+                        ...cell,
+                        className: cn(cell.className, "bg-white overflow-hidden"),
+                        content: (
+                            <div className="absolute inset-0 w-full h-full">
+                                <HomeAnimatedText />
+                            </div>
+                        )
+                    };
+                }
 
+                // 4col (column index 3), bottom block (index 1) -> Lottie pinned to bottom
+                if (colIdx === 3 && cellIdx === 1) {
+                    return {
+                        ...cell,
+                        className: cn(cell.className, "overflow-hidden p-0"),
+                        content: (
+                            <div className="absolute bottom-0 left-0 w-full pointer-events-none">
+                                <HomeLottieBottom src="/img/home-hero/home-hero-05.json" />
+                            </div>
+                        )
+                    };
+                }
 
                 return cell;
             })
@@ -192,44 +242,14 @@ export function HomeHorizontalMasonry({ columns: initialColumns, className }: Ho
 
 // Sub-component for Mobile Layout to keep things clean
 function MobileMasonryLayout({ columns }: { columns: MasonryColumn[] }) {
-    const sliderRef = useRef<HTMLDivElement>(null);
-    const sliderContainerRef = useRef<HTMLDivElement>(null);
-
     // Filter content - assume first cell of first column is the header
     const heroCell = columns[0]?.cells[0];
 
     // Get all other cells for the slider
     const mediaCells = columns.flatMap(col => col.cells).filter(cell => cell !== heroCell);
 
-    useGSAP(() => {
-        if (!sliderRef.current || !sliderContainerRef.current) return;
-
-        const slider = sliderRef.current;
-        // Clone for seamless loop
-        const content = slider.innerHTML;
-        slider.innerHTML += content;
-
-        const totalWidth = slider.scrollWidth / 2;
-
-        gsap.to(slider, {
-            x: -totalWidth,
-            duration: 20,
-            ease: "none",
-            repeat: -1,
-        });
-
-    }, { scope: sliderContainerRef });
-
     return (
         <div className="w-full overflow-hidden bg-white py-12 relative mt-[100px] md:mt-48 px-16 md:px-0">
-            {/* 
-                NOTE: Global padding 'px-4' is on body. 
-                Full width slider needs -mx-4 to touch edges if desired, or just stay inside.
-                Prompt said "Global: add L/R padding 16 px". 
-                If slider should be full edge-to-edge on mobile, we need negative margin.
-                "Slider with media should be placed below mega h1 header".
-            */}
-
             {/* 1. Header (Static) */}
             {heroCell && (
                 <div className="mb-16">
@@ -237,25 +257,23 @@ function MobileMasonryLayout({ columns }: { columns: MasonryColumn[] }) {
                 </div>
             )}
 
-            {/* 2. GSAP Slider (Media) */}
-            <div ref={sliderContainerRef} className="w-full overflow-hidden">
-                <div ref={sliderRef} className="flex gap-4 w-max">
-                    {mediaCells.map((cell) => (
-                        <div
-                            key={cell.id}
-                            className={cn(
-                                "relative border border-black/10 rounded-lg overflow-hidden shrink-0",
-                                cell.className
-                            )}
-                            style={{
-                                width: "80vw",
-                                height: "50vh"
-                            }}
-                        >
-                            {cell.content}
-                        </div>
-                    ))}
-                </div>
+            {/* 2. Scrollable Slider (Media) */}
+            <div className="w-full -mx-16 px-16 overflow-x-auto snap-x snap-mandatory flex gap-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]" style={{ width: 'calc(100% + 32px)' }}>
+                {mediaCells.map((cell) => (
+                    <div
+                        key={cell.id}
+                        className={cn(
+                            "relative border border-black/10 rounded-lg overflow-hidden shrink-0 snap-center",
+                            cell.className
+                        )}
+                        style={{
+                            width: "80vw",
+                            height: "50vh"
+                        }}
+                    >
+                        {cell.content}
+                    </div>
+                ))}
             </div>
         </div>
     );

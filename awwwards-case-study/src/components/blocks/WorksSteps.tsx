@@ -34,7 +34,7 @@ export const WorksSteps: React.FC<WorksStepsProps> = ({ steps }) => {
     return (
         <section className="w-full relative px-6 md:px-12 max-w-[1440px] mx-auto">
             <motion.div
-                className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-x-12"
+                className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-x-12 md:gap-y-8"
                 variants={containerVariants}
                 initial="hidden"
                 whileInView="visible"
@@ -47,7 +47,7 @@ export const WorksSteps: React.FC<WorksStepsProps> = ({ steps }) => {
                         variants={itemVariants}
                     >
                         {/* Circle Number */}
-                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-full border border-gray-300 flex items-center justify-center font-text text-lg md:text-xl font-medium text-gray-800 mb-6 shrink-0">
+                        <div className="min-w-[48px] min-h-[48px] md:min-w-[56px] md:min-h-[56px] p-3 rounded-full border border-gray-300 flex items-center justify-center font-text text-lg md:text-xl font-medium text-gray-800 mb-6 shrink-0 inline-flex">
                             {index + 1}
                         </div>
                         {/* Text Content */}

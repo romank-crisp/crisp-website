@@ -13,6 +13,7 @@ import { SmoothScroll } from "@/components/layouts/SmoothScroll";
 import { MenuItem } from "@/content/navigation";
 
 import { PageTransition } from "@/components/layouts/PageTransition";
+import { WorksPreloader } from "@/components/ui/WorksPreloader";
 
 export function GlobalLayout({ children, footerData, navigationData }: { children: React.ReactNode, footerData: FooterProps['data'], navigationData: MenuItem[] }) {
     const pathname = usePathname();
@@ -65,6 +66,7 @@ export function GlobalLayout({ children, footerData, navigationData }: { childre
     return (
         <ContactFormProvider>
             <BrandProvider>
+                <WorksPreloader />
                 <CustomCursor />
                 <ContactOverlay />
                 <Navbar menuItems={navigationData} />

@@ -58,76 +58,101 @@ export const ScrollItem = memo(({ item }: { item: InfiniteScrollItem }) => {
     const hasCustomColor = item.color?.startsWith('#') || item.color?.startsWith('rgb') || item.color?.startsWith('hsl');
     const colorClass = hasCustomColor ? '' : item.color;
 
+    const [isMobile, setIsMobile] = useState(false);
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    const w = parseInt(String(item.width).replace('px', ''), 10);
+    const h = parseInt(String(item.height).replace('px', ''), 10);
+    const currentWidth = isMobile && !isNaN(w) ? `${w * 0.7}px` : item.width;
+    const currentHeight = isMobile && !isNaN(h) ? `${h * 0.7}px` : item.height;
+
     useEffect(() => {
         if (videoRef.current) {
-            if (isVisible) {
-                videoRef.current.play().catch(() => {
-                    // Autoplay might be blocked until user interaction
-                });
-            } else {
-                videoRef.current.pause();
-            }
+            import('@/hooks/useSequentialVideo').then(({ SequentialVideoLoader }) => {
+                const loader = SequentialVideoLoader.getInstance();
+
+                if (isVisible) {
+                    loader.enqueue(videoRef.current!);
+                    videoRef.current!.play().catch(() => {
+                        // Autoplay might be blocked until user interaction
+                    });
+                } else {
+                    loader.dequeue(videoRef.current!);
+                    videoRef.current!.pause();
+                }
+            });
         }
     }, [isVisible]);
 
     return (
         <div
-            ref={containerRef}
-            id={item.id}
-            className={`shrink-0 flex items-center justify-center overflow-hidden relative ${isPlaceholder ? '' : `rounded-[var(--corner-large)] shadow-sm ${isText ? 'bg-brand' : colorClass}`}`}
+            className="shrink-0 transition-all duration-300"
             style={{
-                width: item.width,
-                height: item.height,
-                ...(!isPlaceholder && !isText && hasCustomColor ? { backgroundColor: item.color } : {}),
+                width: currentWidth,
+                height: currentHeight,
                 willChange: "transform"
             }}
         >
-            {item.type === "image" ? (
-                <>
-                    {item.src ? (
-                        item.src.endsWith('.mp4') || item.src.endsWith('.webm') ? (
-                            <video
-                                ref={videoRef}
-                                src={item.src}
-                                muted
-                                loop
-                                playsInline
-                                preload="auto"
-                                className="absolute inset-0 w-full h-full object-cover"
-                            />
-                        ) : item.src.endsWith('.json') ? (
-                            <div className="absolute inset-0 w-full h-full flex items-center justify-center p-8">
-                                <DynamicLottie url={item.src} isVisible={isVisible} />
-                            </div>
+            <div
+                ref={containerRef}
+                id={item.id}
+                className={`w-full h-full flex items-center justify-center overflow-hidden relative ${isPlaceholder ? '' : `rounded-[var(--corner-large)] shadow-sm ${isText ? 'bg-brand' : colorClass}`}`}
+                style={{
+                    ...(!isPlaceholder && !isText && hasCustomColor ? { backgroundColor: item.color } : {}),
+                }}
+            >
+                {item.type === "image" ? (
+                    <>
+                        {item.src ? (
+                            item.src.endsWith('.mp4') || item.src.endsWith('.webm') ? (
+                                <video
+                                    ref={videoRef}
+                                    src={item.src}
+                                    muted
+                                    loop
+                                    playsInline
+                                    preload="none"
+                                    className="absolute inset-0 w-full h-full object-cover"
+                                />
+                            ) : item.src.endsWith('.json') ? (
+                                <div className="absolute inset-0 w-full h-full flex items-center justify-center p-8">
+                                    <DynamicLottie url={item.src} isVisible={isVisible} />
+                                </div>
+                            ) : (
+                                <img
+                                    src={item.src}
+                                    alt={item.label}
+                                    loading="eager"
+                                    className="absolute inset-0 w-full h-full object-cover"
+                                />
+                            )
                         ) : (
-                            <img
-                                src={item.src}
-                                alt={item.label}
-                                loading="eager"
-                                className="absolute inset-0 w-full h-full object-cover"
-                            />
-                        )
-                    ) : (
-                        <div className="absolute inset-0 bg-gray-200/50 flex flex-col items-center justify-center">
-                            <span className="font-heading text-sm font-bold uppercase tracking-wider text-gray-400 mb-2">{item.label}</span>
-                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 opacity-50">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                <polyline points="21 15 16 10 5 21"></polyline>
-                            </svg>
-                        </div>
-                    )}
-                </>
-            ) : (
-                <div className="p-32 h-full flex items-center justify-center text-center">
-                    <p className="font-text text-text-lg text-white">{item.text}</p>
-                </div>
-            )}
-            {!isText && (
-                <span className="absolute bottom-6 right-6 font-heading text-sm font-bold uppercase tracking-wider text-white bg-black/40 backdrop-blur-sm px-[16px] py-2 rounded-full z-10">
-                    {item.label || `${item.width}x${item.height}`}
-                </span>
-            )}
+                            <div className="absolute inset-0 bg-gray-200/50 flex flex-col items-center justify-center">
+                                <span className="font-heading text-sm font-bold uppercase tracking-wider text-gray-400 mb-2">{item.label}</span>
+                                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 opacity-50">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <div className="p-8 md:p-32 h-full flex items-center justify-center text-center w-[70%] md:w-full mx-auto">
+                        <p className="font-text text-text-lg text-white">{item.text}</p>
+                    </div>
+                )}
+                {!isText && (
+                    <span className="absolute bottom-6 right-6 font-heading text-sm font-bold uppercase tracking-wider text-white bg-black/40 backdrop-blur-sm px-[16px] py-2 rounded-full z-10">
+                        {item.label || `${item.width}x${item.height}`}
+                    </span>
+                )}
+            </div>
         </div>
     );
 });
@@ -236,7 +261,7 @@ export function InfiniteScrollPane({ items, id = "infinite-scroll" }: InfiniteSc
             }}
         >
             <motion.div
-                className="flex flex-col gap-4 md:gap-8 px-4 cursor-grab active:cursor-grabbing w-max items-start"
+                className="flex flex-col gap-[2px] md:gap-8 px-[2px] md:px-4 cursor-grab active:cursor-grabbing w-max items-start"
                 ref={containerRef}
                 style={{ x, y, willChange: "transform" }}
                 onPanStart={() => {
@@ -259,7 +284,7 @@ export function InfiniteScrollPane({ items, id = "infinite-scroll" }: InfiniteSc
                 }}
             >
                 {fullLayout.map((row) => (
-                    <div key={row.id} className="flex gap-4 md:gap-8 flex-nowrap">
+                    <div key={row.id} className="flex gap-[2px] md:gap-8 flex-nowrap">
                         {row.items.map((item, idx) => (
                             <ScrollItem
                                 key={`${row.id}-${idx}`}

@@ -16,6 +16,7 @@ export function ContactOverlay() {
     const contentRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
+    const mobileTitleRef = useRef<HTMLHeadingElement>(null);
     const formContentRef = useRef<HTMLDivElement>(null);
     const [isInteracting, setIsInteracting] = useState(false);
     const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -130,7 +131,11 @@ export function ContactOverlay() {
         if (isInteracting) return;
         setIsInteracting(true);
 
-        gsap.to(titleRef.current, {
+        const titles = [];
+        if (titleRef.current) titles.push(titleRef.current);
+        if (mobileTitleRef.current) titles.push(mobileTitleRef.current);
+
+        gsap.to(titles, {
             scale: 0.75,
             transformOrigin: "left center",
             duration: 1.2,
@@ -166,7 +171,11 @@ export function ContactOverlay() {
         if (!isInteracting) return;
         setIsInteracting(false);
 
-        gsap.to(titleRef.current, { scale: 1, duration: 1.2, ease: "power3.inOut" });
+        const titles = [];
+        if (titleRef.current) titles.push(titleRef.current);
+        if (mobileTitleRef.current) titles.push(mobileTitleRef.current);
+
+        gsap.to(titles, { scale: 1, duration: 1.2, ease: "power3.inOut" });
         gsap.to(formContentRef.current, { y: 0, duration: 1.2, ease: "power3.inOut" });
     });
 
@@ -190,12 +199,12 @@ export function ContactOverlay() {
     return (
         <div
             ref={overlayRef}
-            className="fixed inset-0 z-[100] hidden items-center justify-center bg-white/10 backdrop-blur-sm contact-overlay-wrapper"
+            className="fixed inset-0 z-[100] hidden bg-white/10 backdrop-blur-sm contact-overlay-wrapper overflow-y-auto md:overflow-hidden items-start md:items-center justify-center [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             style={{ display: "none" }}
         >
             <main
                 ref={contentRef}
-                className="contact-overlay-main w-full h-full bg-white flex flex-col md:flex-row relative shadow-[0_0_100px_rgba(0,0,0,0.1)] overflow-hidden"
+                className="contact-overlay-main w-full min-h-full md:h-full bg-white flex flex-col md:flex-row relative shadow-[0_0_100px_rgba(0,0,0,0.1)] overflow-x-hidden md:overflow-hidden"
             >
                 {/* Close Button */}
                 <button
@@ -211,12 +220,19 @@ export function ContactOverlay() {
                     />
                 </button>
 
+                {/* Mobile Header (Top) */}
+                <div className="w-full pt-48 pb-16 px-24 md:hidden bg-white z-20 order-1 shrink-0">
+                    <h1 ref={mobileTitleRef} className="font-mega text-mega-h2 leading-[var(--lh-mega)] tracking-[var(--ls-mega)] uppercase whitespace-nowrap text-brand">
+                        CONTACT US
+                    </h1>
+                </div>
+
                 {/* Left Side - Form */}
-                <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-24 pt-[45vh] md:p-64 overflow-y-auto relative z-10">
+                <div className="w-full flex-1 md:h-auto md:w-1/2 bg-white flex items-start md:items-center justify-center p-24 pb-64 md:p-64 relative z-10 order-3 md:order-1">
                     <div ref={formContentRef} className="w-full max-w-[520px]">
                         {!isSubmitted ? (
                             <>
-                                <h1 ref={titleRef} className="font-mega text-mega-h2 leading-[var(--lh-mega)] tracking-[var(--ls-mega)] uppercase mb-48 md:mb-64 whitespace-nowrap">
+                                <h1 ref={titleRef} className="font-mega text-mega-h2 leading-[var(--lh-mega)] tracking-[var(--ls-mega)] uppercase mb-48 md:mb-64 whitespace-nowrap hidden md:block">
                                     CONTACT US
                                 </h1>
                                 <ContactForm
@@ -244,7 +260,7 @@ export function ContactOverlay() {
                 </div>
 
                 {/* Right Side - Video (Desktop Only) and Mobile Background */}
-                <div className="absolute top-0 left-0 w-full h-[40vh] md:relative md:h-auto md:w-1/2 bg-[#F1F5F9] md:block overflow-hidden z-0">
+                <div className="w-full h-[20vh] md:h-auto md:w-1/2 bg-[#F1F5F9] overflow-hidden relative z-0 order-2 shrink-0">
                     <video
                         ref={videoRef}
                         autoPlay
@@ -258,7 +274,7 @@ export function ContactOverlay() {
                     </video>
 
                     {/* Circle Actions */}
-                    <div className="absolute bottom-48 left-1/2 -translate-x-1/2 flex gap-12 z-20">
+                    <div className="absolute bottom-48 left-1/2 -translate-x-1/2 hidden md:flex gap-12 z-20">
                         <div className="relative group/tooltip">
                             <a
                                 href="https://calendly.com/roman-crisp-studio/30-minute-meeting-clone"

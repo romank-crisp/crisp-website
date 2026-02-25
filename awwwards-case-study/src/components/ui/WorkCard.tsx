@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import { useInView } from "framer-motion";
 import { Tag } from "./Tag";
 
 interface WorkCardProps {
@@ -21,7 +22,9 @@ interface WorkCardProps {
 
 export function WorkCard({ title, tags, image, video, poster, href, className = "", decoration }: WorkCardProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
+    const containerRef = useRef<HTMLAnchorElement>(null);
     const [isHovered, setIsHovered] = useState(false);
+    const isVisible = useInView(containerRef, { margin: "20% 0px 20% 0px" });
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -32,13 +35,31 @@ export function WorkCard({ title, tags, image, video, poster, href, className = 
 
     const handleMouseLeave = () => {
         setIsHovered(false);
-        if (videoRef.current) {
+        if (videoRef.current && isVisible) {
             videoRef.current.play();
         }
     };
 
+    // Play the video when it comes into view, as long as it isn't being hovered
+    useEffect(() => {
+        if (videoRef.current) {
+            import('@/hooks/useSequentialVideo').then(({ SequentialVideoLoader }) => {
+                const loader = SequentialVideoLoader.getInstance();
+
+                if (isVisible && !isHovered) {
+                    loader.enqueue(videoRef.current!);
+                    videoRef.current!.play().catch(() => { });
+                } else if (!isVisible) {
+                    loader.dequeue(videoRef.current!);
+                    videoRef.current!.pause();
+                }
+            });
+        }
+    }, [isVisible, isHovered]);
+
     return (
         <Link
+            ref={containerRef}
             href={href}
             className={`group relative block w-full aspect-[4/5] overflow-hidden bg-gray-100 rounded-[var(--corner-large)] ${className}`}
             data-cursor="arrow"
@@ -52,10 +73,10 @@ export function WorkCard({ title, tags, image, video, poster, href, className = 
                         ref={videoRef}
                         src={video}
                         poster={poster || image}
-                        autoPlay
                         loop
                         muted
                         playsInline
+                        preload="none"
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
                 ) : (

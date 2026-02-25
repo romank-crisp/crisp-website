@@ -23,7 +23,7 @@ export function PageTransition({ children }: { children: ReactNode }) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 1 }} // Keep opacity 1 during exit so overlays cover it
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 1.0 }}
                 >
                     {children}
                 </motion.div>
@@ -37,7 +37,7 @@ export function PageTransition({ children }: { children: ReactNode }) {
                     initial={{ scaleY: 0 }}
                     animate={{ scaleY: 0 }}
                     exit={{ scaleY: 1 }}
-                    transition={{ duration: 0.6, ease: [0.85, 0, 0.15, 1] }}
+                    transition={{ duration: 1.2, ease: [0.95, 0.05, 0.05, 0.95] }}
                 />
 
                 {/* Layer 2: White - Wipes UP second, covering the dark layer */}
@@ -49,7 +49,7 @@ export function PageTransition({ children }: { children: ReactNode }) {
                     initial={{ scaleY: 0 }}
                     animate={{ scaleY: 0 }}
                     exit={{ scaleY: 1 }}
-                    transition={{ duration: 0.6, delay: 0.2, ease: [0.85, 0, 0.15, 1] }}
+                    transition={{ duration: 1.2, delay: 0.4, ease: [0.95, 0.05, 0.05, 0.95] }}
                 />
 
                 {/* --- ENTER ANIMATION OVERLAY --- */}
@@ -62,7 +62,7 @@ export function PageTransition({ children }: { children: ReactNode }) {
                     initial={{ scaleY: 1 }}
                     animate={{ scaleY: 0 }}
                     exit={{ scaleY: 0 }}
-                    transition={{ duration: 0.8, ease: [0.85, 0, 0.15, 1] }}
+                    transition={{ duration: 1.6, ease: [0.95, 0.05, 0.05, 0.95] }}
                 />
 
             </motion.div>

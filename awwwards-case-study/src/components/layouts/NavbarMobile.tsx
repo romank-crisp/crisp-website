@@ -192,7 +192,7 @@ export function NavbarMobile() {
 
                         <div
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="flex items-center gap-6 px-12 py-6 rounded-full cursor-pointer text-text transition-all duration-300 hover:bg-black/[0.03]"
+                            className="flex items-center gap-[12px] px-12 py-6 rounded-full cursor-pointer text-text transition-all duration-300 hover:bg-black/[0.03]"
                         >
                             {isMenuOpen ? (
                                 <>
@@ -249,9 +249,9 @@ export function NavbarMobile() {
                             </Button>
 
                             <Button
-                                variant="transparent"
+                                variant="outline"
                                 size="medium"
-                                className="mobile-footer-item w-full justify-center gap-12 px-24 text-text opacity-0 hover:opacity-100 h-[48px] !text-[14px]"
+                                className="mobile-footer-item w-full justify-center gap-12 px-24 h-[56px] rounded-2xl opacity-0 !text-[16px]"
                                 leftIcon={Mail}
                                 href="mailto:hello@crisp-studio.com"
                             >
@@ -259,9 +259,9 @@ export function NavbarMobile() {
                             </Button>
 
                             <Button
-                                variant="transparent"
+                                variant="outline"
                                 size="medium"
-                                className="mobile-footer-item w-full justify-center gap-12 px-24 text-text opacity-0 hover:opacity-100 h-[48px] !text-[14px]"
+                                className="mobile-footer-item w-full justify-center gap-12 px-24 h-[56px] rounded-2xl opacity-0 !text-[16px]"
                                 leftIcon={MessageSquare}
                                 href="https://api.whatsapp.com/send/?phone=41794540545&text=hi%20crisp,%20lets%20discuss%20a%20project"
                             >

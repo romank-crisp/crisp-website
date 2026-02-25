@@ -54,13 +54,17 @@ export const AboutTeamGallery = () => {
             }
         );
 
-        // Infinite Scroll Animation (Right to Left)
-        tweenRef.current = gsap.to(sliderRef.current, {
-            xPercent: -50, // Move left by 50% of total width (covers 2 sets)
-            ease: "none",
-            duration: 80, // 4x slower
-            repeat: -1
-        });
+        const isMobile = window.innerWidth < 768;
+
+        if (!isMobile) {
+            // Infinite Scroll Animation (Right to Left)
+            tweenRef.current = gsap.to(sliderRef.current, {
+                xPercent: -50, // Move left by 50% of total width (covers 2 sets)
+                ease: "none",
+                duration: 80, // 4x slower
+                repeat: -1
+            });
+        }
 
     }, { scope: containerRef });
 
@@ -72,10 +76,10 @@ export const AboutTeamGallery = () => {
             ref={containerRef}
             className="w-full relative z-10 overflow-hidden py-32 md:py-48 opacity-0 -mt-32 md:-mt-64"
         >
-            <div className="w-full">
+            <div className="w-full overflow-x-auto md:overflow-visible select-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                 <div
                     ref={sliderRef}
-                    className="flex gap-[32px] w-max group hover:cursor-grab active:cursor-grabbing"
+                    className="flex gap-[16px] md:gap-[32px] w-max group hover:cursor-grab active:cursor-grabbing px-16 md:px-0 pb-16 md:pb-0"
                     onMouseEnter={(e) => {
                         if (tweenRef.current) {
                             const x = e.clientX;

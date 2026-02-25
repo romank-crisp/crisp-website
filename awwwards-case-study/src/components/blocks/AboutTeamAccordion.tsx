@@ -170,7 +170,7 @@ export const AboutTeamAccordion = ({ data }: { data: TeamMember[] }) => {
 
     return (
         <section className="pt-128 pb-64 bg-white">
-            <div className="max-w-[1440px] w-full mx-auto">
+            <div className="max-w-[1440px] w-full mx-auto px-16 md:px-64">
                 <h2 className="font-mega text-mega-h2 mb-64 uppercase text-brand">
                     Meet the Team
                 </h2>
@@ -211,7 +211,7 @@ export const AboutTeamAccordion = ({ data }: { data: TeamMember[] }) => {
                                             )}
                                         </div>
 
-                                        <span className="font-text text-text-md text-left block truncate" style={{ color: "var(--color-text)", opacity: 0.6 }}>
+                                        <span className="font-text text-sm md:text-text-md text-left block truncate" style={{ color: "var(--color-text)", opacity: 0.6 }}>
                                             {member.position}
                                         </span>
 

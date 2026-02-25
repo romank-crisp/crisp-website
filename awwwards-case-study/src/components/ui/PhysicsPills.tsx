@@ -14,12 +14,22 @@ export const PhysicsPills = React.memo(({ tags, onTagClick }: PhysicsPillsProps)
     const wrapperRefs = useRef<(HTMLDivElement | null)[]>([]);
     const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
+    const [isMobile, setIsMobile] = useState(false);
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    const actualTags = isMobile ? tags.slice(0, Math.ceil(tags.length / 2)) : tags;
+
     // Stable seed per tags identity so colors don't flicker on re-render
-    const seed = tags.reduce((acc, t) => acc + t.charCodeAt(0), 0);
+    const seed = actualTags.reduce((acc, t) => acc + t.charCodeAt(0), 0);
 
     useLayoutEffect(() => {
-        wrapperRefs.current = wrapperRefs.current.slice(0, tags.length);
-    }, [tags]);
+        wrapperRefs.current = wrapperRefs.current.slice(0, actualTags.length);
+    }, [actualTags]);
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -54,7 +64,7 @@ export const PhysicsPills = React.memo(({ tags, onTagClick }: PhysicsPillsProps)
         const rightWall = Matter.Bodies.rectangle(width - 50 + W / 2, height / 2, W, height * 3, wallOpts);
         Matter.World.add(world, [ground, leftWall, rightWall]);
 
-        const bodies = tags.map((_, i) => {
+        const bodies = actualTags.map((_, i) => {
             const dim = dims[i] ?? { width: 160, height: 64 };
             // Ensure they drop within the 50px safety gaps
             const startX = 50 + dim.width / 2 + Math.random() * Math.max(width - 100 - dim.width, 0);
@@ -148,14 +158,14 @@ export const PhysicsPills = React.memo(({ tags, onTagClick }: PhysicsPillsProps)
             Matter.Mouse.clearSourceEvents(mouse);
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [tags]);
+    }, [actualTags]);
 
     return (
         <div
             ref={containerRef}
             className="absolute inset-0 overflow-hidden cursor-grab active:cursor-grabbing pointer-events-auto z-0"
         >
-            {tags.map((tag, i) => {
+            {actualTags.map((tag, i) => {
                 const isHovered = hoveredIdx === i;
                 const bg = "rgb(var(--color-brand))";
                 const textColor = "#fff";
@@ -175,14 +185,20 @@ export const PhysicsPills = React.memo(({ tags, onTagClick }: PhysicsPillsProps)
                         }}
                         onMouseEnter={() => setHoveredIdx(i)}
                         onMouseLeave={() => setHoveredIdx(null)}
-                        onClick={() => onTagClick?.()}
+                        onTouchStart={(e) => {
+                            // Ensure fast touch response without event blocking issues
+                            onTagClick?.();
+                        }}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            onTagClick?.();
+                        }}
                     >
                         <div
                             className={clsx(
                                 "inline-flex items-center justify-center rounded-full shadow-md select-none",
                                 "font-heading text-sm font-bold uppercase tracking-wider whitespace-nowrap",
-                                "px-[24px] py-3 transition-all duration-300",
-                                onTagClick && "cursor-pointer"
+                                "px-[24px] py-3 transition-all duration-300 cursor-pointer pointer-events-auto"
                             )}
                             style={{
                                 background: bg,

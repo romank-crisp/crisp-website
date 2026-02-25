@@ -224,7 +224,7 @@ export function WorksPage({ clientsData, worksData, content }: { clientsData: Cl
                 </section>
 
                 {/* Works Grid - Repeated Pattern */}
-                <section className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
+                <section className="grid grid-cols-1 md:grid-cols-12 gap-y-[15vh] md:gap-x-8">
                     {works.map((work, index) => {
                         const patternIndex = index % 3;
 
@@ -238,7 +238,7 @@ export function WorksPage({ clientsData, worksData, content }: { clientsData: Cl
                         } else if (patternIndex === 1) {
                             // Layout B: Right aligned, 5 columns, with spinner decor
                             return (
-                                <div key={index} className="md:col-span-5 md:col-start-8 relative mt-12 md:mt-0">
+                                <div key={index} className="md:col-span-5 md:col-start-8 relative">
                                     <div className="relative w-full">
                                         <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-[120px] h-[120px] md:w-[200px] md:h-[200px] z-10 pointer-events-none">
                                             <img
@@ -255,7 +255,7 @@ export function WorksPage({ clientsData, worksData, content }: { clientsData: Cl
                         } else {
                             // Layout C: Full width
                             return (
-                                <div key={index} className="md:col-span-12 max-h-[75vh] mt-12 md:mt-0">
+                                <div key={index} className="md:col-span-12 max-h-[75vh]">
                                     <WorkCard
                                         {...work}
                                         className="h-[75vh]"
@@ -279,20 +279,17 @@ export function WorksPage({ clientsData, worksData, content }: { clientsData: Cl
             {/* Mega Heading */}
             <AnimatedMegaHeading />
 
-            {/* Combined Steps & Physics Section */}
-            <div className="relative w-full h-[70vh] min-h-[700px] flex items-center justify-center overflow-hidden mb-0">
-                {/* Background Physics */}
+            {/* Steps Section */}
+            <div className="relative w-full mb-[15vh]">
+                <WorksSteps steps={content?.steps || []} />
+            </div>
+
+            {/* Physics Pills Section */}
+            <div className="relative w-full h-[84vh] min-h-[840px] md:h-[42vh] md:min-h-[420px] flex items-center justify-center overflow-hidden mb-0">
                 <PhysicsPills
                     tags={allTags}
                     onTagClick={openContactForm}
                 />
-
-                {/* Foreground Steps - Positioned on top */}
-                <div className="relative z-10 w-full pointer-events-none -translate-y-[100px]">
-                    <div className="pointer-events-auto">
-                        <WorksSteps steps={content?.steps || []} />
-                    </div>
-                </div>
             </div>
         </main>
     );

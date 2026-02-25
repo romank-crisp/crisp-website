@@ -86,7 +86,7 @@
         {
           "id": "cell-4-2",
           "height": "60vh",
-          "className": "bg-brand text-white border-r border-black/5 p-8",
+          "className": "bg-brand text-white border-r border-black/5 p-0",
           "contentType": "lottie",
           "contentProps": {
             "lottieSrc": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-05.json"

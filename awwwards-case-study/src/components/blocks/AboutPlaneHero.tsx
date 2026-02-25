@@ -108,7 +108,7 @@ export function AboutPlaneHero({ data }: { data: AboutHeroData }) {
                         <video
                             ref={videoRef}
                             src={data.videoDesktop || getAssetUrl("/img/about-plane-fixed.mp4")}
-                            className="w-full h-full object-contain object-bottom"
+                            className="w-full h-full object-contain object-bottom scale-[1.2] md:scale-100"
                             muted
                             playsInline
                             preload="auto"
