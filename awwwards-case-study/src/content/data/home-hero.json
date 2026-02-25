@@ -85,12 +85,11 @@
         },
         {
           "id": "cell-4-2",
-          "height": "40vh",
-          "className": "bg-brand text-white border-r border-black/5 p-0",
-          "contentType": "image",
+          "height": "60vh",
+          "className": "bg-brand text-white border-r border-black/5 p-8",
+          "contentType": "lottie",
           "contentProps": {
-            "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-04-02.png",
-            "alt": "Hero Part 4-2"
+            "lottieSrc": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-05.json"
           }
         }
       ]

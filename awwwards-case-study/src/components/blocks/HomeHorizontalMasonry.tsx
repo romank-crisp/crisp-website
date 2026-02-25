@@ -7,10 +7,7 @@ import { getAssetUrl } from '@/lib/utils';
 import { useGSAP } from "@gsap/react";
 import { twMerge } from "tailwind-merge";
 import Spline from "@splinetool/react-spline";
-import dynamic from "next/dynamic";
 import { clsx, type ClassValue } from "clsx";
-
-const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -34,14 +31,7 @@ interface HorizontalMasonryProps {
     className?: string;
 }
 
-function LottieClientPlayer({ src }: { src: string }) {
-    const [data, setData] = useState<any>(null);
-    useEffect(() => {
-        fetch(src).then(r => r.json()).then(setData).catch(console.error);
-    }, [src]);
-    if (!data) return <div className="w-full h-full" />;
-    return <Lottie animationData={data} loop autoplay style={{ width: "100%", height: "100%" }} />;
-}
+
 
 export function HomeHorizontalMasonry({ columns: initialColumns, className }: HorizontalMasonryProps) {
     // Inject interactive & video components into specific grid cells
@@ -61,38 +51,7 @@ export function HomeHorizontalMasonry({ columns: initialColumns, className }: Ho
                     };
                 }
 
-                // 4th row (column index 3), upper block (index 0) -> home-hero-03.webm
-                if (colIdx === 3 && cellIdx === 0) {
-                    return {
-                        ...cell,
-                        height: "40vh",
-                        content: (
-                            <div className="relative w-full h-full">
-                                <video
-                                    src={getAssetUrl("/img/home-hero/home-hero-03.webm")}
-                                    autoPlay
-                                    loop
-                                    muted
-                                    playsInline
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                        )
-                    };
-                }
 
-                // 4th row (column index 3), bottom block (index 1) -> Lottie
-                if (colIdx === 3 && cellIdx === 1) {
-                    return {
-                        ...cell,
-                        height: "60vh",
-                        content: (
-                            <div className="w-full h-full flex items-center justify-center p-8">
-                                <LottieClientPlayer src={getAssetUrl("/img/home-hero/home-hero-05.json")} />
-                            </div>
-                        )
-                    };
-                }
 
                 return cell;
             })
