@@ -88,7 +88,7 @@ export function HomeHorizontalMasonry({ columns: initialColumns, className }: Ho
                         height: "60vh",
                         content: (
                             <div className="w-full h-full flex items-center justify-center p-8">
-                                <LottieClientPlayer src="/img/home-hero/home-hero-05.json" />
+                                <LottieClientPlayer src={getAssetUrl("/img/home-hero/home-hero-05.json")} />
                             </div>
                         )
                     };
