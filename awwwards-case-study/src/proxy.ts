@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export function proxy(req: NextRequest) {
+export default function proxy(req: NextRequest) {
     const isAdminRoute = req.nextUrl.pathname.startsWith('/admin');
     if (!isAdminRoute) return NextResponse.next();
 
