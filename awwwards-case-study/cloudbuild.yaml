@@ -1,0 +1,18 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '--build-arg'
+      - 'ADMIN_PASSWORD=$_ADMIN_PASSWORD'
+      - '--build-arg'
+      - 'GCS_BUCKET=$_GCS_BUCKET'
+      - '-t'
+      - 'gcr.io/crisp-website-485112/crisp-website:$SHORT_SHA'
+      - '-t'
+      - 'gcr.io/crisp-website-485112/crisp-website:latest'
+      - '-f'
+      - 'Dockerfile'
+      - '.'
+images:
+  - 'gcr.io/crisp-website-485112/crisp-website:$SHORT_SHA'
+  - 'gcr.io/crisp-website-485112/crisp-website:latest'
