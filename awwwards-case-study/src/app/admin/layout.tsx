@@ -1,11 +1,15 @@
 import { headers } from 'next/headers';
-import { NextResponse } from 'next/server';
+import { unauthorized } from 'next/navigation';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
     const password = process.env.ADMIN_PASSWORD;
 
     if (!password) {
-        return new NextResponse('Server misconfiguration: ADMIN_PASSWORD not set.', { status: 500 });
+        return (
+            <html>
+                <body>Server misconfiguration: ADMIN_PASSWORD not set.</body>
+            </html>
+        );
     }
 
     const headersList = await headers();
@@ -21,13 +25,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     }
 
     if (!authorized) {
-        return new NextResponse('Unauthorized', {
-            status: 401,
-            headers: {
-                'WWW-Authenticate': 'Basic realm="Crisp Admin", charset="UTF-8"',
-                'Cache-Control': 'no-store, no-cache, must-revalidate',
-            },
-        });
+        unauthorized();
     }
 
     return <>{children}</>;

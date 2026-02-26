@@ -25,6 +25,12 @@ COPY . .
 # Disable Next.js telemetry during build
 ENV NEXT_TELEMETRY_DISABLED 1
 
+# Accept secrets as build args so Next.js can inline them at build time
+ARG ADMIN_PASSWORD
+ARG GCS_BUCKET
+ENV ADMIN_PASSWORD=$ADMIN_PASSWORD
+ENV GCS_BUCKET=$GCS_BUCKET
+
 RUN \
   if [ -f package-lock.json ]; then npm run build; \
   elif [ -f yarn.lock ]; then yarn build; \
