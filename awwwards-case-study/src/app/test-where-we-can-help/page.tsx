@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { HomeWhereWeCanHelp as WhereWeCanHelp } from "@/components/blocks/HomeWhereWeCanHelp";
 import { readContent } from "@/lib/content";
 

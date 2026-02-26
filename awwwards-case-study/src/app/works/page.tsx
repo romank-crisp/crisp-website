@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { WorksPage } from './works-page';
 import { getAssetUrl } from "@/lib/utils";
 import { readContent } from '@/lib/content';

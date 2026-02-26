@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { parseSeoData } from "@/lib/seo";
 import { SeoData } from "@/types/seo";
 import { readContent } from '@/lib/content';

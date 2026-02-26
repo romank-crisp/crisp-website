@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import AboutPage from './about-page';
 import { readContent } from '@/lib/content';
 import { parseSeoData } from "@/lib/seo";

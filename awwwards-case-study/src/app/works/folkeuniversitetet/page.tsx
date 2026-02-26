@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { CaseStudyPage } from "@/templates/case-study/CaseStudyPage";
 import { readContent } from "@/lib/content";
 import { parseSeoData } from "@/lib/seo";
