@@ -4,10 +4,9 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Lottie from "lottie-react";
 
-import preloaderData from "../../../public/img/preloader.json";
-
 export function WorksPreloader() {
     const [isLoading, setIsLoading] = useState(true);
+    const [animationData, setAnimationData] = useState<object | null>(null);
 
     useEffect(() => {
         // Check if preloader has already been shown in this session (site-wide, not page-specific)
@@ -16,6 +15,12 @@ export function WorksPreloader() {
             setIsLoading(false);
             return;
         }
+
+        // Fetch animation data at runtime (file is served from GCS / public/)
+        fetch('/img/preloader.json')
+            .then(res => res.json())
+            .then(data => setAnimationData(data))
+            .catch(() => {/* fail silently — preloader just won't animate */ });
 
         // Force the preloader to disappear after 4 seconds max
         const timer = setTimeout(() => {
@@ -36,9 +41,9 @@ export function WorksPreloader() {
                     className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-white"
                 >
                     <div className="w-96 h-96 md:w-[512px] md:h-[512px] flex items-center justify-center">
-                        {preloaderData && (
+                        {animationData && (
                             <Lottie
-                                animationData={preloaderData}
+                                animationData={animationData}
                                 loop={true}
                                 className="w-full h-full"
                             />
