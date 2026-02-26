@@ -11,14 +11,16 @@ gsap.registerPlugin(ScrollTrigger);
 import { getAssetUrl } from "@/lib/utils";
 
 const TEAM_IMAGES = [
-    getAssetUrl("/img/teampic/team-gallery-1.JPG"),
-    getAssetUrl("/img/teampic/team-gallery-2.JPG"),
-    getAssetUrl("/img/teampic/team-gallery-3.JPG"),
-    getAssetUrl("/img/teampic/team-gallery-4.JPG"),
-    getAssetUrl("/img/teampic/team-gallery-5.JPG"),
-    getAssetUrl("/img/teampic/team-gallery-6.JPG"),
-    getAssetUrl("/img/teampic/team-gallery-7.JPG"),
-    getAssetUrl("/img/teampic/team-gallery-8.JPG"),
+    getAssetUrl("/img/teampic/team-gallery-1.jpg"),
+    getAssetUrl("/img/teampic/team-gallery-2.jpg"),
+    getAssetUrl("/img/teampic/team-gallery-3.jpg"),
+    getAssetUrl("/img/teampic/team-gallery-4.jpg"),
+    getAssetUrl("/img/teampic/team-gallery-5.jpg"),
+    getAssetUrl("/img/teampic/team-gallery-6.jpg"),
+    getAssetUrl("/img/teampic/team-gallery-7.jpg"),
+    getAssetUrl("/img/teampic/team-gallery-8.jpg"),
+    getAssetUrl("/img/teampic/team-gallery-9.jpg"),
+    getAssetUrl("/img/teampic/team-gallery-10.jpg"),
 ];
 
 const WIDTHS = [

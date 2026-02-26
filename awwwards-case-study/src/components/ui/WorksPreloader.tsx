@@ -22,11 +22,11 @@ export function WorksPreloader() {
             .then(data => setAnimationData(data))
             .catch(() => {/* fail silently — preloader just won't animate */ });
 
-        // Force the preloader to disappear after 4 seconds max
+        // Force the preloader to disappear after 3 seconds max
         const timer = setTimeout(() => {
             sessionStorage.setItem('hasSeenSitePreloader', 'true');
             setIsLoading(false);
-        }, 4000);
+        }, 3000);
 
         return () => clearTimeout(timer);
     }, []);

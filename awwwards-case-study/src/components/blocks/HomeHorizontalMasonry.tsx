@@ -35,7 +35,7 @@ function HomeLottieBottom({ src }: { src: string }) {
             animationData={animationData}
             loop
             autoplay
-            style={{ height: "100%", width: "auto", display: "block" }}
+            style={{ height: "auto", width: "100%", display: "block" }}
         />
     );
 }
@@ -91,13 +91,13 @@ export function HomeHorizontalMasonry({ columns: initialColumns, className }: Ho
                     };
                 }
 
-                // 4col (column index 3), bottom block (index 1) -> Lottie pinned to bottom
+                // 4col (column index 3), bottom block (index 1) -> Lottie pinned to bottom edge
                 if (colIdx === 3 && cellIdx === 1) {
                     return {
                         ...cell,
                         className: cn(cell.className, "overflow-hidden p-0"),
                         content: (
-                            <div className="absolute bottom-0 left-0 w-full pointer-events-none">
+                            <div className="absolute inset-0 w-full h-full pointer-events-none flex items-end">
                                 <HomeLottieBottom src="/img/home-hero/home-hero-05.json" />
                             </div>
                         )

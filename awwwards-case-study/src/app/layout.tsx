@@ -20,8 +20,8 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "CentroGreen Case Study",
-  description: "Brand identity, Website and Product Visualization",
+  title: "Crisp Studio",
+  description: "Award-winning creative studio specialising in brand identity, web design and product visualisation.",
   icons: {
     icon: "/favicon.png",
   },

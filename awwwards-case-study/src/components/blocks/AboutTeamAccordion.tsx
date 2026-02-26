@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Plus } from "lucide-react";
 import { TeamMember } from "@/content/team";
 import { Tag } from "@/components/ui/Tag";
+import { getAssetUrl } from "@/lib/utils";
 
 export const AboutTeamAccordion = ({ data }: { data: TeamMember[] }) => {
     const [openId, setOpenId] = useState<string | null>(null);
@@ -201,7 +202,7 @@ export const AboutTeamAccordion = ({ data }: { data: TeamMember[] }) => {
                                             {member.inlineLogoUrl && (
                                                 <div className="flex md:hidden items-center">
                                                     <Image
-                                                        src={member.inlineLogoUrl}
+                                                        src={getAssetUrl(member.inlineLogoUrl)}
                                                         alt={`${member.name} logo`}
                                                         width={80}
                                                         height={26}
@@ -218,7 +219,7 @@ export const AboutTeamAccordion = ({ data }: { data: TeamMember[] }) => {
                                         {member.inlineLogoUrl && (
                                             <div className="hidden md:flex ml-[100px] items-center self-center">
                                                 <Image
-                                                    src={member.inlineLogoUrl}
+                                                    src={getAssetUrl(member.inlineLogoUrl)}
                                                     alt={`${member.name} logo`}
                                                     width={120}
                                                     height={40}
@@ -254,7 +255,7 @@ export const AboutTeamAccordion = ({ data }: { data: TeamMember[] }) => {
                                             <div className="w-full md:w-[320px] flex-shrink-0 hidden md:block">
                                                 <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg bg-gray-100">
                                                     <Image
-                                                        src={member.photo}
+                                                        src={getAssetUrl(member.photo)}
                                                         alt={member.name}
                                                         fill
                                                         className="object-cover"
@@ -297,7 +298,7 @@ export const AboutTeamAccordion = ({ data }: { data: TeamMember[] }) => {
                     {hoveredMember && (
                         <div className="relative w-full h-full rounded-lg overflow-hidden shadow-2xl">
                             <Image
-                                src={hoveredMember.photo}
+                                src={getAssetUrl(hoveredMember.photo)}
                                 alt={hoveredMember.name}
                                 fill
                                 className="object-cover"

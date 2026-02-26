@@ -10,7 +10,7 @@ export interface WorkItem {
 
 export interface InfiniteScrollItem {
     id: string;
-    type: "image" | "text";
+    type: "image" | "text" | "spline";
     width: number;
     height: number;
     color: string;
@@ -23,7 +23,7 @@ export interface InfiniteScrollContentItem {
     id?: string;
     row?: number;
     slot?: number;
-    type: "image" | "text";
+    type: "image" | "text" | "spline";
     src?: string;
     text?: string;
     color?: string; // Hex color for lottie/text background

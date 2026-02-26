@@ -14,6 +14,7 @@ import { MenuItem } from "@/content/navigation";
 
 import { PageTransition } from "@/components/layouts/PageTransition";
 import { WorksPreloader } from "@/components/ui/WorksPreloader";
+import { TransitionOverlay } from "@/components/layouts/TransitionOverlay";
 
 export function GlobalLayout({ children, footerData, navigationData }: { children: React.ReactNode, footerData: FooterProps['data'], navigationData: MenuItem[] }) {
     const pathname = usePathname();
@@ -67,6 +68,7 @@ export function GlobalLayout({ children, footerData, navigationData }: { childre
         <ContactFormProvider>
             <BrandProvider>
                 <WorksPreloader />
+                <TransitionOverlay />
                 <CustomCursor />
                 <ContactOverlay />
                 <Navbar menuItems={navigationData} />

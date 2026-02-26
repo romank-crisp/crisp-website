@@ -13,8 +13,6 @@ interface Sparkle {
     size: number;
     opacity: number;
     decay: number;
-    rotation: number;
-    rotationSpeed: number;
 }
 
 function createSparkle(x: number, y: number): Sparkle {
@@ -25,32 +23,16 @@ function createSparkle(x: number, y: number): Sparkle {
         y,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed - 1.5,
-        size: Math.random() * 2.5 + 1.5, // 2x smaller
+        size: Math.random() * 2.5 + 1.5,
         opacity: 1,
-        decay: Math.random() * 0.007 + 0.004, // much slower fade = longer trail
-        rotation: Math.random() * Math.PI * 2,
-        rotationSpeed: (Math.random() - 0.5) * 0.2,
+        decay: Math.random() * 0.007 + 0.004,
     };
 }
 
-function drawStar(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, rotation: number) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(rotation);
+function drawCircle(ctx: CanvasRenderingContext2D, x: number, y: number, size: number) {
     ctx.beginPath();
-    for (let i = 0; i < 4; i++) {
-        const angle = (i / 4) * Math.PI * 2;
-        const outerX = Math.cos(angle) * size;
-        const outerY = Math.sin(angle) * size;
-        const innerAngle = angle + Math.PI / 4;
-        const innerX = Math.cos(innerAngle) * (size * 0.35);
-        const innerY = Math.sin(innerAngle) * (size * 0.35);
-        if (i === 0) ctx.moveTo(outerX, outerY);
-        else ctx.lineTo(outerX, outerY);
-        ctx.lineTo(innerX, innerY);
-    }
+    ctx.arc(x, y, size, 0, Math.PI * 2);
     ctx.closePath();
-    ctx.restore();
 }
 
 export function HomeAnimatedText() {
@@ -109,11 +91,10 @@ export function HomeAnimatedText() {
                 s.y += s.vy;
                 s.vy += 0.05; // gravity
                 s.opacity -= s.decay;
-                s.rotation += s.rotationSpeed;
 
                 ctx.globalAlpha = Math.max(0, s.opacity);
                 ctx.fillStyle = BRAND_COLOR;
-                drawStar(ctx, s.x, s.y, s.size, s.rotation);
+                drawCircle(ctx, s.x, s.y, s.size);
                 ctx.fill();
             }
             ctx.globalAlpha = 1;

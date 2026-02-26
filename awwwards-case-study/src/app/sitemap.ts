@@ -13,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/privacy-policy',
     ].map((route) => ({
         url: `${baseUrl}${route}`,
-        lastModified: new Date(),
+        lastModified: new Date('2026-02-26'),
         changeFrequency: 'monthly' as const,
         priority: route === '' ? 1 : 0.8,
     }))

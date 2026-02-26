@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { clsx } from "clsx";
+import { getAssetUrl } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -26,6 +27,8 @@ export function SharedScrollRevealImage({
     aspectRatio,
     mode = "intrinsic"
 }: ScrollRevealImageProps) {
+    const resolvedSrc = getAssetUrl(src);
+    const resolvedVideoSrc = videoSrc ? getAssetUrl(videoSrc) : undefined;
     const containerRef = useRef<HTMLDivElement>(null);
     const mediaRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -87,8 +90,8 @@ export function SharedScrollRevealImage({
                 {videoSrc ? (
                     <video
                         ref={videoRef}
-                        src={videoSrc}
-                        poster={src}
+                        src={resolvedVideoSrc}
+                        poster={resolvedSrc}
                         muted
                         playsInline
                         className={clsx("w-full block cursor-pointer", isCover ? "h-full object-cover" : "h-auto")}
@@ -102,7 +105,7 @@ export function SharedScrollRevealImage({
                 ) : (
                     isCover ? (
                         <Image
-                            src={src}
+                            src={resolvedSrc}
                             alt={alt}
                             fill
                             sizes="100vw"
@@ -111,7 +114,7 @@ export function SharedScrollRevealImage({
                     ) : (
                         /* eslint-disable-next-line @next/next/no-img-element */
                         <img
-                            src={src}
+                            src={resolvedSrc}
                             alt={alt}
                             className="block w-full h-auto"
                         />

@@ -4,6 +4,7 @@ import React, { useRef, useState, useEffect, useMemo, memo } from "react";
 import { motion, useMotionValue, useAnimationFrame, wrap, useInView } from "framer-motion";
 import { InfiniteScrollItem, InfiniteScrollContentItem } from "@/types/work";
 import Lottie from "lottie-react";
+import Spline from "@splinetool/react-spline";
 
 const globalLottieCache = new Map<string, any>();
 
@@ -55,7 +56,8 @@ export const ScrollItem = memo(({ item }: { item: InfiniteScrollItem }) => {
 
     const isPlaceholder = item.type === "image" && !item.src;
     const isText = item.type === "text";
-    const hasCustomColor = item.color?.startsWith('#') || item.color?.startsWith('rgb') || item.color?.startsWith('hsl');
+    const isSpline = item.type === "spline";
+    const hasCustomColor = !isSpline && (item.color?.startsWith('#') || item.color?.startsWith('rgb') || item.color?.startsWith('hsl'));
     const colorClass = hasCustomColor ? '' : item.color;
 
     const [isMobile, setIsMobile] = useState(false);
@@ -142,12 +144,17 @@ export const ScrollItem = memo(({ item }: { item: InfiniteScrollItem }) => {
                             </div>
                         )}
                     </>
+                ) : item.type === "spline" ? (
+                    // Spline 3D scene — uses exact same technique as HomeHorizontalMasonry
+                    <div className="absolute inset-0 w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing [&>div]:!h-full [&>div]:!w-full [&>div>canvas]:!w-full [&>div>canvas]:!h-full [&>div>canvas]:object-cover">
+                        <Spline scene={item.src || "/img/workspane/pane-11-viry/scene.splinecode"} />
+                    </div>
                 ) : (
                     <div className="p-8 md:p-32 h-full flex items-center justify-center text-center w-[70%] md:w-full mx-auto">
                         <p className="font-text text-text-lg text-white">{item.text}</p>
                     </div>
                 )}
-                {!isText && (
+                {!isText && !isSpline && (
                     <span className="absolute bottom-6 right-6 font-heading text-sm font-bold uppercase tracking-wider text-white bg-black/40 backdrop-blur-sm px-[16px] py-2 rounded-full z-10">
                         {item.label || `${item.width}x${item.height}`}
                     </span>

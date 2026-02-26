@@ -3,7 +3,7 @@ import path from "path";
 import { unstable_cache } from "next/cache";
 
 const storage = new Storage();
-const BUCKET_NAME = "crisp-website-485112_cloudbuild";
+const BUCKET_NAME = process.env.GCS_BUCKET ?? "crisp-website-485112_cloudbuild";
 const DATA_PREFIX = "data";
 
 export async function readContent(filename: string, revalidate: number = 3600) {

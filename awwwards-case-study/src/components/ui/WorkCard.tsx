@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
 import { useInView } from "framer-motion";
 import { Tag } from "./Tag";
+import { getAssetUrl } from "@/lib/utils";
 
 interface WorkCardProps {
     title: string;
@@ -21,6 +22,9 @@ interface WorkCardProps {
 }
 
 export function WorkCard({ title, tags, image, video, poster, href, className = "", decoration }: WorkCardProps) {
+    const resolvedImage = getAssetUrl(image);
+    const resolvedVideo = getAssetUrl(video);
+    const resolvedPoster = getAssetUrl(poster);
     const videoRef = useRef<HTMLVideoElement>(null);
     const containerRef = useRef<HTMLAnchorElement>(null);
     const [isHovered, setIsHovered] = useState(false);
@@ -71,8 +75,8 @@ export function WorkCard({ title, tags, image, video, poster, href, className = 
                 {video ? (
                     <video
                         ref={videoRef}
-                        src={video}
-                        poster={poster || image}
+                        src={resolvedVideo}
+                        poster={resolvedPoster || resolvedImage}
                         loop
                         muted
                         playsInline
@@ -81,7 +85,7 @@ export function WorkCard({ title, tags, image, video, poster, href, className = 
                     />
                 ) : (
                     <img
-                        src={image}
+                        src={resolvedImage}
                         alt={title}
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
@@ -95,7 +99,7 @@ export function WorkCard({ title, tags, image, video, poster, href, className = 
             {decoration && decoration.type === 'spinner' && (
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px]">
                     <img
-                        src={decoration.src}
+                        src={getAssetUrl(decoration.src)}
                         alt="Decoration"
                         className="w-full h-full object-contain animate-spin"
                         style={{ animationDuration: '8s' }}

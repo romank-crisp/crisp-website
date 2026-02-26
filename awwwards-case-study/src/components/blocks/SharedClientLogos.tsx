@@ -5,6 +5,7 @@ import React from "react";
 import { ClientLogo } from "@/content/clients";
 import { useState, useEffect } from "react";
 import { clsx } from "clsx";
+import { getAssetUrl } from "@/lib/utils";
 import useEmblaCarousel from "embla-carousel-react";
 
 export const SharedClientLogos = ({ data }: { data: ClientLogo[] }) => {
@@ -23,7 +24,7 @@ export const SharedClientLogos = ({ data }: { data: ClientLogo[] }) => {
                                 >
                                     <div className="w-full h-full flex items-center justify-center">
                                         <img
-                                            src={logo.src}
+                                            src={getAssetUrl(logo.src)}
                                             alt={logo.name}
                                             className="max-w-full max-h-full object-contain opacity-40 group-hover:opacity-100 transition-opacity duration-300"
                                         />
@@ -93,7 +94,7 @@ function MobileLogoSlider({ data }: { data: ClientLogo[] }) {
                                         className="aspect-square border border-gray-100 flex items-center justify-center p-8 -mr-[1px] -mb-[1px]"
                                     >
                                         <img
-                                            src={logo.src}
+                                            src={getAssetUrl(logo.src)}
                                             alt={logo.name}
                                             className="max-w-full max-h-full object-contain opacity-60"
                                         />
