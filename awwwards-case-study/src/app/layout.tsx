@@ -1,4 +1,7 @@
 import type { Metadata, Viewport } from "next";
+
+export const dynamic = 'force-dynamic';
+
 import Script from "next/script";
 import { Staatliches, DM_Sans } from "next/font/google";
 import "./globals.css";
