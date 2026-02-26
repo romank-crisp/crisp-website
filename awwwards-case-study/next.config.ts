@@ -3,6 +3,9 @@ import withBundleAnalyzer from '@next/bundle-analyzer';
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  env: {
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD ?? '',
+  },
   async headers() {
     return [
       {
