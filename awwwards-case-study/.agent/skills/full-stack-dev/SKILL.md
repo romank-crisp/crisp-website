@@ -153,5 +153,6 @@ Before marking any task complete:
 - Architecture overview: `README.md`
 - Detailed AI guide: `.agent/JSON_FIRST_GUIDE.md`
 - Admin sidebar guide: `.agent/ADMIN_SIDEBAR_REFERENCE.md`
+- **GCS assets & CORS fetch patterns: `.agent/GCS_ASSETS_GUIDE.md`** ← read before using any media/Lottie
 - Full block workflow: `.agent/workflows/create-new-block.md`
 - Quick reference: `.agent/QUICK_REFERENCE.md`

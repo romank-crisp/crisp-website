@@ -21,7 +21,8 @@ function HomeLottieBottom({ src }: { src: string }) {
     const [animationData, setAnimationData] = useState<unknown>(null);
 
     useEffect(() => {
-        fetch(src)
+        const url = getAssetUrl(src);
+        fetch(url)
             .then((res) => res.json())
             .then((data) => setAnimationData(data))
             .catch((err) => console.error("Failed to load Lottie:", err));

@@ -58,7 +58,21 @@ Welcome to the Crisp Website JSON-First Architecture documentation. This project
 
 ---
 
-### 4. **create-new-block.md** (.agent/workflows/)
+### 4. **GCS_ASSETS_GUIDE.md** (.agent/)
+**Purpose**: How media and JSON content is stored on GCS and fetched from components  
+**Audience**: All developers and AI agents  
+**Contains**:
+- Bucket layout: `data/` (content JSON) vs `img/` (media files)
+- Server-side reads via `readContent()` (content JSON only)
+- Client-side reads via `getAssetUrl()` + `fetch()` (Lottie, images, video)
+- CORS rules and common pitfalls
+- Asset type quick reference table
+
+**When to read**: Any time you are loading images, video, or Lottie animations in a component.
+
+---
+
+### 5. **create-new-block.md** (.agent/workflows/)
 **Purpose**: Step-by-step workflow  
 **Audience**: Developers creating new blocks  
 **Contains**:
@@ -130,6 +144,7 @@ Project Root/
 │   ├── INDEX.md                       ← This file
 │   ├── JSON_FIRST_GUIDE.md           ← Detailed AI guide
 │   ├── ADMIN_SIDEBAR_REFERENCE.md    ← Admin update reference
+│   ├── GCS_ASSETS_GUIDE.md          ← Media & content fetch patterns
 │   └── workflows/
 │       └── create-new-block.md       ← Step-by-step workflow
 │
