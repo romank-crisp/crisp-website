@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import React, { use } from "react";
 import { ColorsSection } from "@/components/design-system/ColorsSection";
 import { TypographySection } from "@/components/design-system/TypographySection";
