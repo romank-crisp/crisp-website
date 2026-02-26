@@ -4,7 +4,8 @@ export function proxy(req: NextRequest) {
     const isAdminRoute = req.nextUrl.pathname.startsWith('/admin');
     if (!isAdminRoute) return NextResponse.next();
 
-    const password = process.env.ADMIN_PASSWORD;
+    // NEXT_PUBLIC_ prefix makes the var available in Edge runtime
+    const password = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
 
     if (!password) {
         return new NextResponse('Server misconfiguration: ADMIN_PASSWORD not set.', { status: 500 });
