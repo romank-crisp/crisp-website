@@ -3,7 +3,7 @@ steps:
     args:
       - 'build'
       - '--build-arg'
-      - 'ADMIN_PASSWORD=$_ADMIN_PASSWORD'
+      - 'NEXT_PUBLIC_ADMIN_PASSWORD=$_NEXT_PUBLIC_ADMIN_PASSWORD'
       - '--build-arg'
       - 'GCS_BUCKET=$_GCS_BUCKET'
       - '-t'
