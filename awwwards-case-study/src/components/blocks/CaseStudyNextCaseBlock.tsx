@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { NextCaseProps } from "@/types/case-study";
+import { getAssetUrl } from "@/lib/utils";
 
 export function CaseStudyNextCaseBlock({
     title,
@@ -27,7 +28,7 @@ export function CaseStudyNextCaseBlock({
                         loop
                         playsInline
                     >
-                        <source src={videoPath} type="video/webm" />
+                        <source src={getAssetUrl(videoPath)} type="video/webm" />
                     </video>
                     {/* Overlay Gradient */}
                     <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-700" />

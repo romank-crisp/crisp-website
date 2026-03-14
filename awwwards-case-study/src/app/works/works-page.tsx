@@ -5,7 +5,8 @@ import { WorkCard } from "@/components/ui/WorkCard";
 import { PhysicsPills } from "@/components/ui/PhysicsPills";
 import { CaseStudyTextReveal } from "@/components/blocks/CaseStudyTextReveal";
 import { getAssetUrl } from "@/lib/utils";
-import { InfiniteScrollPane } from "@/components/blocks/InfiniteScrollPane";
+import { InfiniteScrollPane } from "@/components/blocks/HomeInfiniteScrollPane";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import { useBrand } from "@/context/BrandContext";
 import { useContactForm } from "@/context/ContactFormContext";
 import { useEffect, useState, useRef, useMemo } from "react";
@@ -19,59 +20,28 @@ import { WorksSteps } from "@/components/blocks/WorksSteps";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function AnimatedMegaHeading() {
-    const containerRef = useRef<HTMLDivElement>(null);
-
-    useGSAP(() => {
-        gsap.fromTo(".works-mega-word",
-            { y: "110%", opacity: 0 },
-            {
-                y: "0%",
-                opacity: 1,
-                duration: 0.8,
-                stagger: 0.08,
-                ease: "circ.out",
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top 85%",
-                }
-            }
-        );
-    }, { scope: containerRef });
-
-    return (
-        <div ref={containerRef} className="max-w-[1440px] mx-auto px-6 md:px-12 mt-[15vh]">
-            <h2 className="font-mega text-mega-h2 text-text uppercase leading-none pt-0 px-[3px] py-[3px] flex flex-col items-start xl:whitespace-nowrap">
-                <span className="flex flex-wrap gap-x-[0.25em]">
-                    <span className="inline-block overflow-hidden"><span className="works-mega-word inline-block">Design</span></span>
-                    <span className="inline-block overflow-hidden"><span className="works-mega-word inline-block">matters.</span></span>
-                </span>
-                <span className="flex flex-wrap gap-x-[0.25em] text-brand">
-                    <span className="inline-block overflow-hidden"><span className="works-mega-word inline-block">Craft</span></span>
-                    <span className="inline-block overflow-hidden"><span className="works-mega-word inline-block">what</span></span>
-                    <span className="inline-block overflow-hidden"><span className="works-mega-word inline-block">endures.</span></span>
-                </span>
-            </h2>
-        </div>
-    );
-}
 
 // Animated Works Heading Component
 function AnimatedWorksHeading({ phrases, staticText }: { phrases: string[], staticText: string }) {
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    const dynamicPhrases = phrases.length > 0 ? phrases : [
-        "brands that scale.",
-        "websites that convert.",
-        "robust design systems.",
-        "omnichannel content.",
-        "rock-solid design."
-    ];
+    // Memoize to avoid creating a new array reference every render,
+    // which would reset the setInterval on every parent re-render.
+    const dynamicPhrases = useMemo(() =>
+        phrases.length > 0 ? phrases : [
+            "brands that scale.",
+            "websites that convert.",
+            "robust design systems.",
+            "omnichannel content.",
+            "rock-solid design."
+        ],
+        [phrases]
+    );
 
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((prev) => (prev + 1) % dynamicPhrases.length);
-        }, 3000); // Slower interval for better readability (2s -> 3s)
+        }, 3000);
 
         return () => clearInterval(interval);
     }, [dynamicPhrases]);
@@ -150,11 +120,28 @@ export function WorksPage({ clientsData, worksData, content }: { clientsData: Cl
         "Web Design", "Development", "Branding", "Visual Identity",
         "UX/UI Design", "Content Strategy", "E-commerce", "Animation",
         "Motion Graphics", "3D Design", "Design Systems", "Platform",
-        "Copywriting", "SEO", "Art Direction", "Digital Product"
+        "Copywriting", "SEO", "Art Direction", "Digital Product",
+        "Decision-Shaping Workshops", "Brand Foundation",
+        "Creative and Visual Concepts", "Logos and Brand Marks",
+        "Tone of Voice", "High-Performing Websites",
+        "User Experience Design", "Interface Design",
+        "Interactive Prototypes", "Brand Strategy",
+        "Digital Experience", "Messaging House"
     ];
-    // Combine base tags with any unique tags from works, ensuring no duplicates
-    const allTags = Array.from(new Set([...baseTags, ...works.flatMap(work => work.tags || [])]))
-        .sort(() => Math.random() - 0.5);
+    // Combine base tags with any unique tags from works, ensuring no duplicates.
+    // Memoized with a deterministic seeded shuffle to prevent:
+    //   - SSR/client hydration mismatch (Math.random gives different values)
+    //   - PhysicsPills re-creating its entire Matter.js world on every render
+    const allTags = useMemo(() => {
+        const tags = Array.from(new Set([...baseTags, ...works.flatMap(work => work.tags || [])]));
+        // Deterministic shuffle using a simple seed based on tag content
+        const seed = tags.reduce((acc, t) => acc + t.charCodeAt(0) + t.length, 0);
+        return tags.sort((a, b) => {
+            const hashA = (a.charCodeAt(0) * 31 + seed) % 997;
+            const hashB = (b.charCodeAt(0) * 31 + seed) % 997;
+            return hashA - hashB;
+        });
+    }, [works]);
 
     // Fallbacks
     // Fallbacks to empty/safe defaults instead of hardcoded content to enforce JSON source of truth.
@@ -274,23 +261,22 @@ export function WorksPage({ clientsData, worksData, content }: { clientsData: Cl
                 </div>
             </div>
 
-            <InfiniteScrollPane id="infinite-scroll-pane" items={infiniteScrollItems} />
+            <ErrorBoundary label="InfiniteScrollPane">
+                <InfiniteScrollPane id="infinite-scroll-pane" items={infiniteScrollItems} />
+            </ErrorBoundary>
 
-            {/* Mega Heading */}
-            <AnimatedMegaHeading />
-
-            {/* Steps Section */}
-            <div className="relative w-full mb-[15vh]">
-                <WorksSteps steps={content?.steps || []} />
-            </div>
-
-            {/* Physics Pills Section */}
-            <div className="relative w-full h-[84vh] min-h-[840px] md:h-[42vh] md:min-h-[420px] flex items-center justify-center overflow-hidden mb-0">
-                <PhysicsPills
-                    tags={allTags}
-                    onTagClick={openContactForm}
-                />
-            </div>
+            {/* Bottom section — heading + steps with PhysicsPills background */}
+            <WorksSteps
+                steps={content?.steps || []}
+                background={
+                    <ErrorBoundary label="PhysicsPills">
+                        <PhysicsPills
+                            tags={allTags}
+                            onTagClick={openContactForm}
+                        />
+                    </ErrorBoundary>
+                }
+            />
         </main>
     );
 }

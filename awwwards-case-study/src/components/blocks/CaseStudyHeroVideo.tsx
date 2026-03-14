@@ -137,9 +137,9 @@ export function CaseStudyHeroVideo({
                 muted={isMuted}
                 loop
                 playsInline
-                poster={posterPath}
+                poster={getAssetUrl(posterPath)}
             >
-                <source src={videoPath} type="video/webm" />
+                <source src={getAssetUrl(videoPath)} type="video/webm" />
             </video>
 
             {/* Overlay Gradient */}

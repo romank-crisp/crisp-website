@@ -22,17 +22,30 @@ interface JsonEditorProps {
     title?: string;
     liveUrl?: string;
     initialData: any;
+    isEditable?: boolean;
     onSave: (filename: string, data: any) => Promise<void>;
 }
 
-export function JsonEditor({ filename, title, liveUrl, initialData, onSave }: JsonEditorProps) {
+export function JsonEditor({ filename, title, liveUrl, initialData, isEditable = true, onSave }: JsonEditorProps) {
     const [data, setData] = useState<string>("");
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [activeTab, setActiveTab] = useState<"json" | "ai" | "preview">(isEditable ? "json" : "preview");
+
+    // Ensure activeTab syncs if isEditable changes
+    useEffect(() => {
+        if (!isEditable && activeTab !== "preview") {
+            setActiveTab("preview");
+        } else if (isEditable && activeTab === "preview" && !liveUrl) {
+            setActiveTab("json");
+        }
+    }, [isEditable, activeTab, liveUrl]);
 
     useEffect(() => {
-        if (initialData) {
+        if (initialData && Object.keys(initialData).length > 0) {
             setData(JSON.stringify(initialData, null, 2));
+        } else {
+            setData("{}"); // Explicit fallback to stringified empty object instead of empty string
         }
     }, [initialData]);
 
@@ -71,9 +84,8 @@ export function JsonEditor({ filename, title, liveUrl, initialData, onSave }: Js
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [data]); // Depend on data to ensure latest state is saved
+    }, [data, handleSave]);
 
-    const [activeTab, setActiveTab] = useState<"json" | "ai">("json");
     const [prompt, setPrompt] = useState("");
     const [aiLoading, setAiLoading] = useState(false);
     const [aiError, setAiError] = useState<string | null>(null);
@@ -104,7 +116,7 @@ export function JsonEditor({ filename, title, liveUrl, initialData, onSave }: Js
     return (
         <div className="flex flex-col h-full gap-4">
             {/* Header / Tabs */}
-            <div className="relative flex items-center justify-center py-1 border-b border-gray-200 min-h-[48px]">
+            <div className="relative flex items-center justify-center py-1 border-b border-gray-200 min-h-[48px] shrink-0">
                 {/* Left: Title */}
                 <div className="absolute left-0 flex items-center">
                     {liveUrl ? (
@@ -140,20 +152,33 @@ export function JsonEditor({ filename, title, liveUrl, initialData, onSave }: Js
 
                 {/* Center: Tabs */}
                 <div className="flex gap-1 bg-gray-100 p-1 rounded-lg">
-                    <button
-                        onClick={() => setActiveTab("json")}
-                        className={`px-3 py-1 font-text text-xs font-medium rounded-md transition-colors ${activeTab === "json" ? "bg-white text-black" : "text-gray-500 hover:text-black"
-                            }`}
-                    >
-                        JSON
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("ai")}
-                        className={`px-3 py-1 font-text text-xs font-medium rounded-md transition-colors ${activeTab === "ai" ? "bg-white text-black" : "text-gray-500 hover:text-black"
-                            }`}
-                    >
-                        AI Prompt
-                    </button>
+                    {isEditable && (
+                        <>
+                            <button
+                                onClick={() => setActiveTab("json")}
+                                className={`px-3 py-1 font-text text-xs font-medium rounded-md transition-colors ${activeTab === "json" ? "bg-white text-black shadow-sm" : "text-gray-500 hover:text-black"
+                                    }`}
+                            >
+                                JSON
+                            </button>
+                            <button
+                                onClick={() => setActiveTab("ai")}
+                                className={`px-3 py-1 font-text text-xs font-medium rounded-md transition-colors ${activeTab === "ai" ? "bg-white text-black shadow-sm" : "text-gray-500 hover:text-black"
+                                    }`}
+                            >
+                                AI Prompt
+                            </button>
+                        </>
+                    )}
+                    {liveUrl && (
+                        <button
+                            onClick={() => setActiveTab("preview")}
+                            className={`px-3 py-1 font-text text-xs font-medium rounded-md transition-colors ${activeTab === "preview" ? "bg-white text-black shadow-sm" : "text-gray-500 hover:text-black"
+                                }`}
+                        >
+                            Preview
+                        </button>
+                    )}
                 </div>
 
                 {/* Right: Error */}
@@ -176,7 +201,13 @@ export function JsonEditor({ filename, title, liveUrl, initialData, onSave }: Js
                                 <Editor
                                     value={data}
                                     onValueChange={handleChange}
-                                    highlight={code => highlight(code, languages.json, 'json')}
+                                    highlight={code => {
+                                        try {
+                                            return highlight(code, languages.json, 'json');
+                                        } catch (e) {
+                                            return code;
+                                        }
+                                    }}
                                     padding={20}
                                     style={{
                                         fontFamily: '"Fira code", "Fira Mono", monospace',
@@ -189,7 +220,7 @@ export function JsonEditor({ filename, title, liveUrl, initialData, onSave }: Js
                             </div>
                         </div>
                     </div>
-                ) : (
+                ) : activeTab === "ai" ? (
                     <div className="flex flex-col h-full max-w-4xl mx-auto w-full px-8">
                         <div className="w-full space-y-4 pt-4">
                             <div className="text-left">
@@ -247,6 +278,20 @@ export function JsonEditor({ filename, title, liveUrl, initialData, onSave }: Js
                                 <p className="font-text text-xs text-gray-400">Press ⌘ + Enter to send</p>
                             </div>
                         </div>
+                    </div>
+                ) : (
+                    <div className="flex-grow w-full h-full bg-white rounded-xl border border-gray-200 overflow-hidden relative">
+                        {liveUrl ? (
+                            <iframe
+                                src={liveUrl}
+                                className="w-full h-full border-none"
+                                title="Live Preview"
+                            />
+                        ) : (
+                            <div className="flex items-center justify-center h-full text-gray-500 font-text">
+                                No live preview available for this JSON file.
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

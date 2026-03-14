@@ -47,17 +47,11 @@ export function WorkCard({ title, tags, image, video, poster, href, className = 
     // Play the video when it comes into view, as long as it isn't being hovered
     useEffect(() => {
         if (videoRef.current) {
-            import('@/hooks/useSequentialVideo').then(({ SequentialVideoLoader }) => {
-                const loader = SequentialVideoLoader.getInstance();
-
-                if (isVisible && !isHovered) {
-                    loader.enqueue(videoRef.current!);
-                    videoRef.current!.play().catch(() => { });
-                } else if (!isVisible) {
-                    loader.dequeue(videoRef.current!);
-                    videoRef.current!.pause();
-                }
-            });
+            if (isVisible && !isHovered) {
+                videoRef.current.play().catch(() => { });
+            } else if (!isVisible) {
+                videoRef.current.pause();
+            }
         }
     }, [isVisible, isHovered]);
 

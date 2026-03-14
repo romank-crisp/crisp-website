@@ -8,6 +8,9 @@ const config: Config = {
     ],
     theme: {
         extend: {
+            screens: {
+                "3xl": "1980px",
+            },
             fontFamily: {
                 mega: ["var(--font-mega)", "system-ui", "sans-serif"],
                 heading: ["var(--font-heading)", "system-ui", "sans-serif"],

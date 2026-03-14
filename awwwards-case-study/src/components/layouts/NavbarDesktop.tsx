@@ -122,7 +122,7 @@ export function NavbarDesktop({ menuItems }: { menuItems: MenuItem[] }) {
     return (
         <header
             ref={navbarRef}
-            className="fixed z-50 top-24 lg:top-32 left-1/2 -translate-x-1/2 hidden lg:block bg-white border border-black/[0.03] shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-full pointer-events-auto origin-top"
+            className="fixed z-[9100] top-24 lg:top-32 left-1/2 -translate-x-1/2 hidden lg:block bg-white border border-black/[0.03] shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-full pointer-events-auto origin-top"
             style={{ overflow: "visible" }}
         >
             <nav
@@ -139,7 +139,7 @@ export function NavbarDesktop({ menuItems }: { menuItems: MenuItem[] }) {
                             width={100}
                             height={33}
                             priority
-                            className="w-auto h-[33px] transition-transform duration-300 origin-left"
+                            className="w-auto h-[33px] transition-transform duration-300 origin-left hover:scale-105"
                             style={{ transform: `scale(${brand.logoScale || 1})` }}
                         />
                     </Link>
@@ -170,7 +170,8 @@ export function NavbarDesktop({ menuItems }: { menuItems: MenuItem[] }) {
                     {/* Menu Trigger */}
                     <div
                         ref={menuTriggerRef}
-                        className="flex items-center gap-8 text-text whitespace-nowrap overflow-hidden mr-6" // Added mr-6 (24px) here instead of gap
+                        className="flex items-center gap-8 text-text whitespace-nowrap overflow-hidden mr-6 cursor-pointer" // Added mr-6 (24px) here instead of gap
+                        onClick={() => setIsMenuHovered(true)}
                     >
                         <Menu size={20} />
                         <span className="text-h3 font-bold">Menu</span>

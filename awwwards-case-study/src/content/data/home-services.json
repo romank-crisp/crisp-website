@@ -7,30 +7,51 @@
   ],
   "services": [
     {
-      "title": "Brand Strategy & Ideation",
-      "description": "Before a brand is a brand, it is an idea and the set of beliefs that inspired it. We co-shape the foundational visual",
+      "title": "Branding",
+      "description": "We build visual identity that tells your story and connects with your audience. Brand identity, logo and design systems — every detail considered to make your brand recognizable and ready to scale.",
       "labels": [
-        "DECISION-SHAPING WORKSHOPS",
-        "BRAND FOUNDATION",
-        "CREATIVE AND VISUAL CONCEPTS"
+        "BRAND IDENTITY",
+        "LOGO",
+        "DESIGN SYSTEMS",
+        "VISUAL GUIDELINES",
+        "TYPOGRAPHY",
+        "COLOR PALETTE",
+        "BRAND STRATEGY",
+        "ART DIRECTION",
+        "PACKAGING DESIGN",
+        "BRAND POSITIONING"
       ]
     },
     {
-      "title": "Brand Identity & Design",
-      "description": "We craft distinctive visual identities that capture the essence of your brand and resonate with your audience.",
+      "title": "Web Development",
+      "description": "Websites that load fast, rank well and convert. Designed and built around what your business actually needs. Modern technologies that give you full control and room to grow.",
       "labels": [
-        "LOGOS AND BRAND MARKS",
-        "TONE OF VOICE AND MESSAGING HOUSE",
-        "HIGH-PERFORMING WEBSITES"
+        "CUSTOM DEVELOPMENT",
+        "WEBFLOW",
+        "PERFORMANCE",
+        "REACT / NEXT.JS",
+        "E-COMMERCE",
+        "HEADLESS CMS",
+        "API INTEGRATIONS",
+        "SEO OPTIMIZATION",
+        "WEB ANIMATIONS",
+        "TECHNICAL PLANNING"
       ]
     },
     {
-      "title": "Digital Experience",
-      "description": "Creating seamless digital experiences that engage users and drive meaningful interactions with your brand.",
+      "title": "Content Creation",
+      "description": "We help you define your voice and structure your content strategy. Product visuals, video, website content and social media. All produced for your business to drive action.",
       "labels": [
-        "USER EXPERIENCE DESIGN",
-        "INTERFACE DESIGN",
-        "INTERACTIVE PROTOTYPES"
+        "PRODUCT VISUALS",
+        "SOCIAL MEDIA",
+        "STORYTELLING",
+        "VIDEO",
+        "COPYWRITING",
+        "MOTION GRAPHICS",
+        "PHOTOGRAPHY",
+        "3D ILLUSTRATION",
+        "CONTENT STRATEGY",
+        "CAMPAIGN ASSETS"
       ]
     }
   ]

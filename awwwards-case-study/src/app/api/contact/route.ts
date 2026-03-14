@@ -35,6 +35,8 @@ interface ContactFormData {
     service: string;
     message: string;
     meetingTime?: string;
+    website?: string;
+    timeToFill?: number;
 }
 
 export async function POST(request: NextRequest) {
@@ -51,6 +53,27 @@ export async function POST(request: NextRequest) {
         }
 
         const body: ContactFormData = await request.json();
+
+        // Spam protection: honeypot and time-to-fill validation
+        // 1. Honeypot check
+        if (body.website) {
+            console.log(`[Antispam] Blocked submission with honeypot field from IP: ${ip}`);
+            // Silently accept it to deceive bots
+            return NextResponse.json(
+                { success: true, message: "Message sent successfully" },
+                { status: 200 }
+            );
+        }
+
+        // 2. Minimum time-to-fill validation (3 seconds)
+        if (body.timeToFill !== undefined && body.timeToFill < 3000) {
+            console.log(`[Antispam] Blocked fast submission (${body.timeToFill}ms) from IP: ${ip}`);
+            // Silently accept it
+            return NextResponse.json(
+                { success: true, message: "Message sent successfully" },
+                { status: 200 }
+            );
+        }
 
         // Server-side validation
         const errors: Record<string, string> = {};

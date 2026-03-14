@@ -1,0 +1,24 @@
+{
+    "sectionTitle": "Interactive product presentations",
+    "videoSrc": "/img/services/ai-case-study/ai-product-interactive.mp4",
+    "overlays": [
+        {
+            "id": "overlay-1",
+            "text": "Turn your products into 3D or interactive storytelling",
+            "timeSec": 1,
+            "position": "top-center"
+        },
+        {
+            "id": "overlay-2",
+            "text": "Present product likes as impressive as Apple does!",
+            "timeSec": 3,
+            "position": "bottom-left"
+        },
+        {
+            "id": "overlay-3",
+            "text": "We provide tools and or help to embed interactive blocks on your website!",
+            "timeSec": 5,
+            "position": "bottom-right"
+        }
+    ]
+}

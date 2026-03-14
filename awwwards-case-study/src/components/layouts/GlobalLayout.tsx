@@ -14,13 +14,13 @@ import { MenuItem } from "@/content/navigation";
 
 import { PageTransition } from "@/components/layouts/PageTransition";
 import { WorksPreloader } from "@/components/ui/WorksPreloader";
-import { TransitionOverlay } from "@/components/layouts/TransitionOverlay";
 
 export function GlobalLayout({ children, footerData, navigationData }: { children: React.ReactNode, footerData: FooterProps['data'], navigationData: MenuItem[] }) {
     const pathname = usePathname();
     const isAdmin = pathname?.startsWith('/admin');
     const isDesignSystem = pathname?.startsWith('/design-system');
-    const showSystemCursor = isAdmin || isDesignSystem;
+    const isBlockPreview = pathname?.startsWith('/pattern-library/preview');
+    const showSystemCursor = isAdmin || isDesignSystem || isBlockPreview;
 
     // Streamlined system cursor management
     useLayoutEffect(() => {
@@ -54,7 +54,7 @@ export function GlobalLayout({ children, footerData, navigationData }: { childre
         };
     }, [showSystemCursor]);
 
-    if (isAdmin) {
+    if (isAdmin || isBlockPreview) {
         return (
             <ContactFormProvider>
                 <BrandProvider>
@@ -68,7 +68,6 @@ export function GlobalLayout({ children, footerData, navigationData }: { childre
         <ContactFormProvider>
             <BrandProvider>
                 <WorksPreloader />
-                <TransitionOverlay />
                 <CustomCursor />
                 <ContactOverlay />
                 <Navbar menuItems={navigationData} />

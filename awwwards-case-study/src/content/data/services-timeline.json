@@ -1,0 +1,85 @@
+{
+    "sectionTitle": "GET A STUNNING VISUALS<br/><span class='text-brand'>IN JUST 5 DAYS</span>",
+    "steps": [
+        {
+            "id": "step-1",
+            "day": "Day 1",
+            "title": "Briefing & Assets In-Take",
+            "description": "You send us guidelines and all the brand assets, and any product photos you have",
+            "images": [
+                {
+                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
+                    "alt": "Product photo 1"
+                },
+                {
+                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
+                    "alt": "Product photo 2"
+                },
+                {
+                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
+                    "alt": "Product photo 3"
+                }
+            ]
+        },
+        {
+            "id": "step-2",
+            "day": "Day 2",
+            "title": "AI Model Training & Concept Generation",
+            "description": "We train custom AI models on your brand and begin generating initial concept directions for your approval.",
+            "images": [
+                {
+                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
+                    "alt": "Training visual 1"
+                },
+                {
+                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
+                    "alt": "Training visual 2"
+                },
+                {
+                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
+                    "alt": "Training visual 3"
+                }
+            ]
+        },
+        {
+            "id": "step-3",
+            "day": "Day 3",
+            "title": "Refining & Direction Approval",
+            "description": "You review the concepts and we refine the selected directions to perfectly match your campaign requirements.",
+            "images": [
+                {
+                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
+                    "alt": "Refining visual 1"
+                },
+                {
+                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
+                    "alt": "Refining visual 2"
+                },
+                {
+                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
+                    "alt": "Refining visual 3"
+                }
+            ]
+        },
+        {
+            "id": "step-4",
+            "day": "Day 5",
+            "title": "Getting Final Design",
+            "description": "Polished, production-ready visuals delivered — static and motion, all formats included",
+            "images": [
+                {
+                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
+                    "alt": "Final design 1"
+                },
+                {
+                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
+                    "alt": "Final design 2"
+                },
+                {
+                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
+                    "alt": "Final design 3"
+                }
+            ]
+        }
+    ]
+}

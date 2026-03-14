@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { TheyTalkInfluencerBlockProps } from "@/types/case-study";
 import { clsx } from "clsx";
+import { getAssetUrl } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -76,7 +77,7 @@ export function TheyTalkInfluencerBlock({
                         playsInline
                         className="w-full h-full object-cover mix-blend-multiply pointer-events-none"
                     >
-                        <source src={videoSrc} type="video/webm" />
+                        <source src={getAssetUrl(videoSrc)} type="video/webm" />
                     </video>
                 </div>
 
@@ -89,7 +90,7 @@ export function TheyTalkInfluencerBlock({
                 >
                     <div className="relative w-full h-full">
                         <Image
-                            src={overlayImageSrc}
+                            src={getAssetUrl(overlayImageSrc)}
                             alt="Real Voices Real Impact"
                             fill
                             className="object-contain"
@@ -104,7 +105,7 @@ export function TheyTalkInfluencerBlock({
                     className="absolute top-[25%] right-[10%] z-20 w-[180px] md:w-[266px] pointer-events-none"
                 >
                     <Image
-                        src={logoSrc}
+                        src={getAssetUrl(logoSrc)}
                         alt="TheyTalk Logo"
                         width={266}
                         height={80}

@@ -1,9 +1,6 @@
 
 import { Storage } from "@google-cloud/storage";
 import path from "path";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const storage = new Storage();
 const BUCKET_NAME = "crisp-website-485112_cloudbuild";

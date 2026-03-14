@@ -47,6 +47,17 @@ const MENU_GROUPS = [
                     { id: "works", label: "Works List" },
                     { id: "works-content", label: "Page Content" },
                 ]
+            },
+            {
+                id: "services-group",
+                label: "Services",
+                icon: FileText,
+                children: [
+                    { id: "services.json", label: "AI Visual Content" },
+                    { id: "services-3d-gallery.json", label: "3D Gallery" },
+                    { id: "services-product-interactive.json", label: "Product Interactive" },
+                    { id: "services-timeline.json", label: "Timeline" },
+                ]
             }
         ]
     },
@@ -118,6 +129,7 @@ const MENU_GROUPS = [
         items: [
             { id: "navigation", label: "Navigation", icon: Navigation },
             { id: "footer", label: "Footer", icon: LayoutTemplate },
+            { id: "patterns.json", label: "Pattern Blocks", icon: Layers },
         ]
     }
 ];

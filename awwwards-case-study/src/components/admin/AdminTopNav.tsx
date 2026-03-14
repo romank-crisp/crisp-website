@@ -1,0 +1,71 @@
+"use client";
+
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
+import { clsx } from "clsx";
+
+/* ─── Sections ──────────────────────────────────────────────────── */
+
+const SECTIONS = [
+    { label: "CMS", href: "/admin" },
+    { label: "Design System", href: "/admin/design-system" },
+    { label: "Patterns", href: "/admin/patterns" },
+] as const;
+
+/* ─── Component ─────────────────────────────────────────────────── */
+
+export function AdminTopNav() {
+    const pathname = usePathname();
+    const router = useRouter();
+
+    const activeHref =
+        SECTIONS.find((s) =>
+            s.href === "/admin"
+                ? pathname === "/admin"
+                : pathname?.startsWith(s.href)
+        )?.href ?? "/admin";
+
+    return (
+        <header className="bg-white px-16 py-[30px] border-b border-gray-200">
+            <div className="relative flex items-center h-full">
+                {/* Brand */}
+                <div className="flex items-center gap-6 z-10">
+                    <Image
+                        src="/img/crisp-logo.svg"
+                        alt="crisp logo"
+                        width={100}
+                        height={40}
+                        className="select-none"
+                    />
+                    <span className="text-gray-200 text-3xl font-light select-none pb-1">|</span>
+                    <span className="text-brand font-heading text-3xl font-bold tracking-tight select-none">
+                        Website Admin
+                    </span>
+                </div>
+
+                {/* Navigation - Centered absolute */}
+                <nav className="absolute inset-x-0 flex items-center justify-center pointer-events-none">
+                    <div className="flex items-center gap-32 pointer-events-auto">
+                        {SECTIONS.map((section) => {
+                            const isActive = activeHref === section.href;
+                            return (
+                                <button
+                                    key={section.href}
+                                    onClick={() => router.push(section.href)}
+                                    className={clsx(
+                                        "text-xl font-text transition-all duration-200 text-black",
+                                        isActive
+                                            ? "opacity-100 font-semibold"
+                                            : "opacity-80 hover:opacity-100"
+                                    )}
+                                >
+                                    {section.label}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </nav>
+            </div>
+        </header>
+    );
+}

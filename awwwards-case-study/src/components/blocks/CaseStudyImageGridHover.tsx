@@ -4,6 +4,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import Image from "next/image";
+import { getAssetUrl } from "@/lib/utils";
 
 interface ImageGridHoverProps {
     heroSrc: string;
@@ -90,7 +91,7 @@ export function CaseStudyImageGridHover({ heroSrc, gridSrcs, alt = "Interactive 
                         }}
                     >
                         <Image
-                            src={src}
+                            src={getAssetUrl(src)}
                             alt={`${alt} grid ${i + 1}`}
                             fill
                             className="object-cover"
@@ -106,7 +107,7 @@ export function CaseStudyImageGridHover({ heroSrc, gridSrcs, alt = "Interactive 
                 className="absolute inset-0 z-10"
             >
                 <Image
-                    src={heroSrc}
+                    src={getAssetUrl(heroSrc)}
                     alt={alt}
                     fill
                     className="object-cover"

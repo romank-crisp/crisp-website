@@ -158,7 +158,7 @@ export function NavbarMobile() {
     return (
         <header
             ref={navbarRef}
-            className="fixed z-50 top-24 left-1/2 -translate-x-1/2 lg:hidden bg-white border border-black/[0.03] shadow-[0_8px_32px_rgba(0,0,0,0.04)] rounded-[2rem] pointer-events-auto overflow-hidden origin-top"
+            className="fixed z-[9100] top-24 left-1/2 -translate-x-1/2 lg:hidden bg-white border border-black/[0.03] shadow-[0_8px_32px_rgba(0,0,0,0.04)] rounded-[2rem] pointer-events-auto overflow-hidden origin-top"
             style={{ width: "calc(100% - 32px)", maxWidth: "600px" }}
         >
             <div
@@ -173,22 +173,20 @@ export function NavbarMobile() {
                             width={100}
                             height={28}
                             priority
-                            className="h-7 w-auto transition-transform duration-300 origin-left"
+                            className="h-7 w-auto transition-transform duration-300 origin-left hover:scale-105"
                             style={{ transform: `scale(${brand.logoScale || 1})` }}
                         />
                     </Link>
 
                     <div className="flex items-center gap-8 pr-4">
-                        {!isMenuOpen && (
-                            <Button
-                                variant="filled"
-                                size="small"
-                                onClick={handleOpenContact}
-                                className="!text-[12px] h-[36px] px-12"
-                            >
-                                Let&apos;s talk
-                            </Button>
-                        )}
+                        <Button
+                            variant="filled"
+                            size="small"
+                            onClick={handleOpenContact}
+                            className={`!text-[12px] h-[36px] px-12 transition-all duration-300 ${isMenuOpen ? 'opacity-0 pointer-events-none scale-90' : 'opacity-100 pointer-events-auto scale-100'}`}
+                        >
+                            Let&apos;s talk
+                        </Button>
 
                         <div
                             onClick={() => setIsMenuOpen(!isMenuOpen)}

@@ -4,6 +4,7 @@ import Home from "./home-page";
 import { readContent } from "@/lib/content";
 import { parseSeoData } from "@/lib/seo";
 import { SeoData } from "@/types/seo";
+import { FAQSchema } from "@/components/seo/FAQSchema";
 
 export async function generateMetadata() {
     const seoData = await readContent("seo/seo-home.json") as SeoData;
@@ -32,15 +33,18 @@ export default async function Page() {
     ]);
 
     return (
-        <Home
-            heroData={heroData}
-            servicesData={servicesData}
-            partnerData={partnerData}
-            clientsData={clientsData}
-            statsData={statsData}
-            testimonialsData={testimonialsData}
-            quoteData={quoteData}
-            faqData={faqData}
-        />
+        <>
+            <FAQSchema faqData={faqData} />
+            <Home
+                heroData={heroData}
+                servicesData={servicesData}
+                partnerData={partnerData}
+                clientsData={clientsData}
+                statsData={statsData}
+                testimonialsData={testimonialsData}
+                quoteData={quoteData}
+                faqData={faqData}
+            />
+        </>
     );
 }

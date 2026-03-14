@@ -40,6 +40,7 @@ export const viewport: Viewport = {
 
 import { GlobalLayout } from "@/components/layouts/GlobalLayout";
 import { readContent } from "@/lib/content";
+import { OrganizationSchema } from "@/components/seo/OrganizationSchema";
 
 export default async function RootLayout({
   children,
@@ -75,6 +76,7 @@ export default async function RootLayout({
           `}
         </Script>
         <GlobalLayout footerData={footerData} navigationData={navigationData}>
+          <OrganizationSchema />
           {children}
           <CookieConsent />
         </GlobalLayout>

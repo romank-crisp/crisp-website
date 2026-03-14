@@ -8,6 +8,19 @@ export function WorksPreloader() {
     const [isLoading, setIsLoading] = useState(true);
     const [animationData, setAnimationData] = useState<object | null>(null);
 
+    // Lock body scroll while preloader is visible
+    useEffect(() => {
+        if (!isLoading) return;
+
+        document.body.style.overflow = 'hidden';
+        // Reset scroll position to top so the user starts at the top after preloader
+        window.scrollTo(0, 0);
+
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isLoading]);
+
     useEffect(() => {
         // Check if preloader has already been shown in this session (site-wide, not page-specific)
         const hasSeenPreloader = sessionStorage.getItem('hasSeenSitePreloader');
@@ -38,7 +51,7 @@ export function WorksPreloader() {
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.8, ease: "easeInOut" }}
-                    className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-white"
+                    className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white"
                 >
                     <div className="w-96 h-96 md:w-[512px] md:h-[512px] flex items-center justify-center">
                         {animationData && (

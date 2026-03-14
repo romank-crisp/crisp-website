@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, FormEvent, useEffect } from "react";
+import { useState, FormEvent, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/Input";
 import { Dropdown } from "@/components/ui/Dropdown";
 import { Button } from "@/components/ui/Button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Upload } from "lucide-react";
+import { useContactForm } from "@/context/ContactFormContext";
 
 interface FormData {
     name: string;
@@ -32,6 +33,7 @@ interface ContactFormProps {
 }
 
 export function ContactForm({ onSuccess, onInteractionStart }: ContactFormProps) {
+    const { prefillData } = useContactForm();
     const [formData, setFormData] = useState<FormData>({
         name: "",
         email: "",
@@ -41,6 +43,24 @@ export function ContactForm({ onSuccess, onInteractionStart }: ContactFormProps)
         gdprConsent: false,
         website: "", // Honeypot
     });
+    const [uploadFiles, setUploadFiles] = useState<File[]>([]);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [startTime, setStartTime] = useState<number>(0);
+
+    // Apply prefill data when it changes
+    useEffect(() => {
+        if (prefillData) {
+            setFormData(prev => ({
+                ...prev,
+                service: prefillData.service ?? prev.service,
+                message: prefillData.message ?? prev.message,
+            }));
+        }
+    }, [prefillData]);
+
+    useEffect(() => {
+        setStartTime(Date.now());
+    }, []);
     const [errors, setErrors] = useState<FormErrors>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
@@ -127,6 +147,13 @@ export function ContactForm({ onSuccess, onInteractionStart }: ContactFormProps)
             return;
         }
 
+        const timeToFill = Date.now() - startTime;
+        if (timeToFill < 3000) {
+            // Filled too quickly, likely a bot
+            setTimeout(() => onSuccess(), 1000);
+            return;
+        }
+
         if (!validateForm()) {
             return;
         }
@@ -145,6 +172,8 @@ export function ContactForm({ onSuccess, onInteractionStart }: ContactFormProps)
                     service: formData.service,
                     message: formData.message,
                     meetingTime: formData.meetingTime,
+                    website: formData.website,
+                    timeToFill: Date.now() - startTime,
                 }),
             });
 
@@ -240,6 +269,40 @@ export function ContactForm({ onSuccess, onInteractionStart }: ContactFormProps)
                     <p className="text-[10px] text-brand uppercase font-bold tracking-tight -mt-16">
                         {errors.message}
                     </p>
+                )}
+
+                {/* Upload files field — shown when opened from calculator */}
+                {prefillData?.showUpload && (
+                    <div className="space-y-8">
+                        <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className={`w-full flex items-center justify-center gap-8 bg-slate-100 ${isSmallScreen ? 'h-[48px] text-h4' : 'h-[56px] text-h3'} px-16 rounded-[var(--corner-small)] transition-all duration-300 font-heading placeholder:opacity-60 hover:bg-slate-200 cursor-pointer text-text/50`}
+                        >
+                            <Upload size={18} />
+                            {uploadFiles.length > 0
+                                ? `${uploadFiles.length} file${uploadFiles.length > 1 ? 's' : ''} selected`
+                                : 'Upload files'
+                            }
+                        </button>
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            multiple
+                            onChange={(e) => setUploadFiles(Array.from(e.target.files ?? []))}
+                            className="hidden"
+                            accept="image/*,.pdf,.zip,.psd,.ai,.fig"
+                        />
+                        {uploadFiles.length > 0 && (
+                            <div className="flex flex-wrap gap-4">
+                                {uploadFiles.map((f, i) => (
+                                    <span key={i} className="text-[10px] text-text/40 font-heading bg-slate-100 px-8 py-2 rounded">
+                                        {f.name}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 )}
             </div>
 

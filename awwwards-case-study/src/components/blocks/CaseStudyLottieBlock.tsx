@@ -7,6 +7,7 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { LottieBlockProps } from "@/types/case-study";
 import { clsx } from "clsx";
+import { getAssetUrl } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -24,7 +25,7 @@ export function CaseStudyLottieBlock({
     // Fetch the animation data
     useEffect(() => {
         let isMounted = true;
-        fetch(animationPath)
+        fetch(getAssetUrl(animationPath))
             .then(res => res.json())
             .then(data => {
                 if (isMounted) setAnimationData(data);

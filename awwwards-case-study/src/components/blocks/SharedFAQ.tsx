@@ -11,14 +11,14 @@ if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
 }
 
-export const SharedFAQ = ({ data }: { data: HomeFAQData }) => {
+export const SharedFAQ = ({ data, forceLightMode = false }: { data: HomeFAQData, forceLightMode?: boolean }) => {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
     const sectionRef = useRef<HTMLElement>(null);
     const panelRefs = useRef<Map<number, HTMLDivElement>>(new Map());
     const iconRefs = useRef<Map<number, HTMLDivElement>>(new Map());
 
     useGSAP(() => {
-        if (!sectionRef.current) return;
+        if (!sectionRef.current || forceLightMode) return;
 
         // Transition background color from White to Dark
         // and text from Dark to White

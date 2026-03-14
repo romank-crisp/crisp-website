@@ -7,9 +7,6 @@ import { SharedStatsBlock } from "@/components/blocks/SharedStatsBlock";
 import { CaseStudyTextReveal } from "@/components/blocks/CaseStudyTextReveal";
 import { SharedScrollRevealImage } from "@/components/blocks/SharedScrollRevealImage";
 import { CaseStudyImageGridHover } from "@/components/blocks/CaseStudyImageGridHover";
-import { CaseStudyFeatureGrid } from "@/components/blocks/CaseStudyFeatureGrid";
-import { CaseStudyProcessSteps } from "@/components/blocks/CaseStudyProcessSteps";
-import { CaseStudyPricingTable } from "@/components/blocks/CaseStudyPricingTable";
 import { SharedContentSplit } from "@/components/blocks/SharedContentSplit";
 import { CaseStudyNextCaseBlock } from "@/components/blocks/CaseStudyNextCaseBlock";
 import { CaseStudyLogoAnimation } from "@/components/blocks/CaseStudyLogoAnimation";
@@ -77,28 +74,10 @@ export function CaseStudyPage({ content }: CaseStudyPageProps) {
                                     </div>
                                 </div>
                             );
-                        case "feature-grid":
-                            return (
-                                <div key={block.id} className="max-w-[1475px] mx-auto">
-                                    <CaseStudyFeatureGrid {...block.props} />
-                                </div>
-                            );
-                        case "process-steps":
-                            return (
-                                <div key={block.id} className="max-w-[1475px] mx-auto">
-                                    <CaseStudyProcessSteps {...block.props} />
-                                </div>
-                            );
                         case "centrogreen-designcode":
                             return (
                                 <div key={block.id} className="max-w-[1475px] mx-auto">
                                     <CentrogreenDesignCode />
-                                </div>
-                            );
-                        case "pricing-table":
-                            return (
-                                <div key={block.id} className="max-w-[1475px] mx-auto">
-                                    <CaseStudyPricingTable {...block.props} />
                                 </div>
                             );
                         case "theytalk-influencer":
