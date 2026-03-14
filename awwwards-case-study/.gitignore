@@ -25,6 +25,10 @@
 *.pem
 public/img/
 
+# temp files
+tmp/
+tmp_*
+
 # debug
 npm-debug.log*
 yarn-debug.log*

@@ -1,0 +1,29 @@
+{
+    "sectionTitle": "What's in the box",
+    "cards": [
+        {
+            "id": "1",
+            "title": "High-quality product visuals for your catalog and campaigns",
+            "description": "Turn your products into keyvisuals that attract, convert and connect your brand to the audience",
+            "mediaSrc": "img/services/ai-case-study/ai-product-shots-prod-1.json",
+            "mediaType": "lottie",
+            "layout": "media-left"
+        },
+        {
+            "id": "2",
+            "title": "Creative and engaging production-grade videos",
+            "description": "Motion content that captures attention and tells your product story in seconds",
+            "mediaSrc": "img/services/ai-case-study/ai-product-shots-prod-2.webm",
+            "mediaType": "video",
+            "layout": "media-right"
+        },
+        {
+            "id": "3",
+            "title": "Run campaigns easily with adapted mockups for every platform",
+            "description": "Ready-to-use assets sized and styled for social, web, print, and marketplace listings",
+            "mediaSrc": "img/services/ai-case-study/ai-product-shots-prod-3.json",
+            "mediaType": "lottie",
+            "layout": "media-left"
+        }
+    ]
+}

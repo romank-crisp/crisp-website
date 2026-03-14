@@ -56,7 +56,10 @@ const MENU_GROUPS = [
                     { id: "services.json", label: "AI Visual Content" },
                     { id: "services-3d-gallery.json", label: "3D Gallery" },
                     { id: "services-product-interactive.json", label: "Product Interactive" },
+                    { id: "services-what-we-offer.json", label: "What We Offer" },
                     { id: "services-timeline.json", label: "Timeline" },
+                    { id: "services-price-calculator.json", label: "Price Calculator" },
+                    { id: "services-made-by-team.json", label: "Made by Team" },
                 ]
             }
         ]

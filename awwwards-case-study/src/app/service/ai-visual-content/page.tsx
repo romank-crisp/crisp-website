@@ -64,6 +64,14 @@ export default async function Page() {
         madeByTeamData = null;
     }
 
+    // What we offer data is optional
+    let whatWeOfferData;
+    try {
+        whatWeOfferData = await readContent("services-what-we-offer.json");
+    } catch {
+        whatWeOfferData = null;
+    }
+
     return (
         <AIVisualContentPage
             servicesData={servicesData}
@@ -72,6 +80,7 @@ export default async function Page() {
             timelineData={timelineData}
             priceCalculatorData={priceCalculatorData}
             madeByTeamData={madeByTeamData}
+            whatWeOfferData={whatWeOfferData}
         />
     );
 }
