@@ -2,9 +2,14 @@
 
 import { useState } from "react";
 import { ContactForm } from "@/components/forms/ContactForm";
-import { ServicesData } from "@/content/services";
+export interface ContactFormData {
+    title?: string;
+    successTitle?: string;
+    successMessage?: string;
+    successButtonText?: string;
+}
 
-export function SharedContactForm({ data }: { data?: ServicesData['contactForm'] }) {
+export function SharedContactForm({ data }: { data?: ContactFormData }) {
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     return (

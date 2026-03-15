@@ -16,33 +16,30 @@ export interface AIVisualHeaderZoomProps {
 
 interface CloudImage {
     src: string;
+    videoSrc?: string;
     gridClass: string;
     isCenter?: boolean;
 }
 
 const cloudImages: CloudImage[] = [
-    // CENTER HERO (2×2 — square)
-    { src: getAssetUrl("img/services/ai-case-study/ai-keyvisuals-01.jpg"), isCenter: true, gridClass: "col-start-4 col-span-2 row-start-3 row-span-2" },
+    // CENTER HERO (4×2 — widescreen ~1440x730)
+    { src: getAssetUrl("img/services/ai-case-study/visuals-01.jpg"), videoSrc: getAssetUrl("img/services/productvis.mp4"), isCenter: true, gridClass: "col-start-3 col-span-4 row-start-3 row-span-2" },
 
     // Top row — four 2×2 blocks (rows 1-2)
-    { src: getAssetUrl("img/services/ai-case-study/ai-product-shots01.jpg"), gridClass: "col-start-1 col-span-2 row-start-1 row-span-2" },
-    { src: getAssetUrl("img/services/ai-case-study/ai-keyvisuals-02.jpg"), gridClass: "col-start-3 col-span-2 row-start-1 row-span-2" },
-    { src: getAssetUrl("img/services/ai-case-study/ai-product-shots02.jpg"), gridClass: "col-start-5 col-span-2 row-start-1 row-span-2" },
-    { src: getAssetUrl("img/services/ai-case-study/ai-keyvisuals-03.jpg"), gridClass: "col-start-7 col-span-2 row-start-1 row-span-2" },
+    { src: getAssetUrl("img/services/ai-case-study/visuals-02.jpg"), gridClass: "col-start-1 col-span-2 row-start-1 row-span-2" },
+    { src: getAssetUrl("img/services/ai-case-study/visuals-03.jpg"), gridClass: "col-start-3 col-span-2 row-start-1 row-span-2" },
+    { src: getAssetUrl("img/services/ai-case-study/visuals-04.jpg"), gridClass: "col-start-5 col-span-2 row-start-1 row-span-2" },
+    { src: getAssetUrl("img/services/ai-case-study/visuals-05.jpg"), gridClass: "col-start-7 col-span-2 row-start-1 row-span-2" },
 
     // Mid row flanks (rows 3-4)
-    { src: getAssetUrl("img/services/ai-case-study/ai-product-shots03.jpg"), gridClass: "col-start-1 col-span-2 row-start-3 row-span-2" },
-    { src: getAssetUrl("img/services/ai-case-study/ai-keyvisuals-04.jpg"), gridClass: "col-start-3 col-span-1 row-start-3 row-span-1" },
-    { src: getAssetUrl("img/services/ai-case-study/ai-product-shots04.jpg"), gridClass: "col-start-6 col-span-1 row-start-3 row-span-1" },
-    { src: getAssetUrl("img/services/ai-case-study/ai-product-shots01.jpg"), gridClass: "col-start-3 col-span-1 row-start-4 row-span-1" },
-    { src: getAssetUrl("img/services/ai-case-study/ai-keyvisuals-02.jpg"), gridClass: "col-start-6 col-span-1 row-start-4 row-span-1" },
-    { src: getAssetUrl("img/services/ai-case-study/ai-product-shots02.jpg"), gridClass: "col-start-7 col-span-2 row-start-3 row-span-2" },
+    { src: getAssetUrl("img/services/ai-case-study/visuals-06.jpg"), gridClass: "col-start-1 col-span-2 row-start-3 row-span-2" },
+    { src: getAssetUrl("img/services/ai-case-study/visuals-07.jpg"), gridClass: "col-start-7 col-span-2 row-start-3 row-span-2" },
 
     // Bottom row — four 2×2 blocks (rows 5-6)
-    { src: getAssetUrl("img/services/ai-case-study/ai-keyvisuals-03.jpg"), gridClass: "col-start-1 col-span-2 row-start-5 row-span-2" },
-    { src: getAssetUrl("img/services/ai-case-study/ai-product-shots03.jpg"), gridClass: "col-start-3 col-span-2 row-start-5 row-span-2" },
-    { src: getAssetUrl("img/services/ai-case-study/ai-keyvisuals-04.jpg"), gridClass: "col-start-5 col-span-2 row-start-5 row-span-2" },
-    { src: getAssetUrl("img/services/ai-case-study/ai-product-shots04.jpg"), gridClass: "col-start-7 col-span-2 row-start-5 row-span-2" },
+    { src: getAssetUrl("img/services/ai-case-study/visuals-08.jpg"), gridClass: "col-start-1 col-span-2 row-start-5 row-span-2" },
+    { src: getAssetUrl("img/services/ai-case-study/visuals-09.jpg"), gridClass: "col-start-3 col-span-2 row-start-5 row-span-2" },
+    { src: getAssetUrl("img/services/ai-case-study/visuals-02.jpg"), gridClass: "col-start-5 col-span-2 row-start-5 row-span-2" },
+    { src: getAssetUrl("img/services/ai-case-study/visuals-03.jpg"), gridClass: "col-start-7 col-span-2 row-start-5 row-span-2" },
 ];
 
 export function AIVisualHeaderZoom({ data }: AIVisualHeaderZoomProps) {
@@ -63,8 +60,10 @@ export function AIVisualHeaderZoom({ data }: AIVisualHeaderZoomProps) {
             }
         });
 
-        // Center = 2/8 * 240vw = 60vw. At 1.3 scale → ~78vw ≈ 1475px on 1900px viewport
-        const initialScale = 1.3;
+        // Center = 4/8 * 240vw = 120vw wide, 2/6 * 180vw = 60vw tall → ~2:1 ratio (1440x730)
+        // At 0.6 scale on 1920px VP: 120vw * 0.6 = 72vw * 19.2 = ~1382px, contained within max-width
+        // The video container renders at ~1382x691 proportions on Desktop, scaling down on mobile
+        const initialScale = 0.6;
 
         // Center the grid via GSAP transforms
         gsap.set(gridRef.current, { xPercent: -50, yPercent: -52, scale: initialScale, transformOrigin: "center center" });
@@ -139,14 +138,26 @@ export function AIVisualHeaderZoom({ data }: AIVisualHeaderZoomProps) {
                                     ref={(el) => { outerImagesRef.current[idx] = el; }}
                                     className={`relative overflow-hidden will-change-transform ${img.gridClass} ${isCenter ? 'z-10 bg-white rounded-[24px] md:rounded-[32px]' : 'z-0 bg-gray-100 rounded-[16px] md:rounded-[24px]'}`}
                                 >
-                                    <Image
-                                        src={img.src}
-                                        alt={`Product visual ${idx}`}
-                                        fill
-                                        className="object-cover"
-                                        sizes={isCenter ? "(max-width: 768px) 100vw, 100vw" : "(max-width: 768px) 33vw, 33vw"}
-                                        priority={isCenter}
-                                    />
+                                    {img.videoSrc ? (
+                                        <video
+                                            src={img.videoSrc}
+                                            className="absolute inset-0 w-full h-full object-cover"
+                                            muted
+                                            autoPlay
+                                            loop
+                                            playsInline
+                                            poster={img.src}
+                                        />
+                                    ) : (
+                                        <Image
+                                            src={img.src}
+                                            alt={`Product visual ${idx}`}
+                                            fill
+                                            className="object-cover"
+                                            sizes={isCenter ? "(max-width: 768px) 100vw, 100vw" : "(max-width: 768px) 33vw, 33vw"}
+                                            priority={isCenter}
+                                        />
+                                    )}
                                 </div>
                             );
                         })}

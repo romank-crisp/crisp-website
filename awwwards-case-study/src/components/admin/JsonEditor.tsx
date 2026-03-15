@@ -24,13 +24,15 @@ interface JsonEditorProps {
     initialData: any;
     isEditable?: boolean;
     onSave: (filename: string, data: any) => Promise<void>;
+    /** Optional custom settings panel rendered as a tab */
+    settingsPanel?: React.ReactNode;
 }
 
-export function JsonEditor({ filename, title, liveUrl, initialData, isEditable = true, onSave }: JsonEditorProps) {
+export function JsonEditor({ filename, title, liveUrl, initialData, isEditable = true, onSave, settingsPanel }: JsonEditorProps) {
     const [data, setData] = useState<string>("");
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [activeTab, setActiveTab] = useState<"json" | "ai" | "preview">(isEditable ? "json" : "preview");
+    const [activeTab, setActiveTab] = useState<"json" | "ai" | "settings" | "preview">(isEditable ? "json" : "preview");
 
     // Ensure activeTab syncs if isEditable changes
     useEffect(() => {
@@ -168,6 +170,15 @@ export function JsonEditor({ filename, title, liveUrl, initialData, isEditable =
                             >
                                 AI Prompt
                             </button>
+                            {settingsPanel && (
+                                <button
+                                    onClick={() => setActiveTab("settings")}
+                                    className={`px-3 py-1 font-text text-xs font-medium rounded-md transition-colors ${activeTab === "settings" ? "bg-white text-black shadow-sm" : "text-gray-500 hover:text-black"
+                                        }`}
+                                >
+                                    Settings
+                                </button>
+                            )}
                         </>
                     )}
                     {liveUrl && (
@@ -219,6 +230,10 @@ export function JsonEditor({ filename, title, liveUrl, initialData, isEditable =
                                 />
                             </div>
                         </div>
+                    </div>
+                ) : activeTab === "settings" && settingsPanel ? (
+                    <div className="flex-grow w-full overflow-hidden">
+                        {settingsPanel}
                     </div>
                 ) : activeTab === "ai" ? (
                     <div className="flex flex-col h-full max-w-4xl mx-auto w-full px-8">

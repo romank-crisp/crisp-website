@@ -16,7 +16,7 @@ import { HomeWhereWeCanHelp } from "@/components/blocks/HomeWhereWeCanHelp";
 import { HomePartnerStatement } from "@/components/blocks/HomePartnerStatement";
 import { HomeAnimatedText } from "@/components/blocks/HomeAnimatedText";
 import { HomeHorizontalMasonry } from "@/components/blocks/HomeHorizontalMasonry";
-import { InfiniteScrollPane } from "@/components/blocks/HomeInfiniteScrollPane";
+import { WorksInfiniteScrollPane } from "@/components/blocks/WorksInfiniteScrollPane";
 import { AboutPlaneHero } from "@/components/blocks/AboutPlaneHero";
 import { AboutServicesList } from "@/components/blocks/AboutServicesList";
 import { AboutLocationsMap } from "@/components/blocks/AboutLocationsMap";
@@ -38,8 +38,8 @@ import { FolkeuniversitetDesignSystem } from "@/components/blocks/Folkeuniversit
 import { AIVisualHeaderZoom } from "@/components/blocks/AIVisualHeaderZoom";
 import { AIVisualImageComparison } from "@/components/blocks/AIVisualImageComparison";
 import { AIVisualMadeByTeam } from "@/components/blocks/AIVisualMadeByTeam";
-import { AIVisualPriceCalculator } from "@/components/blocks/AIVisualPriceCalculator";
-import { AIVisualProductInteractive } from "@/components/blocks/AIVisualProductInteractive";
+import { AIVisualPriceCalculatorV2 } from "@/components/blocks/AIVisualPriceCalculatorV2";
+import { AIVisualVideoScroll } from "@/components/blocks/AIVisualVideoScroll";
 import { AIVisualTextIteration } from "@/components/blocks/AIVisualTextIteration";
 import { AIVisualTimeline } from "@/components/blocks/AIVisualTimeline";
 
@@ -158,8 +158,8 @@ async function renderBlock(block: string): Promise<React.ReactNode | null> {
             );
         case "HomeHorizontalMasonry":
             return <HomeHorizontalMasonry columns={[]} />;
-        case "HomeInfiniteScrollPane":
-            return <InfiniteScrollPane items={[]} />;
+        case "WorksInfiniteScrollPane":
+            return <WorksInfiniteScrollPane items={[]} />;
 
         // ── About blocks ───────────────────────────────────────────
         case "AboutPlaneHero": {
@@ -167,7 +167,7 @@ async function renderBlock(block: string): Promise<React.ReactNode | null> {
             return <AboutPlaneHero data={data} />;
         }
         case "AboutServicesList": {
-            const data = await readContent("services.json");
+            const data = await readContent("aivisuals.json");
             return <AboutServicesList data={data} />;
         }
         case "AboutLocationsMap": {
@@ -283,7 +283,7 @@ async function renderBlock(block: string): Promise<React.ReactNode | null> {
 
         // ── AI Visual Content blocks ──────────────────────────────
         case "AIVisualHeaderZoom": {
-            const data = await readContent("services.json");
+            const data = await readContent("aivisuals.json");
             return <AIVisualHeaderZoom data={data.hero} />;
         }
         case "AIVisualImageComparison":
@@ -296,7 +296,7 @@ async function renderBlock(block: string): Promise<React.ReactNode | null> {
         case "AIVisualMadeByTeam": {
             let data;
             try {
-                data = await readContent("services-made-by-team.json");
+                data = await readContent("aivisuals-made-by-team.json");
             } catch {
                 data = undefined;
             }
@@ -305,20 +305,20 @@ async function renderBlock(block: string): Promise<React.ReactNode | null> {
         case "AIVisualPriceCalculator": {
             let data;
             try {
-                data = await readContent("services-price-calculator.json");
+                data = await readContent("aivisuals-price-calculator.json");
             } catch {
                 data = undefined;
             }
-            return <AIVisualPriceCalculator data={data} />;
+            return <AIVisualPriceCalculatorV2 data={data} />;
         }
-        case "AIVisualProductInteractive": {
+        case "AIVisualVideoScroll": {
             let data;
             try {
-                data = await readContent("services-product-interactive.json", 1);
+                data = await readContent("aivisuals-video-scroll.json", 1);
             } catch {
                 data = null;
             }
-            return data ? <AIVisualProductInteractive data={data} /> : <div className="p-24 text-center text-gray-400">No product interactive data</div>;
+            return data ? <AIVisualVideoScroll data={data} /> : <div className="p-24 text-center text-gray-400">No video scroll data</div>;
         }
         case "AIVisualTextIteration":
             return (
@@ -331,7 +331,7 @@ async function renderBlock(block: string): Promise<React.ReactNode | null> {
         case "AIVisualTimeline": {
             let data;
             try {
-                data = await readContent("services-timeline.json");
+                data = await readContent("aivisuals-timeline.json");
             } catch {
                 data = null;
             }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
+import { useSearchParams, usePathname } from "next/navigation";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import type { TreeGroup } from "@/components/admin/AdminTreeNav";
 import Link from "next/link";
@@ -46,8 +47,12 @@ interface BuilderBlock {
 import { useEffect } from "react";
 
 export default function AdminPatternsClient({ blocks: initialBlocks }: { blocks: BlockEntry[] }) {
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+
     const [blocks, setBlocks] = useState<BlockEntry[]>(initialBlocks);
-    const [activeId, setActiveId] = useState("");
+    const initialTag = searchParams.get("tag") || "";
+    const [activeId, setActiveId] = useState(initialTag ? `tag-${initialTag}` : "");
     const [builderBlocks, setBuilderBlocks] = useState<BuilderBlock[]>([]);
     const [copiedPrompt, setCopiedPrompt] = useState(false);
     const [isBuilderOpen, setIsBuilderOpen] = useState(true);
@@ -55,6 +60,25 @@ export default function AdminPatternsClient({ blocks: initialBlocks }: { blocks:
     const [saving, setSaving] = useState(false);
 
     const PATTERNS_TREE = useMemo(() => buildPatternsTree(blocks), [blocks]);
+
+    // Sync URL when activeId changes
+    const updateUrl = useCallback((id: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+        const tagName = id.replace("tag-", "");
+        params.set("tag", tagName);
+        window.history.replaceState(null, "", `${pathname}?${params.toString()}`);
+    }, [searchParams, pathname]);
+
+    // Scroll to initial tag on mount
+    useEffect(() => {
+        if (initialTag) {
+            const targetId = `tag-${initialTag}`;
+            const element = document.getElementById(`pattern-section-${targetId}`);
+            if (element) {
+                setTimeout(() => element.scrollIntoView({ behavior: "smooth" }), 300);
+            }
+        }
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Setup scrolling observer to sync navigation tree with viewport
     useEffect(() => {
@@ -68,6 +92,7 @@ export default function AdminPatternsClient({ blocks: initialBlocks }: { blocks:
                     if (entry.isIntersecting) {
                         const id = entry.target.id.replace("pattern-section-", "");
                         setActiveId(id);
+                        updateUrl(id);
                         foundIntersecting = true;
                     }
                 });
@@ -88,6 +113,7 @@ export default function AdminPatternsClient({ blocks: initialBlocks }: { blocks:
 
     const handleTreeSelect = (id: string) => {
         setActiveId(id);
+        updateUrl(id);
         const element = document.getElementById(`pattern-section-${id}`);
         if (element) {
             element.scrollIntoView({ behavior: "smooth" });

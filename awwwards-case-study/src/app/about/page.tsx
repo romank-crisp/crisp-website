@@ -14,7 +14,7 @@ export default async function Page() {
     const aboutData = await readContent("about.json");
     const clientsData = await readContent("clients.json");
     const locationsData = await readContent("locations.json");
-    const servicesData = await readContent("services.json");
+    const servicesData = await readContent("about-capabilities.json");
     const teamData = await readContent("team.json");
 
     return (

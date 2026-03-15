@@ -1,13 +1,13 @@
 "use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { getAssetUrl } from "@/lib/utils";
 import { TimelineData, TimelineStep } from "@/content/services";
 import { clsx } from "clsx";
+import { ArrowRight } from "lucide-react";
+import { TextFormatter } from "@/components/ui/TextFormatter";
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
@@ -40,7 +40,7 @@ export function AIVisualTimeline({ data }: AIVisualTimelineProps) {
             duration: 0.9,
             ease: "power2.inOut",
             overwrite: true,
-            onComplete: () => { gsap.set(el, { height: "auto" }); },
+            onComplete: () => { gsap.set(el, { height: "auto" }); ScrollTrigger.refresh(); },
         });
     }, []);
 
@@ -76,15 +76,8 @@ export function AIVisualTimeline({ data }: AIVisualTimelineProps) {
                 }
             }
 
-            // If activeIndex is past the last step, also collapse the last step
-            if (activeIndex >= stepCount) {
-                for (let i = 0; i < stepCount; i++) {
-                    if (next.has(i)) {
-                        next.delete(i);
-                        collapsePanel(i);
-                    }
-                }
-            }
+            // If activeIndex is past the last step, we no longer collapse it
+            // per the requirement to let the last item stay open when scrolling past.
 
             return next;
         });
@@ -102,10 +95,6 @@ export function AIVisualTimeline({ data }: AIVisualTimelineProps) {
                 end: "bottom 40%",
                 onEnter: () => setActiveIndex(index),
                 onEnterBack: () => setActiveIndex(index),
-                // When scrolling past the last spacer, collapse everything
-                ...(index === lastIndex && {
-                    onLeave: () => setActiveIndex(lastIndex + 1),
-                }),
             });
         });
 
@@ -119,64 +108,77 @@ export function AIVisualTimeline({ data }: AIVisualTimelineProps) {
     if (!data?.steps?.length) return null;
 
     return (
-        <section ref={containerRef} className="w-full bg-white pt-[120px]">
+        <section ref={containerRef} className="w-full bg-white pt-[160px] pb-0">
             <div className="max-w-[1475px] mx-auto px-6 md:px-16">
 
+                {/* Sticky Title — pins at 10vh and gets covered by the accordion */}
                 <h2
-                    className="font-mega text-mega-h2 uppercase text-text max-w-[900px] pb-24"
+                    className="sticky top-[10vh] z-0 font-mega text-mega-h2 uppercase text-text max-w-[900px] pl-[5px] mb-24 md:mb-48 bg-white"
                     dangerouslySetInnerHTML={{ __html: data.sectionTitle }}
                 />
 
-                {/*
-                    KEY LAYOUT FOR STICKY TO WORK:
-                    - Outer div is `relative` — this is the scroll container the sticky respects.
-                    - Inner accordion div is `sticky top-[150px]` — it pins within this outer div.
-                    - The spacer divs inside give the outer div its scroll height.
-                    - Once the spacers scroll past, the sticky element naturally unsticks.
-                */}
                 <div className="relative">
 
-                    {/* Sticky Accordion — pins inside the relative container */}
-                    <div className="sticky top-[150px] z-10">
-                        <div className="flex flex-col border-t border-gray-200 bg-white">
+                    {/* Sticky Accordion — pins directly over the title at 10vh */}
+                    <div className="sticky top-[10vh] z-10 bg-white w-full">
+                        <div className="flex flex-col border-t justify-start border-gray-200 bg-white pt-4">
                             {data.steps.map((step, i) => (
                                 <div
                                     key={step.id}
-                                    className="bg-white border-b border-gray-200 last:border-b-0"
+                                    className="bg-white border-b border-gray-200 last:border-b-0 cursor-pointer"
+                                    onClick={() => {
+                                        setExpandedSet(prev => {
+                                            const next = new Set(prev);
+                                            if (next.has(i)) {
+                                                next.delete(i);
+                                                collapsePanel(i);
+                                            } else {
+                                                next.add(i);
+                                                expandPanel(i);
+                                            }
+                                            return next;
+                                        });
+                                    }}
                                 >
-                                    {/* Header: always visible */}
-                                    <div className="pt-14 pb-14">
-                                        <div className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-8">
-                                            <div className="w-[200px] shrink-0">
-                                                <span className={clsx(
-                                                    "font-heading font-bold text-h2 transition-colors duration-700 whitespace-nowrap",
-                                                    expandedSet.has(i) || activeIndex >= i ? "text-brand" : "text-gray-300"
-                                                )}>
-                                                    {step.day}
-                                                </span>
-                                            </div>
+                                    <div className="py-[48px] flex flex-col md:flex-row md:items-baseline gap-2 md:gap-8">
+                                        <div className="w-[200px] shrink-0">
+                                            <span className={clsx(
+                                                "font-heading font-bold text-h2 transition-colors duration-700 whitespace-nowrap",
+                                                expandedSet.has(i) || activeIndex >= i ? "text-brand" : "text-gray-300"
+                                            )}>
+                                                {step.day}
+                                            </span>
+                                        </div>
+                                        <div className="flex-1 text-left">
                                             <h3 className={clsx(
                                                 "font-heading text-h2 transition-colors duration-700",
                                                 expandedSet.has(i) || activeIndex >= i ? "text-text" : "text-gray-300"
                                             )}>
                                                 {step.title}
                                             </h3>
-                                        </div>
-                                    </div>
 
-                                    {/* Collapsible body */}
-                                    <div
-                                        ref={(el) => { contentsRef.current[i] = el; }}
-                                        className="overflow-hidden"
-                                        style={{ height: "auto", opacity: 1 }}
-                                    >
-                                        <div className="pb-14">
-                                            <p className="font-text text-text-md text-text/70 max-w-[875px] mb-12 leading-relaxed">
-                                                {step.description}
-                                            </p>
-                                            {step.images && step.images.length > 0 && (
-                                                <TimelineImages images={step.images} />
-                                            )}
+                                            {/* Collapsible body */}
+                                            <div
+                                                ref={(el) => { contentsRef.current[i] = el; }}
+                                                className="overflow-hidden cursor-default"
+                                                style={{ height: "auto", opacity: 1 }}
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                <div className="pt-[48px] pb-4">
+                                                    <ul className="space-y-4 w-full md:w-[60%]">
+                                                        {(step.list || [step.description]).map((listItem, listIndex) => (
+                                                            <li key={listIndex} className="flex items-start gap-4 w-full">
+                                                                <div className="shrink-0 mt-[9px]">
+                                                                    <ArrowRight className="w-5 h-5 text-brand" />
+                                                                </div>
+                                                                <p className="font-text text-text-md text-text/70 leading-relaxed text-left m-0 flex-1">
+                                                                    <TextFormatter text={listItem} />
+                                                                </p>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -209,20 +211,4 @@ export function AIVisualTimeline({ data }: AIVisualTimelineProps) {
     );
 }
 
-function TimelineImages({ images }: { images: TimelineStep["images"] }) {
-    return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full">
-            {images.map((img, i) => (
-                <div key={i} className="relative aspect-[3/4] rounded-xl overflow-hidden bg-gray-100">
-                    <Image
-                        src={getAssetUrl(img.src)}
-                        alt={img.alt}
-                        fill
-                        className="object-cover transition-transform duration-700 hover:scale-105"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                </div>
-            ))}
-        </div>
-    );
-}
+

@@ -6,15 +6,15 @@ import { SharedScrollRevealImage } from "@/components/blocks/SharedScrollRevealI
 import { SharedContactForm } from "@/components/blocks/SharedContactForm";
 import { SharedFAQ } from "@/components/blocks/SharedFAQ";
 
-import { AIVisualProductInteractive } from "@/components/blocks/AIVisualProductInteractive";
+import { AIVisualVideoScroll } from "@/components/blocks/AIVisualVideoScroll";
 import { AIVisualTimeline } from "@/components/blocks/AIVisualTimeline";
-import { AIVisualPriceCalculator } from "@/components/blocks/AIVisualPriceCalculator";
+import { AIVisualPriceCalculatorV2 } from "@/components/blocks/AIVisualPriceCalculatorV2";
 import { AIVisualMadeByTeam } from "@/components/blocks/AIVisualMadeByTeam";
 
 export default function PreviewClient({
     servicesData,
     faqData,
-    productInteractiveData,
+    videoScrollData,
     timelineData,
     priceCalculatorData,
     madeByTeamData
@@ -31,9 +31,9 @@ export default function PreviewClient({
             />
         },
 
-        { id: "AIVisualProductInteractive", label: "Product Interactive", render: () => productInteractiveData ? <AIVisualProductInteractive data={productInteractiveData} /> : <div>No Data</div> },
+        { id: "AIVisualVideoScroll", label: "Video Scroll", render: () => videoScrollData ? <AIVisualVideoScroll data={videoScrollData} /> : <div>No Data</div> },
         { id: "AIVisualTimeline", label: "Timeline", render: () => timelineData ? <AIVisualTimeline data={timelineData} /> : <div>No Data</div> },
-        { id: "AIVisualPriceCalculator", label: "Price Calculator", render: () => <AIVisualPriceCalculator data={priceCalculatorData} /> },
+        { id: "AIVisualPriceCalculator", label: "Price Calculator", render: () => <AIVisualPriceCalculatorV2 data={priceCalculatorData} /> },
         { id: "AIVisualMadeByTeam", label: "Made By Team", render: () => <AIVisualMadeByTeam data={madeByTeamData} /> },
         { id: "SharedContactForm", label: "Contact Form", render: () => <div className="bg-white text-black text-white-override"><SharedContactForm data={servicesData.contactForm} /></div> },
         { id: "SharedFAQ", label: "FAQ", render: () => <SharedFAQ data={faqData} forceLightMode={true} /> },

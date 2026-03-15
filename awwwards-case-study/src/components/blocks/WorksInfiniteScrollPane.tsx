@@ -4,6 +4,8 @@ import React, { useRef, useEffect, useMemo, useCallback, useState } from "react"
 import { InfiniteScrollItem } from "@/types/work";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import { getAssetUrl } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
+import { ArrowRight } from "lucide-react";
 import dynamic from "next/dynamic";
 
 const Spline = dynamic(() => import("@splinetool/react-spline"), { ssr: false });
@@ -114,7 +116,7 @@ function MobileScrollPane({ items, id }: { items: InfiniteScrollItem[][]; id: st
     );
 
     return (
-        <section id={id} className="w-full bg-white py-12 overflow-hidden">
+        <section id={id} className="w-full bg-white pt-[128px] overflow-hidden">
             <div
                 className="w-full overflow-x-auto snap-x snap-mandatory flex pl-4 pr-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
                 style={{ WebkitOverflowScrolling: "touch" }}
@@ -167,10 +169,21 @@ function MobileScrollCell({ item }: { item: InfiniteScrollItem }) {
 
     if (item.type === "text" && item.text) {
         return (
-            <div className="absolute inset-0 flex items-center justify-center p-8">
-                <p className="text-white text-xl font-normal text-center leading-relaxed">
+            <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-end pb-16">
+                <p className="text-white text-3xl font-normal text-center leading-relaxed font-heading mb-12">
                     {item.text}
                 </p>
+                <div className="flex justify-center pointer-events-auto pb-8">
+                    <Button
+                        href="/service/ai-visual-content"
+                        variant="filled"
+                        size="large"
+                        className="!bg-white !text-brand !border-white hover:!bg-white/90 shadow-lg"
+                        rightIcon={ArrowRight}
+                    >
+                        Learn more
+                    </Button>
+                </div>
             </div>
         );
     }
@@ -229,7 +242,7 @@ function MobileScrollCell({ item }: { item: InfiniteScrollItem }) {
 }
 
 // ─── Component ──────────────────────────────────────────────────────
-export function InfiniteScrollPane({ items, id = "infinite-scroll" }: InfiniteScrollPaneProps) {
+export function WorksInfiniteScrollPane({ items, id = "infinite-scroll" }: InfiniteScrollPaneProps) {
     return (
         <>
             {/* Mobile: horizontal scroll (visible < md) */}
@@ -246,7 +259,8 @@ export function InfiniteScrollPane({ items, id = "infinite-scroll" }: InfiniteSc
 
 function DesktopInfiniteScrollPane({ items, id }: InfiniteScrollPaneProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const overlayRef = useRef<HTMLDivElement>(null);
+    const splineOverlayRef = useRef<HTMLDivElement>(null);
+    const textOverlayRef = useRef<HTMLDivElement>(null);
     const rafRef = useRef<number | null>(null);
     const mediaCache = useRef<Map<string, MediaEntry>>(new Map());
     const lottieCache = useRef<Map<string, any>>(new Map());
@@ -260,6 +274,7 @@ function DesktopInfiniteScrollPane({ items, id }: InfiniteScrollPaneProps) {
     const currentMul = useRef({ x: 1, y: 0 });
     const isVisible = useRef(false);
     const dpr = useRef(1);
+    const isHoveringButton = useRef(false);
 
     // ─── Build flat cell layout (one "tile" = all rows) ─────────────
     const { cells, tileW, tileH } = useMemo(() => {
@@ -530,8 +545,9 @@ function DesktopInfiniteScrollPane({ items, id }: InfiniteScrollPaneProps) {
                 if (Math.abs(velocity.current.x) < 0.1) velocity.current.x = 0;
                 if (Math.abs(velocity.current.y) < 0.1) velocity.current.y = 0;
 
-                const moveX = (AUTO_SPEED * currentMul.current.x) + velocity.current.x;
-                const moveY = (AUTO_SPEED * currentMul.current.y) + velocity.current.y;
+                const baseSpeed = isHoveringButton.current ? 0 : AUTO_SPEED;
+                const moveX = (baseSpeed * currentMul.current.x) + velocity.current.x;
+                const moveY = (baseSpeed * currentMul.current.y) + velocity.current.y;
 
                 scrollPos.current.x = wrapValue(-tileW, 0, scrollPos.current.x + moveX * timeScale);
                 scrollPos.current.y = wrapValue(-tileH, 0, scrollPos.current.y + moveY * timeScale);
@@ -566,9 +582,9 @@ function DesktopInfiniteScrollPane({ items, id }: InfiniteScrollPaneProps) {
             }
 
             // Position Spline overlays
-            if (overlayRef.current) {
+            if (splineOverlayRef.current) {
                 const splineCells = cells.filter(c => c.item.type === "spline");
-                const overlayChildren = overlayRef.current.children;
+                const overlayChildren = splineOverlayRef.current.children;
                 let overlayIdx = 0;
 
                 for (const cell of splineCells) {
@@ -605,6 +621,46 @@ function DesktopInfiniteScrollPane({ items, id }: InfiniteScrollPaneProps) {
                 }
             }
 
+            // Position Text item button overlays
+            if (textOverlayRef.current) {
+                const textCells = cells.filter(c => c.item.type === "text" && c.item.text);
+                const overlayChildren = textOverlayRef.current.children;
+                let overlayIdx = 0;
+
+                for (const cell of textCells) {
+                    let bestX = Infinity, bestY = Infinity;
+                    // Find the best tile copy that's closest to the viewport center
+                    for (let ty = -1; ty <= 1; ty++) {
+                        for (let tx = -1; tx <= 1; tx++) {
+                            const candX = cell.x + sx + tx * tileW;
+                            const candY = cell.y + sy + ty * tileH;
+                            const centerDist = Math.hypot(
+                                candX + cell.w / 2 - viewW / 2,
+                                candY + cell.h / 2 - viewH / 2
+                            );
+                            const bestDist = Math.hypot(
+                                bestX + cell.w / 2 - viewW / 2,
+                                bestY + cell.h / 2 - viewH / 2
+                            );
+                            if (centerDist < bestDist) {
+                                bestX = candX;
+                                bestY = candY;
+                            }
+                        }
+                    }
+
+                    const el = overlayChildren[overlayIdx] as HTMLElement | undefined;
+                    if (el) {
+                        const isOnScreen = bestX + cell.w > 0 && bestX < viewW && bestY + cell.h > 0 && bestY < viewH;
+                        el.style.transform = `translate(${bestX}px, ${bestY}px)`;
+                        el.style.width = `${cell.w}px`;
+                        el.style.height = `${cell.h}px`;
+                        el.style.display = isOnScreen ? "flex" : "none";
+                    }
+                    overlayIdx++;
+                }
+            }
+
             rafRef.current = requestAnimationFrame(tick);
         };
 
@@ -631,6 +687,11 @@ function DesktopInfiniteScrollPane({ items, id }: InfiniteScrollPaneProps) {
     // ─── Spline overlay items ────────────────────────────────────────
     const splineItems = useMemo(
         () => cells.filter(c => c.item.type === "spline"),
+        [cells]
+    );
+
+    const textItems = useMemo(
+        () => cells.filter(c => c.item.type === "text" && c.item.text),
         [cells]
     );
 
@@ -683,7 +744,7 @@ function DesktopInfiniteScrollPane({ items, id }: InfiniteScrollPaneProps) {
     return (
         <section
             id={id}
-            className="relative w-full h-[150vh] min-h-[600px] bg-white overflow-hidden select-none cursor-grab active:cursor-grabbing touch-none"
+            className="relative w-full h-[150vh] min-h-[600px] bg-white pt-[128px] overflow-hidden select-none cursor-grab active:cursor-grabbing touch-none"
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
@@ -691,12 +752,12 @@ function DesktopInfiniteScrollPane({ items, id }: InfiniteScrollPaneProps) {
         >
             <canvas
                 ref={canvasRef}
-                className="absolute inset-0 w-full h-full"
+                className="absolute inset-0 w-full h-full z-0"
             />
 
             {/* DOM overlay for Spline scenes (rare — usually 0-1 items) */}
             {splineItems.length > 0 && (
-                <div ref={overlayRef} className="absolute inset-0 pointer-events-none">
+                <div ref={splineOverlayRef} className="absolute inset-0 pointer-events-none z-10">
                     {splineItems.map((cell, i) => (
                         <ErrorBoundary key={i} label={`Spline:${cell.item.id}`}>
                             <div
@@ -706,6 +767,36 @@ function DesktopInfiniteScrollPane({ items, id }: InfiniteScrollPaneProps) {
                                 <Spline scene={cell.item.src || "/img/workspane/pane-11-viry/scene.splinecode"} />
                             </div>
                         </ErrorBoundary>
+                    ))}
+                </div>
+            )}
+
+            {/* DOM overlay for Text Item Buttons */}
+            {textItems.length > 0 && (
+                <div ref={textOverlayRef} className="absolute inset-0 pointer-events-none origin-top-left z-20">
+                    {textItems.map((cell, i) => (
+                        <div
+                            key={i}
+                            className="absolute top-0 left-0 pointer-events-none flex flex-col justify-end p-8 md:p-12 pb-16"
+                            style={{ display: "none" }}
+                        >
+                            <div
+                                className="flex justify-center pointer-events-auto h-full items-end pb-8"
+                                onPointerDown={(e) => e.stopPropagation()}
+                                onPointerEnter={() => { isHoveringButton.current = true; }}
+                                onPointerLeave={() => { isHoveringButton.current = false; }}
+                            >
+                                <Button
+                                    href="/service/ai-visual-content"
+                                    variant="filled"
+                                    size="large"
+                                    className="!bg-white !text-brand !border-white hover:!bg-white/90 shadow-lg relative z-50"
+                                    rightIcon={ArrowRight}
+                                >
+                                    Learn more
+                                </Button>
+                            </div>
+                        </div>
                     ))}
                 </div>
             )}

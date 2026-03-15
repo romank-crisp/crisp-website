@@ -8,19 +8,6 @@ export function WorksPreloader() {
     const [isLoading, setIsLoading] = useState(true);
     const [animationData, setAnimationData] = useState<object | null>(null);
 
-    // Lock body scroll while preloader is visible
-    useEffect(() => {
-        if (!isLoading) return;
-
-        document.body.style.overflow = 'hidden';
-        // Reset scroll position to top so the user starts at the top after preloader
-        window.scrollTo(0, 0);
-
-        return () => {
-            document.body.style.overflow = '';
-        };
-    }, [isLoading]);
-
     useEffect(() => {
         // Check if preloader has already been shown in this session (site-wide, not page-specific)
         const hasSeenPreloader = sessionStorage.getItem('hasSeenSitePreloader');
@@ -43,6 +30,52 @@ export function WorksPreloader() {
 
         return () => clearTimeout(timer);
     }, []);
+
+    // Disable scrolling while preloader is visible
+    useEffect(() => {
+        if (!isLoading) {
+            // Re-enable scrolling
+            document.documentElement.style.overflow = '';
+            document.documentElement.style.position = '';
+            document.documentElement.style.width = '';
+            document.documentElement.style.height = '';
+            document.body.style.overflow = '';
+            // Start lenis after preloader exit animation finishes
+            setTimeout(() => {
+                if ((window as any).lenis) {
+                    (window as any).lenis.start();
+                }
+            }, 900); // slightly longer than exit animation (0.8s)
+            return;
+        }
+
+        // Lock scroll: position fixed on <html> prevents all native scrolling
+        document.documentElement.style.overflow = 'hidden';
+        document.documentElement.style.position = 'fixed';
+        document.documentElement.style.width = '100%';
+        document.documentElement.style.height = '100%';
+        document.body.style.overflow = 'hidden';
+
+        // Lenis may not be initialised yet — poll until it is, then stop it
+        const poll = setInterval(() => {
+            if ((window as any).lenis) {
+                (window as any).lenis.stop();
+                clearInterval(poll);
+            }
+        }, 50);
+
+        return () => {
+            clearInterval(poll);
+            document.documentElement.style.overflow = '';
+            document.documentElement.style.position = '';
+            document.documentElement.style.width = '';
+            document.documentElement.style.height = '';
+            document.body.style.overflow = '';
+            if ((window as any).lenis) {
+                (window as any).lenis.start();
+            }
+        };
+    }, [isLoading]);
 
     return (
         <AnimatePresence>

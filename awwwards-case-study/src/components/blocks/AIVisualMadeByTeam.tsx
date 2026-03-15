@@ -8,7 +8,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+import { ArrowRight } from "lucide-react";
+
 import { getAssetUrl } from "@/lib/utils";
+import { CaseStudyTextReveal } from "@/components/blocks/CaseStudyTextReveal";
+import { TextFormatter } from "@/components/ui/TextFormatter";
 
 export interface MadeByTeamMember {
     name: string;
@@ -21,6 +25,9 @@ export interface MadeByTeamData {
     headingLine2: string;
     description: string;
     team: MadeByTeamMember[];
+    listItems?: string[];
+    leftColHeader?: string;
+    rightColHeader?: string;
 }
 
 const DEFAULT_TEAM: MadeByTeamMember[] = [
@@ -41,6 +48,13 @@ const WIDTHS = [
     "w-[290px] md:w-[390px]",
 ];
 
+const DEFAULT_LIST_ITEMS = [
+    "Artdirection",
+    "AI Model Tooling and chaining",
+    "Photo editing",
+    "Make it feel real",
+];
+
 interface Props {
     data?: MadeByTeamData;
 }
@@ -53,6 +67,9 @@ export const AIVisualMadeByTeam = ({ data }: Props) => {
     const team = data?.team ?? DEFAULT_TEAM;
     const headingLine1 = data?.headingLine1 ?? "Leveraged by AI.";
     const headingLine2 = data?.headingLine2 ?? "Created by experts";
+    const leftColHeader = data?.leftColHeader ?? "HUMAN TALENT × AI-CENTRIC WORKFLOWS";
+    const rightColHeader = data?.rightColHeader ?? "HOW WE MAKE IT HAPPEN";
+    const listItems = data?.listItems ?? DEFAULT_LIST_ITEMS;
     const description =
         data?.description ??
         "You send us guidelines and all the brand assets, and product photos you have. Our team of designers, art directors and AI specialists craft every visual — combining creative expertise with AI-powered tools to deliver consistent, high-quality content at scale.";
@@ -97,7 +114,7 @@ export const AIVisualMadeByTeam = ({ data }: Props) => {
     return (
         <section
             ref={containerRef}
-            className="w-full relative z-10 overflow-hidden py-24 md:py-40 opacity-0 bg-white text-text flex flex-col items-center"
+            className="w-full relative z-10 overflow-hidden pt-[160px] pb-0 opacity-0 bg-white text-text flex flex-col items-center"
         >
             {/* Heading */}
             <div className="max-w-[1475px] w-full px-6 md:px-16 mb-24 md:mb-32">
@@ -165,30 +182,48 @@ export const AIVisualMadeByTeam = ({ data }: Props) => {
                                     className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                                     sizes="(max-width: 768px) 320px, 420px"
                                 />
-                                {/* Subtle overlay */}
-                                <div className="absolute inset-0 bg-black/5" />
-                            </div>
+                                {/* Dark gradient overlay on hover so text is readable */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                            {/* Info panel below the image - visible on hover */}
-                            <div className="flex flex-col items-start mt-6 text-left opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out">
-                                <span className="font-heading text-[24px] md:text-h3 text-text mb-1 transition-colors">{member.name}</span>
-                                {member.position && (
-                                    <span className="font-text text-sm md:text-text-md text-text opacity-60 block truncate">{member.position}</span>
-                                )}
+                                {/* Info panel inside the image - visible on hover */}
+                                <div className="absolute inset-x-0 bottom-0 pl-[64px] pb-[64px] pr-8 pt-8 flex flex-col items-start text-left opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out">
+                                    <h3 className="font-heading text-h3 text-white mb-1">{member.name}</h3>
+                                    {member.position && (
+                                        <span className="font-text text-text-sm text-white/90 block truncate">{member.position}</span>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
 
-            {/* Description */}
-            <div className="max-w-[1475px] w-full px-6 md:px-16 mt-24 md:mt-32 max-md:mb-12">
-                <div className="max-w-3xl">
-                    <p className="font-text text-text-lg opacity-70">
-                        {description}
-                    </p>
+            {/* Content & List */}
+            <div className="max-w-[1475px] w-full px-6 md:px-16 py-[128px] grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
+                <div className="lg:col-span-7">
+                    <h4 className="font-heading text-sm font-bold uppercase tracking-wider mb-[64px] opacity-40">
+                        {leftColHeader}
+                    </h4>
+                    <CaseStudyTextReveal
+                        text={description}
+                        className="!p-0 !max-w-full font-text text-text-lg md:text-text-2xl text-text leading-[1.4]"
+                    />
+                </div>
+                <div className="lg:col-span-4 lg:col-start-9 flex flex-col justify-center">
+                    <h4 className="font-heading text-sm font-bold uppercase tracking-wider mb-[64px] opacity-40">
+                        {rightColHeader}
+                    </h4>
+                    <ul className="flex flex-col gap-6 text-text mt-[6px]">
+                        {listItems.map((item, index) => (
+                            <li key={index} className="flex items-center gap-4">
+                                <ArrowRight className="text-brand w-24 h-24 flex-shrink-0" />
+                                <h3 className="font-heading text-h4 md:text-h3"><TextFormatter text={item} /></h3>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             </div>
+
         </section>
     );
 };

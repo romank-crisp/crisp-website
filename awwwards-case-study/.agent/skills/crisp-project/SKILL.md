@@ -5,6 +5,9 @@ description: Consolidated project knowledge for the Crisp Website — architectu
 
 # Crisp Website — Project Knowledge
 
+### 🔴 CRITICAL COMMANDMENT
+**NEVER overwrite production GCS data with generated/placeholder content. NEVER use seed scripts to overwrite the LIVE JSON.**
+
 ## Tech Stack
 
 | Layer | Technology |

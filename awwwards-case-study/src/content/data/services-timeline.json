@@ -1,85 +1,53 @@
 {
-    "sectionTitle": "GET A STUNNING VISUALS<br/><span class='text-brand'>IN JUST 5 DAYS</span>",
+    "sectionTitle": "GET STUNNING VISUALS<br/><span class='text-brand'>IN JUST 5 DAYS</span>",
     "steps": [
         {
             "id": "step-1",
             "day": "Day 1",
             "title": "Briefing & Assets In-Take",
-            "description": "You send us guidelines and all the brand assets, and any product photos you have",
-            "images": [
-                {
-                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
-                    "alt": "Product photo 1"
-                },
-                {
-                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
-                    "alt": "Product photo 2"
-                },
-                {
-                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
-                    "alt": "Product photo 3"
-                }
-            ]
+            "description": "You share brand guidelines, product photos, and references. We align on the creative direction and define deliverables — no back-and-forth after this point.",
+            "list": [
+                "You share brand guidelines, product photos, and references. We align on the creative direction and define deliverables — no back-and-forth after this point.",
+                "Consolidate all project assets into a clean, searchable brand vault.",
+                "Review aesthetic benchmarks and confirm alignment on tone."
+            ],
+            "images": []
         },
         {
             "id": "step-2",
             "day": "Day 2",
-            "title": "AI Model Training & Concept Generation",
-            "description": "We train custom AI models on your brand and begin generating initial concept directions for your approval.",
-            "images": [
-                {
-                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
-                    "alt": "Training visual 1"
-                },
-                {
-                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
-                    "alt": "Training visual 2"
-                },
-                {
-                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
-                    "alt": "Training visual 3"
-                }
-            ]
+            "title": "Still Shots Creation",
+            "description": "We select the right AI models and build custom workflows tailored to your product and brand, then generate high-resolution product shots — styled, lit, and composed to match your visual identity.",
+            "list": [
+                "We select the right AI models and build custom workflows tailored to your product and brand, then generate high-resolution product shots — styled, lit, and composed to match your visual identity.",
+                "Iterate through lighting setups and refine environment context.",
+                "Export print-ready and web-optimized masters."
+            ],
+            "images": []
         },
         {
             "id": "step-3",
-            "day": "Day 3",
-            "title": "Refining & Direction Approval",
-            "description": "You review the concepts and we refine the selected directions to perfectly match your campaign requirements.",
-            "images": [
-                {
-                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
-                    "alt": "Refining visual 1"
-                },
-                {
-                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
-                    "alt": "Refining visual 2"
-                },
-                {
-                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
-                    "alt": "Refining visual 3"
-                }
-            ]
+            "day": "Day 3–4",
+            "title": "Videos & Motion Content",
+            "description": "Your stills come to life. We produce short-form product videos, animated loops, and motion assets ready for social, web, and paid channels.",
+            "list": [
+                "Your stills come to life. We produce short-form product videos, animated loops, and motion assets ready for social, web, and paid channels.",
+                "Create seamless transitions and dynamic camera paths.",
+                "Ensure motion behavior aligns with the brand's physics."
+            ],
+            "images": []
         },
         {
             "id": "step-4",
             "day": "Day 5",
-            "title": "Getting Final Design",
-            "description": "Polished, production-ready visuals delivered — static and motion, all formats included",
-            "images": [
-                {
-                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
-                    "alt": "Final design 1"
-                },
-                {
-                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
-                    "alt": "Final design 2"
-                },
-                {
-                    "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/home-hero-03.png",
-                    "alt": "Final design 3"
-                }
-            ]
+            "title": "Campaign Assets & Handover",
+            "description": "Final deliverables — all formats, all sizes. Product shots, videos, key visuals, and platform-specific mockups. Production-ready, no extra formatting needed.",
+            "list": [
+                "Final deliverables — all formats, all sizes. Product shots, videos, key visuals, and platform-specific mockups. Production-ready, no extra formatting needed.",
+                "Organize components with sensible naming conventions.",
+                "Provide a complete deployment guide and final walkthrough."
+            ],
+            "images": []
         }
     ]
 }

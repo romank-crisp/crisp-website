@@ -7,24 +7,24 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export interface ProductInteractiveOverlay {
+export interface VideoScrollOverlay {
     id: string;
     text: string;
     timeSec: number;
     position: "top-center" | "bottom-left" | "bottom-right";
 }
 
-export interface ProductInteractiveData {
+export interface VideoScrollData {
     sectionTitle?: string;
     videoSrc: string;
-    overlays: ProductInteractiveOverlay[];
+    overlays: VideoScrollOverlay[];
 }
 
 interface Props {
-    data: ProductInteractiveData;
+    data: VideoScrollData;
 }
 
-export function AIVisualProductInteractive({ data }: Props) {
+export function AIVisualVideoScroll({ data }: Props) {
     const containerRef = useRef<HTMLDivElement>(null);
     const stickyRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -73,27 +73,30 @@ export function AIVisualProductInteractive({ data }: Props) {
             }, 0);
 
             // 3) Text overlays — show at specific video timestamps
-            //    Each phrase scrolls upward continuously (large y travel)
+            //    Each phrase scrolls upward continuously
+            //    Positioned: left (cols 2-5), right (cols 8-11), left (cols 2-5)
             data.overlays.forEach((overlay, i) => {
                 const el = overlayRefs.current[i];
                 if (!el) return;
 
-                const fraction = overlay.timeSec / duration;
+                // Ensure overlays start AFTER zoom completes (0.3)
+                const rawFraction = overlay.timeSec / duration;
+                const fraction = Math.max(rawFraction, 0.35);
 
-                const fadeIn = Math.min(0.35 / duration, fraction);
-                const fadeOut = 0.35 / duration;
+                const fadeIn = Math.min(0.28 / duration, fraction - 0.3);
+                const fadeOut = 0.28 / duration;
 
                 const maxVisibleDuration = 1.0 - fraction - fadeOut;
-                const visibleDuration = Math.min(1.5 / duration, Math.max(0, maxVisibleDuration));
+                const visibleDuration = Math.min(1.2 / duration, Math.max(0, maxVisibleDuration));
 
                 const totalDur = fadeIn + visibleDuration + fadeOut;
 
-                // Continuous upward scroll across the entire lifespan
+                // Continuous upward scroll — 20% less travel (240px instead of 300px)
                 master.fromTo(el, {
-                    y: 300,
+                    y: 240,
                     opacity: 0,
                 }, {
-                    y: -300,
+                    y: -240,
                     opacity: 1,
                     ease: "none",
                     duration: totalDur,
@@ -116,16 +119,16 @@ export function AIVisualProductInteractive({ data }: Props) {
                 }, fraction + visibleDuration);
             });
 
-            // 4) Animate the header title — starts visible, fades out on scroll
+            // 4) Header title — always visible by default.
+            //    After zoom completes (0.3), scroll it up & fade out.
             if (headerRef.current) {
                 gsap.set(headerRef.current, { opacity: 1, y: 0 });
-
                 master.to(headerRef.current, {
                     opacity: 0,
                     y: -80,
                     ease: "power2.in",
-                    duration: 0.15, // Fades out in the first 15% of scroll
-                }, 0);
+                    duration: 0.12,
+                }, 0.3);
             }
         };
 
@@ -153,12 +156,12 @@ export function AIVisualProductInteractive({ data }: Props) {
     return (
         <section
             ref={containerRef}
-            className="relative bg-white"
-            style={{ height: "1000vh" }}
+            className="relative bg-white pt-[160px] pb-0"
+            style={{ height: "500vh" }}
         >
             <div
                 ref={stickyRef}
-                className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden"
+                className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden"
             >
                 {/* Video wrapper — starts constrained, zooms to full viewport */}
                 <div
@@ -182,30 +185,38 @@ export function AIVisualProductInteractive({ data }: Props) {
                     {/* Slight vignette overlay for text readability */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/30 pointer-events-none" />
 
-                    {/* Section title — centered both vertically and horizontally */}
-                    {data.sectionTitle && (
-                        <h1
-                            ref={headerRef}
-                            className="absolute inset-0 flex items-center justify-center font-mega text-mega-h2 uppercase text-white text-center z-10 pointer-events-none drop-shadow-lg px-8"
-                        >
-                            {data.sectionTitle}
-                        </h1>
-                    )}
+                    {/* Text overlays — positioned on 12-col grid: left/right/left */}
+                    {data.overlays.map((overlay, i) => {
+                        // Alternating: 0=left(cols 2-5), 1=right(cols 8-11), 2=left(cols 2-5)
+                        const isRight = i % 2 === 1;
+                        const posClass = isRight
+                            ? "right-0 pr-[8.33%] pl-[66.67%]"   // cols 8-11
+                            : "left-0 pl-[8.33%] pr-[66.67%]"; // cols 2-5
 
-                    {/* Text overlays — all centered */}
-                    {data.overlays.map((overlay, i) => (
-                        <div
-                            key={overlay.id}
-                            ref={(el) => { overlayRefs.current[i] = el; }}
-                            className="absolute inset-0 flex items-center justify-center pointer-events-none px-6 md:px-16"
-                            style={{ opacity: 0 }}
-                        >
-                            <p className="font-text text-text-lg text-white drop-shadow-lg max-w-[600px] leading-relaxed text-center">
-                                {overlay.text}
-                            </p>
-                        </div>
-                    ))}
+                        return (
+                            <div
+                                key={overlay.id}
+                                ref={(el) => { overlayRefs.current[i] = el; }}
+                                className={`absolute inset-y-0 flex items-center pointer-events-none ${posClass}`}
+                                style={{ opacity: 0 }}
+                            >
+                                <p className="font-text text-text-lg text-white drop-shadow-lg leading-relaxed text-left">
+                                    {overlay.text}
+                                </p>
+                            </div>
+                        );
+                    })}
                 </div>
+
+                {/* Section title — rendered ABOVE the video wrapper, always visible by default */}
+                {data.sectionTitle && (
+                    <h1
+                        ref={headerRef}
+                        className="absolute inset-0 flex items-center justify-center font-heading text-h1 text-white text-center z-20 pointer-events-none drop-shadow-lg"
+                    >
+                        <span className="max-w-[800px] px-8">{data.sectionTitle}</span>
+                    </h1>
+                )}
             </div>
         </section>
     );

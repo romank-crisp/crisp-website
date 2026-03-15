@@ -106,7 +106,7 @@
         "previewHeight": 900
     },
     {
-        "name": "HomeInfiniteScrollPane",
+        "name": "WorksInfiniteScrollPane",
         "label": "Infinite Scroll Pane",
         "tags": [],
         "previewHeight": 800
@@ -274,8 +274,8 @@
         "previewHeight": 1000
     },
     {
-        "name": "AIVisualProductInteractive",
-        "label": "Product Interactive",
+        "name": "AIVisualVideoScroll",
+        "label": "Video Scroll",
         "tags": [],
         "previewHeight": 900
     },

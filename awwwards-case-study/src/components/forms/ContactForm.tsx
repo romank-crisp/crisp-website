@@ -208,6 +208,7 @@ export function ContactForm({ onSuccess, onInteractionStart }: ContactFormProps)
             {/* All fields shown by default */}
             <div className="space-y-24">
                 <Input
+                    id="contact-name"
                     sizeVariant={sizeVariant}
                     placeholder="Name"
                     value={formData.name}

@@ -102,14 +102,14 @@ export const SharedFAQ = ({ data, forceLightMode = false }: { data: HomeFAQData,
     return (
         <section
             ref={sectionRef}
-            className="py-64 md:py-128 bg-white relative z-10 transition-colors duration-500"
+            className="pt-[160px] pb-[120px] bg-white relative z-10 transition-colors duration-500"
         >
-            <div className="max-w-[1475px] w-full mx-auto flex flex-col md:flex-row gap-64 md:gap-48 px-16 md:px-64">
+            <div className="w-[1475px] max-w-full mx-auto flex flex-col md:flex-row gap-64 md:gap-48 px-16 md:px-64">
 
                 {/* Left Column: H1 Header */}
                 <div className="w-full md:w-1/3">
                     <h2
-                        className="font-heading text-h1 font-bold leading-tight sticky top-128"
+                        className="font-heading text-h1 font-bold leading-tight sticky top-128 mt-[36px]"
                         dangerouslySetInnerHTML={{ __html: data.title.replace(/\n/g, '<br/>') }}
                     />
                 </div>

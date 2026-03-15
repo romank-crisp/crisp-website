@@ -24,6 +24,8 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
 
     lenisRef.current = lenis;
     lenis.on("scroll", ScrollTrigger.update);
+    // Expose lenis globally for preloader and other components to pause/start
+    (window as any).lenis = lenis;
 
     gsap.ticker.add((time) => {
       lenis.raf(time * 1000);
@@ -34,6 +36,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     return () => {
       lenis.destroy();
       gsap.ticker.remove(lenis.raf);
+      delete (window as any).lenis;
     };
   }, []);
 

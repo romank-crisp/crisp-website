@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useSearchParams, usePathname } from "next/navigation";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import type { TreeGroup } from "@/components/admin/AdminTreeNav";
 import { Palette, Type, Maximize, MousePointerClick, TextCursorInput, Tag } from "lucide-react";
@@ -47,7 +48,18 @@ const SECTION_MAP: Record<string, React.ComponentType> = {
 /* ─── Page ──────────────────────────────────────────────────────── */
 
 export default function AdminDesignSystemPage() {
-    const [activeSection, setActiveSection] = useState<string>("colors");
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+
+    const initialSection = searchParams.get("section") || "colors";
+    const [activeSection, setActiveSection] = useState<string>(initialSection);
+
+    // Sync URL when activeSection changes
+    const updateUrl = useCallback((section: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set("section", section);
+        window.history.replaceState(null, "", `${pathname}?${params.toString()}`);
+    }, [searchParams, pathname]);
 
     // Intersection Observer to update active tab on scroll
     useEffect(() => {
@@ -59,6 +71,7 @@ export default function AdminDesignSystemPage() {
                     if (entry.isIntersecting) {
                         const id = entry.target.id.replace("ds-section-", "");
                         setActiveSection(id);
+                        updateUrl(id);
                     }
                 });
             },
@@ -78,6 +91,7 @@ export default function AdminDesignSystemPage() {
 
     const handleTreeSelect = (id: string) => {
         setActiveSection(id);
+        updateUrl(id);
         const element = document.getElementById(`ds-section-${id}`);
         if (element) {
             element.scrollIntoView({ behavior: "smooth" });

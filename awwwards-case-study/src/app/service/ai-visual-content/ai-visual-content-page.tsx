@@ -3,28 +3,29 @@
 import { AIVisualHeaderZoom } from "@/components/blocks/AIVisualHeaderZoom";
 import { SharedFAQ } from "@/components/blocks/SharedFAQ";
 import { AIVisualImageComparison } from "@/components/blocks/AIVisualImageComparison";
-import { AIVisualProductInteractive, ProductInteractiveData } from "@/components/blocks/AIVisualProductInteractive";
+import { AIVisualVideoScroll, VideoScrollData } from "@/components/blocks/AIVisualVideoScroll";
 import { AIVisualTimeline } from "@/components/blocks/AIVisualTimeline";
-import { AIVisualPriceCalculator, PriceCalculatorData } from "@/components/blocks/AIVisualPriceCalculator";
+import { AIVisualPriceCalculatorV2, PriceCalculatorV2Data } from "@/components/blocks/AIVisualPriceCalculatorV2";
 import { AIVisualMadeByTeam, MadeByTeamData } from "@/components/blocks/AIVisualMadeByTeam";
 import { AIVisualWhatWeOffer } from "@/components/blocks/AIVisualWhatWeOffer";
 import { ServicesData, TimelineData } from "@/content/services";
 import { HomeFAQData } from "@/types/home";
 import { WhatWeOfferData } from "@/types/services-what-we-offer";
-
-
+import { SharedVideoScrollingCTA } from "@/components/blocks/SharedVideoScrollingCTA";
+import { ServicesCTAData, DEFAULT_SERVICES_CTA } from "@/types/services-cta";
 
 interface Props {
     servicesData: ServicesData;
     faqData: HomeFAQData;
-    productInteractiveData?: ProductInteractiveData;
+    videoScrollData?: VideoScrollData;
     timelineData?: TimelineData;
-    priceCalculatorData?: PriceCalculatorData;
+    priceCalculatorData?: PriceCalculatorV2Data;
     madeByTeamData?: MadeByTeamData;
     whatWeOfferData?: WhatWeOfferData;
+    ctaData?: ServicesCTAData;
 }
 
-export default function AIVisualContentPage({ servicesData, faqData, productInteractiveData, timelineData, priceCalculatorData, madeByTeamData, whatWeOfferData }: Props) {
+export default function AIVisualContentPage({ servicesData, faqData, videoScrollData, timelineData, priceCalculatorData, madeByTeamData, whatWeOfferData, ctaData }: Props) {
     if (!servicesData || !faqData) {
         return (
             <main className="min-h-screen bg-white" />
@@ -39,20 +40,23 @@ export default function AIVisualContentPage({ servicesData, faqData, productInte
             <AIVisualWhatWeOffer data={whatWeOfferData} />
 
 
-            {productInteractiveData && (
-                <AIVisualProductInteractive data={productInteractiveData} />
+            {videoScrollData && (
+                <AIVisualVideoScroll data={videoScrollData} />
             )}
-
             {timelineData && (
                 <AIVisualTimeline data={timelineData} />
             )}
-
-            <AIVisualPriceCalculator data={priceCalculatorData} />
-
             <AIVisualMadeByTeam data={madeByTeamData} />
 
 
+            <AIVisualPriceCalculatorV2 data={priceCalculatorData} />
+
+
+
+
             <SharedFAQ data={faqData} forceLightMode={true} />
+
+            <SharedVideoScrollingCTA data={ctaData || DEFAULT_SERVICES_CTA} />
 
         </main>
     );

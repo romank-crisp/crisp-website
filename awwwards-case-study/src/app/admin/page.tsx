@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { useSearchParams, usePathname } from "next/navigation";
 import { readContent, updateContent } from "@/app/actions/content";
 import { JsonEditor } from "@/components/admin/JsonEditor";
+import { PriceCalculatorEditor } from "@/components/admin/PriceCalculatorEditor";
 import { Toast, type ToastType } from "@/components/ui/Toast";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import type { TreeGroup } from "@/components/admin/AdminTreeNav";
@@ -36,6 +38,7 @@ const CMS_TREE: TreeGroup[] = [
                 icon: FileText,
                 children: [
                     { id: "about", label: "About Page" },
+                    { id: "about-capabilities.json", label: "Capabilities" },
                     { id: "locations", label: "Locations" },
                     { id: "services", label: "Services" },
                     { id: "clients", label: "Clients" },
@@ -51,12 +54,24 @@ const CMS_TREE: TreeGroup[] = [
                     { id: "works-content", label: "Page Content" },
                 ],
             },
+        ],
+    },
+    {
+        title: "Services",
+        items: [
             {
-                id: "services-group",
-                label: "Services",
+                id: "ai-visual-content-group",
+                label: "AI Visual Content",
                 icon: FileText,
                 children: [
-                    { id: "services.json", label: "AI Visual Content" },
+                    { id: "aivisuals.json", label: "Hero" },
+                    { id: "aivisuals-what-we-offer.json", label: "What We Offer" },
+                    { id: "aivisuals-video-scroll.json", label: "Video Scroll" },
+                    { id: "aivisuals-timeline.json", label: "Timeline" },
+                    { id: "aivisuals-made-by-team.json", label: "Made by Team" },
+                    { id: "aivisuals-price-calculator.json", label: "Price Calculator" },
+                    { id: "aivisuals-faq.json", label: "FAQ" },
+                    { id: "aivisuals-cta.json", label: "Video CTA" },
                 ],
             },
         ],
@@ -106,7 +121,7 @@ const CMS_TREE: TreeGroup[] = [
                 children: [
                     { id: "seo/seo-home.json", label: "Home" },
                     { id: "seo/seo-about.json", label: "About" },
-                    { id: "seo/seo-services.json", label: "Services" },
+                    { id: "seo/seo-aivisuals.json", label: "Services" },
                     { id: "seo/seo-works.json", label: "Works" },
                     { id: "seo/seo-contact.json", label: "Contact" },
                     { id: "seo/seo-privacy-policy.json", label: "Privacy Policy" },
@@ -133,10 +148,85 @@ const CMS_TREE: TreeGroup[] = [
     },
 ];
 
+/* ─── Map each JSON tab to its single-block preview URL ─────────── */
+
+const BLOCK_PREVIEW_MAP: Record<string, string> = {
+    // Home Page
+    "home-hero.json": "/pattern-library/preview/SharedServicesHero",
+    "home-services.json": "/pattern-library/preview/HomeWhereWeCanHelp",
+    "home-quote.json": "/pattern-library/preview/SharedCenteredQuote",
+    "home-partner.json": "/pattern-library/preview/HomePartnerStatement",
+    "home-clients.json": "/pattern-library/preview/SharedClientLogos",
+    "home-stats.json": "/pattern-library/preview/SharedStatsBlock",
+    "home-testimonials.json": "/pattern-library/preview/SharedTestimonials",
+    "home-faq.json": "/pattern-library/preview/SharedFAQ",
+    // About Us
+    "about": "/pattern-library/preview/AboutPlaneHero",
+    "about-capabilities.json": "/pattern-library/preview/AboutServicesList",
+    "locations": "/pattern-library/preview/AboutLocationsMap",
+    "services": "/pattern-library/preview/AboutServicesList",
+    "clients": "/pattern-library/preview/SharedClientLogos",
+    "team": "/pattern-library/preview/AboutTeamAccordion",
+    // Works
+    "works": "/works",
+    "works-content": "/works",
+    // AI Visual Content
+    "aivisuals.json": "/pattern-library/preview/AIVisualHeaderZoom",
+    "aivisuals-what-we-offer.json": "/service/ai-visual-content",
+    "aivisuals-video-scroll.json": "/pattern-library/preview/AIVisualVideoScroll",
+    "aivisuals-timeline.json": "/pattern-library/preview/AIVisualTimeline",
+    "aivisuals-price-calculator.json": "/pattern-library/preview/AIVisualPriceCalculatorV2",
+    "aivisuals-made-by-team.json": "/pattern-library/preview/AIVisualMadeByTeam",
+    "aivisuals-faq.json": "/pattern-library/preview/SharedFAQ",
+    "aivisuals-cta.json": "/pattern-library/preview/SharedVideoScrollingCTA",
+    // Case Studies — CentroGreen
+    "case-studies/centrogreen-general.json": "/pattern-library/preview/CaseStudyHeroVideo",
+    "case-studies/centrogreen-case-details.json": "/pattern-library/preview/CaseStudyDetails",
+    "case-studies/centrogreen-case-stats.json": "/pattern-library/preview/SharedStatsBlock",
+    // Case Studies — Folkeuniversitetet
+    "case-studies/folkeuniversitetet-general.json": "/pattern-library/preview/CaseStudyHeroVideo",
+    "case-studies/folkeuniversitetet-case-details.json": "/pattern-library/preview/CaseStudyDetails",
+    "case-studies/folkeuniversitetet-case-stats.json": "/pattern-library/preview/SharedStatsBlock",
+    // Case Studies — TheyTalk
+    "case-studies/theytalk-general.json": "/pattern-library/preview/CaseStudyHeroVideo",
+    "case-studies/theytalk-case-details.json": "/pattern-library/preview/CaseStudyDetails",
+    "case-studies/theytalk-case-stats.json": "/pattern-library/preview/SharedStatsBlock",
+    // SEO — no visual preview
+    "seo/seo-home.json": "/",
+    "seo/seo-about.json": "/about",
+    "seo/seo-aivisuals.json": "/service/ai-visual-content",
+    "seo/seo-works.json": "/works",
+    "seo/seo-contact.json": "/",
+    "seo/seo-privacy-policy.json": "/privacy-policy",
+    "seo/seo-centrogreen.json": "/works/centrogreen",
+    "seo/seo-folkeuniversitetet.json": "/works/folkeuniversitetet",
+    "seo/seo-theytalk.json": "/works/theytalk",
+    // Shared
+    "navigation": "/",
+    "footer": "/",
+};
+
+function getBlockPreviewUrl(tab: string): string {
+    const key = tab.endsWith(".json") ? tab : tab;
+    return BLOCK_PREVIEW_MAP[key] || "/";
+}
+
 /* ─── CMS Admin Page ────────────────────────────────────────────── */
 
 export default function AdminPage() {
-    const [activeTab, setActiveTab] = useState("locations");
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+
+    const initialTab = searchParams.get("tab") || "locations";
+    const [activeTab, setActiveTab] = useState(initialTab);
+
+    // Sync URL when activeTab changes
+    const handleTabChange = useCallback((tab: string) => {
+        setActiveTab(tab);
+        const params = new URLSearchParams(searchParams.toString());
+        params.set("tab", tab);
+        window.history.replaceState(null, "", `${pathname}?${params.toString()}`);
+    }, [searchParams, pathname]);
     const [currentData, setCurrentData] = useState<any>(null);
     const [loading, setLoading] = useState(false);
 
@@ -154,12 +244,14 @@ export default function AdminPage() {
     useEffect(() => {
         const loadTabContent = async () => {
             setLoading(true);
+            setCurrentData(null);
             try {
                 const filename = getFilename(activeTab);
                 const data = await readContent(filename);
                 setCurrentData(data);
             } catch (error) {
                 console.error(`Failed to load data for ${activeTab}`, error);
+                setCurrentData(null);
                 setToast({
                     message: `Failed to load content for ${activeTab}`,
                     type: "error",
@@ -197,7 +289,7 @@ export default function AdminPage() {
             <AdminLayout
                 treeGroups={CMS_TREE}
                 activeTreeId={activeTab}
-                onTreeSelect={setActiveTab}
+                onTreeSelect={handleTabChange}
             >
                 <div className="flex-1 overflow-hidden relative h-full flex flex-col">
                     {loading ? (
@@ -216,32 +308,21 @@ export default function AdminPage() {
                                         ?.replace(".json", "")
                                         .replace("-", " ") || activeTab
                                 }
-                                liveUrl={
-                                    activeTab.includes("case-studies")
-                                        ? `/works/${activeTab
-                                            .split("/")
-                                            .pop()
-                                            ?.replace("-general.json", "")
-                                            .replace("-case-details.json", "")
-                                            .replace("-case-stats.json", "")
-                                            .replace(".json", "")}`
-                                        : activeTab === "services.json"
-                                            ? "/service/ai-visual-content"
-                                            : activeTab === "clients"
-                                                ? "/about#clients"
-                                                : activeTab === "about"
-                                                    ? "/about"
-                                                    : activeTab === "services"
-                                                        ? "/#services"
-                                                        : activeTab === "locations"
-                                                            ? "/about#locations"
-                                                            : "/"
-                                }
+                                liveUrl={getBlockPreviewUrl(activeTab)}
                                 initialData={currentData || {}}
                                 isEditable={!["navigation", "footer"].includes(activeTab)}
                                 onSave={async (_, data) => {
                                     handleSave(data);
                                 }}
+                                settingsPanel={
+                                    activeTab === "aivisuals-price-calculator.json"
+                                        ? <PriceCalculatorEditor
+                                            key={`settings-${activeTab}`}
+                                            data={currentData || {}}
+                                            onSave={(data) => handleSave(data)}
+                                        />
+                                        : undefined
+                                }
                             />
                         </div>
                     )}

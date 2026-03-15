@@ -8,7 +8,7 @@ import { SeoData } from "@/types/seo";
 export async function generateMetadata() {
     let seoData;
     try {
-        seoData = await readContent("seo/seo-services.json") as SeoData;
+        seoData = await readContent("seo/seo-aivisuals.json") as SeoData;
         if (!seoData) throw new Error("No seo data");
         seoData.title = "AI Assisted Visual Content | Crisp Studio";
     } catch {
@@ -28,22 +28,22 @@ export async function generateMetadata() {
 
 export default async function Page() {
     const [servicesData, faqData] = await Promise.all([
-        readContent("services.json"),
-        readContent("home-faq.json"),
+        readContent("aivisuals.json"),
+        readContent("aivisuals-faq.json"),
     ]);
 
-    // Product interactive video data is optional
-    let productInteractiveData;
+    // Video scroll data is optional
+    let videoScrollData;
     try {
-        productInteractiveData = await readContent("services-product-interactive.json", 1);
+        videoScrollData = await readContent("aivisuals-video-scroll.json", 1);
     } catch {
-        productInteractiveData = null;
+        videoScrollData = null;
     }
 
     // Timeline data is optional
     let timelineData;
     try {
-        timelineData = await readContent("services-timeline.json");
+        timelineData = await readContent("aivisuals-timeline.json", 1);
     } catch {
         timelineData = null;
     }
@@ -51,7 +51,7 @@ export default async function Page() {
     // Price calculator data is optional
     let priceCalculatorData;
     try {
-        priceCalculatorData = await readContent("services-price-calculator.json");
+        priceCalculatorData = await readContent("aivisuals-price-calculator.json");
     } catch {
         priceCalculatorData = null;
     }
@@ -59,7 +59,7 @@ export default async function Page() {
     // Made by team data is optional
     let madeByTeamData;
     try {
-        madeByTeamData = await readContent("services-made-by-team.json");
+        madeByTeamData = await readContent("aivisuals-made-by-team.json");
     } catch {
         madeByTeamData = null;
     }
@@ -67,20 +67,29 @@ export default async function Page() {
     // What we offer data is optional
     let whatWeOfferData;
     try {
-        whatWeOfferData = await readContent("services-what-we-offer.json");
+        whatWeOfferData = await readContent("aivisuals-what-we-offer.json");
     } catch {
         whatWeOfferData = null;
+    }
+
+    // CTA data is optional
+    let ctaData;
+    try {
+        ctaData = await readContent("aivisuals-cta.json");
+    } catch {
+        ctaData = null;
     }
 
     return (
         <AIVisualContentPage
             servicesData={servicesData}
             faqData={faqData}
-            productInteractiveData={productInteractiveData}
+            videoScrollData={videoScrollData}
             timelineData={timelineData}
             priceCalculatorData={priceCalculatorData}
             madeByTeamData={madeByTeamData}
             whatWeOfferData={whatWeOfferData}
+            ctaData={ctaData}
         />
     );
 }

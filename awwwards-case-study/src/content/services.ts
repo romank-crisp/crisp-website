@@ -10,25 +10,13 @@ export interface Service {
 
 
 export interface ServicesData {
-    title: string[];
-    items: Service[];
-    scrollRevealImage?: { src: string; alt?: string };
-    textIterations?: string[];
-    imageComparison?: {
-        beforeImage: string;
-        afterImage: string;
-    };
+    title?: string[];
+    items?: Service[];
     hero?: {
         label?: string;
         title?: string;
         description?: string;
         image?: string;
-    };
-    contactForm?: {
-        title?: string;
-        successTitle?: string;
-        successMessage?: string;
-        successButtonText?: string;
     };
 }
 
@@ -42,6 +30,7 @@ export interface TimelineStep {
     day: string;
     title: string;
     description: string;
+    list?: string[];
     images: TimelineImage[];
 }
 
@@ -51,4 +40,4 @@ export interface TimelineData {
 }
 
 // Re-export price calculator data type
-export type { PriceCalculatorData } from "@/components/blocks/AIVisualPriceCalculator";
+export type { PriceCalculatorV2Data as PriceCalculatorData } from "@/components/blocks/AIVisualPriceCalculatorV2";

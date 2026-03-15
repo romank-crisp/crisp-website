@@ -33,6 +33,7 @@ const MENU_GROUPS = [
                 icon: FileText,
                 children: [
                     { id: "about", label: "About Page" },
+                    { id: "about-capabilities.json", label: "Capabilities" },
                     { id: "locations", label: "Locations" },
                     { id: "services", label: "Services" },
                     { id: "clients", label: "Clients" },
@@ -49,17 +50,17 @@ const MENU_GROUPS = [
                 ]
             },
             {
-                id: "services-group",
-                label: "Services",
+                id: "ai-visual-content-group",
+                label: "AI Visual Content",
                 icon: FileText,
                 children: [
-                    { id: "services.json", label: "AI Visual Content" },
-                    { id: "services-3d-gallery.json", label: "3D Gallery" },
-                    { id: "services-product-interactive.json", label: "Product Interactive" },
-                    { id: "services-what-we-offer.json", label: "What We Offer" },
-                    { id: "services-timeline.json", label: "Timeline" },
-                    { id: "services-price-calculator.json", label: "Price Calculator" },
-                    { id: "services-made-by-team.json", label: "Made by Team" },
+                    { id: "aivisuals.json", label: "Hero" },
+                    { id: "aivisuals-what-we-offer.json", label: "What We Offer" },
+                    { id: "aivisuals-video-scroll.json", label: "Video Scroll" },
+                    { id: "aivisuals-timeline.json", label: "Timeline" },
+                    { id: "aivisuals-price-calculator.json", label: "Price Calculator" },
+                    { id: "aivisuals-made-by-team.json", label: "Made by Team" },
+                    { id: "aivisuals-faq.json", label: "FAQ" },
                 ]
             }
         ]
@@ -109,7 +110,7 @@ const MENU_GROUPS = [
                 children: [
                     { id: "seo/seo-home.json", label: "Home" },
                     { id: "seo/seo-about.json", label: "About" },
-                    { id: "seo/seo-services.json", label: "Services" },
+                    { id: "seo/seo-aivisuals.json", label: "Services" },
                     { id: "seo/seo-works.json", label: "Works" },
                     { id: "seo/seo-contact.json", label: "Contact" },
                     { id: "seo/seo-privacy-policy.json", label: "Privacy Policy" },

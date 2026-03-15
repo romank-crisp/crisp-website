@@ -2,10 +2,9 @@
 
 import { WorksData, WorksPageContent, InfiniteScrollItem } from "@/types/work";
 import { WorkCard } from "@/components/ui/WorkCard";
-import { PhysicsPills } from "@/components/ui/PhysicsPills";
 import { CaseStudyTextReveal } from "@/components/blocks/CaseStudyTextReveal";
 import { getAssetUrl } from "@/lib/utils";
-import { InfiniteScrollPane } from "@/components/blocks/HomeInfiniteScrollPane";
+import { WorksInfiniteScrollPane } from "@/components/blocks/WorksInfiniteScrollPane";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import { useBrand } from "@/context/BrandContext";
 import { useContactForm } from "@/context/ContactFormContext";
@@ -15,8 +14,6 @@ import { ClientLogo } from "@/content/clients";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-
-import { WorksSteps } from "@/components/blocks/WorksSteps";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -116,32 +113,6 @@ export function WorksPage({ clientsData, worksData, content }: { clientsData: Cl
 
     // Use passed data or empty array to prevent crashes
     const works = worksData || [];
-    const baseTags = [
-        "Web Design", "Development", "Branding", "Visual Identity",
-        "UX/UI Design", "Content Strategy", "E-commerce", "Animation",
-        "Motion Graphics", "3D Design", "Design Systems", "Platform",
-        "Copywriting", "SEO", "Art Direction", "Digital Product",
-        "Decision-Shaping Workshops", "Brand Foundation",
-        "Creative and Visual Concepts", "Logos and Brand Marks",
-        "Tone of Voice", "High-Performing Websites",
-        "User Experience Design", "Interface Design",
-        "Interactive Prototypes", "Brand Strategy",
-        "Digital Experience", "Messaging House"
-    ];
-    // Combine base tags with any unique tags from works, ensuring no duplicates.
-    // Memoized with a deterministic seeded shuffle to prevent:
-    //   - SSR/client hydration mismatch (Math.random gives different values)
-    //   - PhysicsPills re-creating its entire Matter.js world on every render
-    const allTags = useMemo(() => {
-        const tags = Array.from(new Set([...baseTags, ...works.flatMap(work => work.tags || [])]));
-        // Deterministic shuffle using a simple seed based on tag content
-        const seed = tags.reduce((acc, t) => acc + t.charCodeAt(0) + t.length, 0);
-        return tags.sort((a, b) => {
-            const hashA = (a.charCodeAt(0) * 31 + seed) % 997;
-            const hashB = (b.charCodeAt(0) * 31 + seed) % 997;
-            return hashA - hashB;
-        });
-    }, [works]);
 
     // Fallbacks
     // Fallbacks to empty/safe defaults instead of hardcoded content to enforce JSON source of truth.
@@ -253,7 +224,7 @@ export function WorksPage({ clientsData, worksData, content }: { clientsData: Cl
                     })}
                 </section>
 
-                <div className="mt-[15vh] mb-[15vh]">
+                <div className="py-[120px]">
                     <CaseStudyTextReveal
                         text={bottomText}
                         className="font-text text-2xl md:text-4xl text-black leading-tight max-w-4xl"
@@ -261,22 +232,9 @@ export function WorksPage({ clientsData, worksData, content }: { clientsData: Cl
                 </div>
             </div>
 
-            <ErrorBoundary label="InfiniteScrollPane">
-                <InfiniteScrollPane id="infinite-scroll-pane" items={infiniteScrollItems} />
+            <ErrorBoundary label="WorksInfiniteScrollPane">
+                <WorksInfiniteScrollPane id="infinite-scroll-pane" items={infiniteScrollItems} />
             </ErrorBoundary>
-
-            {/* Bottom section — heading + steps with PhysicsPills background */}
-            <WorksSteps
-                steps={content?.steps || []}
-                background={
-                    <ErrorBoundary label="PhysicsPills">
-                        <PhysicsPills
-                            tags={allTags}
-                            onTagClick={openContactForm}
-                        />
-                    </ErrorBoundary>
-                }
-            />
         </main>
     );
 }
