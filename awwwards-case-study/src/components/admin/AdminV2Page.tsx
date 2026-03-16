@@ -1,202 +1,313 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useSearchParams, usePathname } from "next/navigation";
 import { readContent, updateContent } from "@/app/actions/content";
-import { FormEditor } from "@/components/admin/FormEditor";
+import { SectionEditor } from "@/components/admin/FormEditor";
 import { Toast, type ToastType } from "@/components/ui/Toast";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import type { TreeGroup } from "@/components/admin/AdminTreeNav";
-import { FileText, Navigation, LayoutTemplate } from "lucide-react";
+import {
+    FileText,
+    Navigation,
+    LayoutTemplate,
+    Search,
+    ChevronDown,
+    ChevronRight,
+    Save,
+    Loader2,
+} from "lucide-react";
 
-/* ─── CMS tree data (shared with V1) ────────────────────────────── */
+/* ─── Section definition ─────────────────────────────────────────── */
 
-const CMS_TREE: TreeGroup[] = [
+interface SectionDef {
+    id: string;       // filename without .json
+    label: string;
+    previewUrl?: string;
+}
+
+interface PageDef {
+    id: string;
+    label: string;
+    icon: any;
+    sections: SectionDef[];
+    pageUrl?: string;
+}
+
+/* ─── Pages with their sections ──────────────────────────────────── */
+
+const PAGES: PageDef[] = [
     {
-        title: "Pages",
-        items: [
-            {
-                id: "home-group",
-                label: "Home Page",
-                icon: FileText,
-                children: [
-                    { id: "home-hero.json", label: "Hero Section" },
-                    { id: "home-services.json", label: "Services" },
-                    { id: "home-quote.json", label: "Centered Quote" },
-                    { id: "home-partner.json", label: "Partner Statement" },
-                    { id: "home-clients.json", label: "Clients" },
-                    { id: "home-stats.json", label: "Stats" },
-                    { id: "home-testimonials.json", label: "Testimonials" },
-                    { id: "home-faq.json", label: "FAQ Section" },
-                ],
-            },
-            {
-                id: "about-us-group",
-                label: "About Us",
-                icon: FileText,
-                children: [
-                    { id: "about", label: "About Page" },
-                    { id: "about-capabilities.json", label: "Capabilities" },
-                    { id: "locations", label: "Locations" },
-                    { id: "services", label: "Services" },
-                    { id: "clients", label: "Clients" },
-                    { id: "team", label: "Team" },
-                ],
-            },
-            {
-                id: "works-group",
-                label: "Works Page",
-                icon: FileText,
-                children: [
-                    { id: "works", label: "Works List" },
-                    { id: "works-content", label: "Page Content" },
-                ],
-            },
+        id: "home",
+        label: "Home Page",
+        icon: FileText,
+        pageUrl: "/",
+        sections: [
+            { id: "home-hero.json", label: "Hero Section", previewUrl: "/pattern-library/preview/SharedServicesHero" },
+            { id: "home-services.json", label: "Services", previewUrl: "/pattern-library/preview/HomeWhereWeCanHelp" },
+            { id: "home-quote.json", label: "Centered Quote", previewUrl: "/pattern-library/preview/SharedCenteredQuote" },
+            { id: "home-partner.json", label: "Partner Statement", previewUrl: "/pattern-library/preview/HomePartnerStatement" },
+            { id: "home-clients.json", label: "Clients", previewUrl: "/pattern-library/preview/SharedClientLogos" },
+            { id: "home-stats.json", label: "Stats", previewUrl: "/pattern-library/preview/SharedStatsBlock" },
+            { id: "home-testimonials.json", label: "Testimonials", previewUrl: "/pattern-library/preview/SharedTestimonials" },
+            { id: "home-faq.json", label: "FAQ Section", previewUrl: "/pattern-library/preview/SharedFAQ" },
         ],
     },
     {
-        title: "Services",
-        items: [
-            {
-                id: "ai-visual-content-group",
-                label: "AI Visual Content",
-                icon: FileText,
-                children: [
-                    { id: "aivisuals.json", label: "Hero" },
-                    { id: "aivisuals-what-we-offer.json", label: "What We Offer" },
-                    { id: "aivisuals-video-scroll.json", label: "Video Scroll" },
-                    { id: "aivisuals-timeline.json", label: "Timeline" },
-                    { id: "aivisuals-made-by-team.json", label: "Made by Team" },
-                    { id: "aivisuals-price-calculator.json", label: "Price Calculator" },
-                    { id: "aivisuals-faq.json", label: "FAQ" },
-                    { id: "aivisuals-cta.json", label: "Video CTA" },
-                ],
-            },
+        id: "about",
+        label: "About Us",
+        icon: FileText,
+        pageUrl: "/about",
+        sections: [
+            { id: "about.json", label: "About Page", previewUrl: "/pattern-library/preview/AboutPlaneHero" },
+            { id: "about-capabilities.json", label: "Capabilities", previewUrl: "/pattern-library/preview/AboutServicesList" },
+            { id: "locations.json", label: "Locations", previewUrl: "/pattern-library/preview/AboutLocationsMap" },
+            { id: "services.json", label: "Services", previewUrl: "/pattern-library/preview/AboutServicesList" },
+            { id: "clients.json", label: "Clients", previewUrl: "/pattern-library/preview/SharedClientLogos" },
+            { id: "team.json", label: "Team", previewUrl: "/pattern-library/preview/AboutTeamAccordion" },
         ],
     },
     {
-        title: "Case Studies",
-        items: [
-            {
-                id: "case-studies/centrogreen",
-                label: "CentroGreen",
-                icon: FileText,
-                children: [
-                    { id: "case-studies/centrogreen-general.json", label: "General" },
-                    { id: "case-studies/centrogreen-case-details.json", label: "Details" },
-                    { id: "case-studies/centrogreen-case-stats.json", label: "Stats" },
-                ],
-            },
-            {
-                id: "case-studies/folkeuniversitetet",
-                label: "Folkeuniversitetet",
-                icon: FileText,
-                children: [
-                    { id: "case-studies/folkeuniversitetet-general.json", label: "General" },
-                    { id: "case-studies/folkeuniversitetet-case-details.json", label: "Details" },
-                    { id: "case-studies/folkeuniversitetet-case-stats.json", label: "Stats" },
-                ],
-            },
-            {
-                id: "case-studies/theytalk",
-                label: "TheyTalk",
-                icon: FileText,
-                children: [
-                    { id: "case-studies/theytalk-general.json", label: "General" },
-                    { id: "case-studies/theytalk-case-details.json", label: "Details" },
-                    { id: "case-studies/theytalk-case-stats.json", label: "Stats" },
-                ],
-            },
+        id: "works",
+        label: "Works Page",
+        icon: FileText,
+        pageUrl: "/works",
+        sections: [
+            { id: "works.json", label: "Works List", previewUrl: "/works" },
+            { id: "works-content.json", label: "Page Content", previewUrl: "/works" },
         ],
     },
     {
-        title: "SEO Settings",
-        items: [
-            {
-                id: "seo-pages",
-                label: "Page SEO",
-                icon: FileText,
-                children: [
-                    { id: "seo/seo-home.json", label: "Home" },
-                    { id: "seo/seo-about.json", label: "About" },
-                    { id: "seo/seo-aivisuals.json", label: "Services" },
-                    { id: "seo/seo-works.json", label: "Works" },
-                    { id: "seo/seo-contact.json", label: "Contact" },
-                    { id: "seo/seo-privacy-policy.json", label: "Privacy Policy" },
-                ],
-            },
-            {
-                id: "seo-case-studies",
-                label: "Case Studies SEO",
-                icon: FileText,
-                children: [
-                    { id: "seo/seo-centrogreen.json", label: "CentroGreen" },
-                    { id: "seo/seo-folkeuniversitetet.json", label: "Folkeuniversitetet" },
-                    { id: "seo/seo-theytalk.json", label: "TheyTalk" },
-                ],
-            },
+        id: "ai-visuals",
+        label: "AI Visual Content",
+        icon: FileText,
+        pageUrl: "/service/ai-visual-content",
+        sections: [
+            { id: "aivisuals.json", label: "Hero", previewUrl: "/pattern-library/preview/AIVisualHeaderZoom" },
+            { id: "aivisuals-what-we-offer.json", label: "What We Offer", previewUrl: "/service/ai-visual-content" },
+            { id: "aivisuals-video-scroll.json", label: "Video Scroll", previewUrl: "/pattern-library/preview/AIVisualVideoScroll" },
+            { id: "aivisuals-timeline.json", label: "Timeline", previewUrl: "/pattern-library/preview/AIVisualTimeline" },
+            { id: "aivisuals-made-by-team.json", label: "Made by Team", previewUrl: "/pattern-library/preview/AIVisualMadeByTeam" },
+            { id: "aivisuals-price-calculator.json", label: "Price Calculator", previewUrl: "/pattern-library/preview/AIVisualPriceCalculatorV2" },
+            { id: "aivisuals-faq.json", label: "FAQ", previewUrl: "/pattern-library/preview/SharedFAQ" },
+            { id: "aivisuals-cta.json", label: "Video CTA", previewUrl: "/pattern-library/preview/SharedVideoScrollingCTA" },
         ],
     },
     {
-        title: "Shared",
-        items: [
-            { id: "navigation", label: "Navigation", icon: Navigation },
-            { id: "footer", label: "Footer", icon: LayoutTemplate },
+        id: "centrogreen",
+        label: "CentroGreen",
+        icon: FileText,
+        pageUrl: "/works/centrogreen",
+        sections: [
+            { id: "case-studies/centrogreen-general.json", label: "General", previewUrl: "/pattern-library/preview/CaseStudyHeroVideo" },
+            { id: "case-studies/centrogreen-case-details.json", label: "Details", previewUrl: "/pattern-library/preview/CaseStudyDetails" },
+            { id: "case-studies/centrogreen-case-stats.json", label: "Stats", previewUrl: "/pattern-library/preview/SharedStatsBlock" },
+        ],
+    },
+    {
+        id: "folkeuniversitetet",
+        label: "Folkeuniversitetet",
+        icon: FileText,
+        pageUrl: "/works/folkeuniversitetet",
+        sections: [
+            { id: "case-studies/folkeuniversitetet-general.json", label: "General", previewUrl: "/pattern-library/preview/CaseStudyHeroVideo" },
+            { id: "case-studies/folkeuniversitetet-case-details.json", label: "Details", previewUrl: "/pattern-library/preview/CaseStudyDetails" },
+            { id: "case-studies/folkeuniversitetet-case-stats.json", label: "Stats", previewUrl: "/pattern-library/preview/SharedStatsBlock" },
+        ],
+    },
+    {
+        id: "theytalk",
+        label: "TheyTalk",
+        icon: FileText,
+        pageUrl: "/works/theytalk",
+        sections: [
+            { id: "case-studies/theytalk-general.json", label: "General", previewUrl: "/pattern-library/preview/CaseStudyHeroVideo" },
+            { id: "case-studies/theytalk-case-details.json", label: "Details", previewUrl: "/pattern-library/preview/CaseStudyDetails" },
+            { id: "case-studies/theytalk-case-stats.json", label: "Stats", previewUrl: "/pattern-library/preview/SharedStatsBlock" },
+        ],
+    },
+    {
+        id: "seo",
+        label: "SEO Settings",
+        icon: Search,
+        sections: [
+            { id: "seo/seo-home.json", label: "Home", previewUrl: "/" },
+            { id: "seo/seo-about.json", label: "About", previewUrl: "/about" },
+            { id: "seo/seo-aivisuals.json", label: "Services", previewUrl: "/service/ai-visual-content" },
+            { id: "seo/seo-works.json", label: "Works", previewUrl: "/works" },
+            { id: "seo/seo-contact.json", label: "Contact", previewUrl: "/contact" },
+            { id: "seo/seo-privacy-policy.json", label: "Privacy Policy", previewUrl: "/privacy-policy" },
+            { id: "seo/seo-centrogreen.json", label: "CentroGreen", previewUrl: "/works/centrogreen" },
+            { id: "seo/seo-folkeuniversitetet.json", label: "Folkeuniversitetet", previewUrl: "/works/folkeuniversitetet" },
+            { id: "seo/seo-theytalk.json", label: "TheyTalk", previewUrl: "/works/theytalk" },
+        ],
+    },
+    {
+        id: "navigation",
+        label: "Navigation",
+        icon: Navigation,
+        sections: [
+            { id: "navigation.json", label: "Navigation", previewUrl: "/" },
+        ],
+    },
+    {
+        id: "footer",
+        label: "Footer",
+        icon: LayoutTemplate,
+        sections: [
+            { id: "footer.json", label: "Footer", previewUrl: "/" },
         ],
     },
 ];
 
-/* ─── Block preview map ──────────────────────────────────────────── */
+/* ─── Convert to tree ────────────────────────────────────────────── */
 
-const BLOCK_PREVIEW_MAP: Record<string, string> = {
-    "home-hero.json": "/pattern-library/preview/SharedServicesHero",
-    "home-services.json": "/pattern-library/preview/HomeWhereWeCanHelp",
-    "home-quote.json": "/pattern-library/preview/SharedCenteredQuote",
-    "home-partner.json": "/pattern-library/preview/HomePartnerStatement",
-    "home-clients.json": "/pattern-library/preview/SharedClientLogos",
-    "home-stats.json": "/pattern-library/preview/SharedStatsBlock",
-    "home-testimonials.json": "/pattern-library/preview/SharedTestimonials",
-    "home-faq.json": "/pattern-library/preview/SharedFAQ",
-    "about": "/pattern-library/preview/AboutPlaneHero",
-    "about-capabilities.json": "/pattern-library/preview/AboutServicesList",
-    "locations": "/pattern-library/preview/AboutLocationsMap",
-    "services": "/pattern-library/preview/AboutServicesList",
-    "clients": "/pattern-library/preview/SharedClientLogos",
-    "team": "/pattern-library/preview/AboutTeamAccordion",
-    "works": "/works",
-    "works-content": "/works",
-    "aivisuals.json": "/pattern-library/preview/AIVisualHeaderZoom",
-    "aivisuals-what-we-offer.json": "/service/ai-visual-content",
-    "aivisuals-video-scroll.json": "/pattern-library/preview/AIVisualVideoScroll",
-    "aivisuals-timeline.json": "/pattern-library/preview/AIVisualTimeline",
-    "aivisuals-price-calculator.json": "/pattern-library/preview/AIVisualPriceCalculatorV2",
-    "aivisuals-made-by-team.json": "/pattern-library/preview/AIVisualMadeByTeam",
-    "aivisuals-faq.json": "/pattern-library/preview/SharedFAQ",
-    "aivisuals-cta.json": "/pattern-library/preview/SharedVideoScrollingCTA",
-    "case-studies/centrogreen-general.json": "/pattern-library/preview/CaseStudyHeroVideo",
-    "case-studies/centrogreen-case-details.json": "/pattern-library/preview/CaseStudyDetails",
-    "case-studies/centrogreen-case-stats.json": "/pattern-library/preview/SharedStatsBlock",
-    "case-studies/folkeuniversitetet-general.json": "/pattern-library/preview/CaseStudyHeroVideo",
-    "case-studies/folkeuniversitetet-case-details.json": "/pattern-library/preview/CaseStudyDetails",
-    "case-studies/folkeuniversitetet-case-stats.json": "/pattern-library/preview/SharedStatsBlock",
-    "case-studies/theytalk-general.json": "/pattern-library/preview/CaseStudyHeroVideo",
-    "case-studies/theytalk-case-details.json": "/pattern-library/preview/CaseStudyDetails",
-    "case-studies/theytalk-case-stats.json": "/pattern-library/preview/SharedStatsBlock",
-    "seo/seo-home.json": "/",
-    "seo/seo-about.json": "/about",
-    "seo/seo-aivisuals.json": "/service/ai-visual-content",
-    "seo/seo-works.json": "/works",
-    "seo/seo-contact.json": "/",
-    "seo/seo-privacy-policy.json": "/privacy-policy",
-    "seo/seo-centrogreen.json": "/works/centrogreen",
-    "seo/seo-folkeuniversitetet.json": "/works/folkeuniversitetet",
-    "seo/seo-theytalk.json": "/works/theytalk",
-    "navigation": "/",
-    "footer": "/",
-};
+const CMS_TREE: TreeGroup[] = [
+    {
+        title: "Pages",
+        items: PAGES.filter((p) => ["home", "about", "works"].includes(p.id)).map((p) => ({
+            id: p.id,
+            label: p.label,
+            icon: p.icon,
+        })),
+    },
+    {
+        title: "Services",
+        items: PAGES.filter((p) => p.id === "ai-visuals").map((p) => ({
+            id: p.id,
+            label: p.label,
+            icon: p.icon,
+        })),
+    },
+    {
+        title: "Case Studies",
+        items: PAGES.filter((p) => ["centrogreen", "folkeuniversitetet", "theytalk"].includes(p.id)).map((p) => ({
+            id: p.id,
+            label: p.label,
+            icon: p.icon,
+        })),
+    },
+    {
+        title: "Settings",
+        items: PAGES.filter((p) => ["seo", "navigation", "footer"].includes(p.id)).map((p) => ({
+            id: p.id,
+            label: p.label,
+            icon: p.icon,
+        })),
+    },
+];
 
-function getBlockPreviewUrl(tab: string): string {
-    return BLOCK_PREVIEW_MAP[tab] || "/";
+/* ─── Section Panel (two-column: editor | preview) ───────────────── */
+
+function SectionPanel({
+    section,
+    data,
+    onDataChange,
+    onSave,
+    saving,
+    isActive,
+    onActivate,
+}: {
+    section: SectionDef;
+    data: any;
+    onDataChange: (newData: any) => void;
+    onSave: () => void;
+    saving: boolean;
+    isActive: boolean;
+    onActivate: () => void;
+}) {
+    const [expanded, setExpanded] = useState(false);
+    const sectionRef = useRef<HTMLDivElement>(null);
+
+    const handleToggle = () => {
+        const willExpand = !expanded;
+        setExpanded(willExpand);
+        if (willExpand) {
+            onActivate();
+            // Scroll into view when expanding
+            setTimeout(() => {
+                sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }, 50);
+        }
+    };
+
+    return (
+        <div
+            ref={sectionRef}
+            className={`border rounded-xl overflow-hidden transition-all ${isActive
+                    ? "border-black/20 shadow-sm"
+                    : "border-gray-200 hover:border-gray-300"
+                }`}
+        >
+            {/* Section header */}
+            <button
+                type="button"
+                onClick={handleToggle}
+                className={`w-full flex items-center gap-3 px-5 py-3.5 text-left transition-colors ${expanded
+                        ? "bg-gray-50 border-b border-gray-200"
+                        : "bg-white hover:bg-gray-50/50"
+                    }`}
+            >
+                <span className="text-gray-400 transition-transform">
+                    {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                </span>
+                <span className="font-heading text-sm font-bold text-gray-800 uppercase tracking-wide flex-1">
+                    {section.label}
+                </span>
+                {expanded && (
+                    <button
+                        type="button"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onSave();
+                        }}
+                        disabled={saving}
+                        className="flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-white bg-black rounded-lg
+                                   hover:bg-gray-800 disabled:bg-gray-300 transition-colors"
+                    >
+                        {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
+                        {saving ? "Saving…" : "Save"}
+                    </button>
+                )}
+            </button>
+
+            {/* Section body: two-column */}
+            {expanded && data !== undefined && (
+                <div className="grid grid-cols-1 xl:grid-cols-2 divide-y xl:divide-y-0 xl:divide-x divide-gray-200 min-h-[300px]">
+                    {/* Left column: Editor */}
+                    <div className="p-4 overflow-y-auto max-h-[70vh]">
+                        <SectionEditor
+                            data={data}
+                            onChange={onDataChange}
+                            sectionId={section.id}
+                        />
+                    </div>
+
+                    {/* Right column: Preview */}
+                    <div className="bg-gray-50 relative min-h-[300px]">
+                        {section.previewUrl ? (
+                            <iframe
+                                src={section.previewUrl}
+                                className="w-full h-full min-h-[300px] border-none"
+                                title={`Preview: ${section.label}`}
+                            />
+                        ) : (
+                            <div className="flex items-center justify-center h-full text-gray-400 font-text text-sm">
+                                No preview available
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {/* Loading placeholder */}
+            {expanded && data === undefined && (
+                <div className="flex items-center justify-center py-12">
+                    <Loader2 size={20} className="animate-spin text-gray-300" />
+                </div>
+            )}
+        </div>
+    );
 }
 
 /* ─── Admin V2 Page ──────────────────────────────────────────────── */
@@ -205,10 +316,12 @@ export function AdminV2Page() {
     const searchParams = useSearchParams();
     const pathname = usePathname();
 
-    const initialTab = searchParams.get("tab") || "home-hero.json";
-    const [activeTab, setActiveTab] = useState(initialTab);
-    const [currentData, setCurrentData] = useState<any>(null);
+    const initialPage = searchParams.get("page") || "home";
+    const [activePage, setActivePage] = useState(initialPage);
+    const [activeSection, setActiveSection] = useState<string | null>(null);
+    const [sectionsData, setSectionsData] = useState<Record<string, any>>({});
     const [loading, setLoading] = useState(false);
+    const [savingSection, setSavingSection] = useState<string | null>(null);
 
     const [toast, setToast] = useState<{ message: string; type: ToastType; visible: boolean }>({
         message: "",
@@ -216,52 +329,85 @@ export function AdminV2Page() {
         visible: false,
     });
 
-    const handleTabChange = useCallback(
-        (tab: string) => {
-            setActiveTab(tab);
+    // Get current page definition
+    const currentPage = PAGES.find((p) => p.id === activePage) || PAGES[0];
+
+    // Handle page selection from sidebar
+    const handlePageChange = useCallback(
+        (pageId: string) => {
+            setActivePage(pageId);
+            setActiveSection(null);
+            setSectionsData({});
             const params = new URLSearchParams(searchParams.toString());
-            params.set("tab", tab);
+            params.set("page", pageId);
             window.history.replaceState(null, "", `${pathname}?${params.toString()}`);
         },
         [searchParams, pathname]
     );
 
-    const getFilename = (tab: string) => (tab.endsWith(".json") ? tab : `${tab}.json`);
-
+    // Load all sections for the current page
     useEffect(() => {
-        const loadTabContent = async () => {
+        const loadAllSections = async () => {
             setLoading(true);
-            setCurrentData(null);
+            const results: Record<string, any> = {};
+            const page = PAGES.find((p) => p.id === activePage);
+            if (!page) return;
+
+            await Promise.all(
+                page.sections.map(async (section) => {
+                    try {
+                        const data = await readContent(section.id);
+                        results[section.id] = data;
+                    } catch (error) {
+                        console.error(`Failed to load ${section.id}:`, error);
+                        results[section.id] = null;
+                    }
+                })
+            );
+
+            setSectionsData(results);
+            setLoading(false);
+        };
+
+        loadAllSections();
+    }, [activePage]);
+
+    // Update section data in local state
+    const handleSectionDataChange = useCallback((sectionId: string, newData: any) => {
+        setSectionsData((prev) => ({ ...prev, [sectionId]: newData }));
+    }, []);
+
+    // Save a single section
+    const handleSaveSection = useCallback(
+        async (sectionId: string) => {
+            setSavingSection(sectionId);
             try {
-                const filename = getFilename(activeTab);
-                const data = await readContent(filename);
-                setCurrentData(data);
+                const data = sectionsData[sectionId];
+                await updateContent(sectionId, data);
+                setToast({ message: `Saved ${sectionId}`, type: "success", visible: true });
             } catch (error) {
-                console.error(`Failed to load data for ${activeTab}`, error);
-                setCurrentData(null);
-                setToast({
-                    message: `Failed to load content for ${activeTab}`,
-                    type: "error",
-                    visible: true,
-                });
+                console.error(`Failed to save ${sectionId}:`, error);
+                setToast({ message: `Failed to save ${sectionId}`, type: "error", visible: true });
             } finally {
-                setLoading(false);
+                setSavingSection(null);
+            }
+        },
+        [sectionsData]
+    );
+
+    // Cmd+S to save active section
+    useEffect(() => {
+        const handler = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === "s") {
+                e.preventDefault();
+                if (activeSection) {
+                    handleSaveSection(activeSection);
+                }
             }
         };
-        loadTabContent();
-    }, [activeTab]);
-
-    const handleSave = async (data: any) => {
-        const filename = getFilename(activeTab);
-        try {
-            await updateContent(filename, data);
-            setToast({ message: "Successfully saved", type: "success", visible: true });
-            setCurrentData(data);
-        } catch (error) {
-            console.error("Failed to save", error);
-            setToast({ message: "Failed to save changes", type: "error", visible: true });
-        }
-    };
+        window.addEventListener("keydown", handler);
+        return () => window.removeEventListener("keydown", handler);
+    }, [activeSection, handleSaveSection]);
 
     return (
         <>
@@ -274,36 +420,61 @@ export function AdminV2Page() {
 
             <AdminLayout
                 treeGroups={CMS_TREE}
-                activeTreeId={activeTab}
-                onTreeSelect={handleTabChange}
+                activeTreeId={activePage}
+                onTreeSelect={handlePageChange}
             >
-                <div className="flex-1 overflow-hidden relative h-full flex flex-col">
+                <div className="flex-1 h-full flex flex-col min-h-0">
+                    {/* Page header */}
+                    <div className="flex items-center gap-4 mb-6 shrink-0">
+                        <h1 className="font-heading text-2xl font-bold text-black">
+                            {currentPage.label}
+                        </h1>
+                        {currentPage.pageUrl && (
+                            <a
+                                href={currentPage.pageUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-text text-xs text-gray-400 hover:text-brand transition-colors underline underline-offset-2"
+                            >
+                                View live page →
+                            </a>
+                        )}
+                        <span className="ml-auto font-text text-xs text-gray-400">
+                            {currentPage.sections.length} sections
+                        </span>
+                    </div>
+
+                    {/* Sections list */}
                     {loading ? (
-                        <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-10">
-                            <div className="animate-pulse text-gray-400">Loading...</div>
+                        <div className="flex items-center justify-center py-20">
+                            <Loader2 size={24} className="animate-spin text-gray-300" />
                         </div>
                     ) : (
-                        <div className="flex-1 h-full w-full">
-                            <FormEditor
-                                key={activeTab}
-                                filename={getFilename(activeTab)}
-                                title={
-                                    activeTab
-                                        .split("/")
-                                        .pop()
-                                        ?.replace(".json", "")
-                                        .replace("-", " ") || activeTab
-                                }
-                                liveUrl={getBlockPreviewUrl(activeTab)}
-                                initialData={currentData || {}}
-                                isEditable={!["navigation", "footer"].includes(activeTab)}
-                                onSave={async (_, data) => {
-                                    handleSave(data);
-                                }}
-                            />
+                        <div className="flex-1 overflow-y-auto pr-2 space-y-3 custom-scrollbar">
+                            {currentPage.sections.map((section) => (
+                                <SectionPanel
+                                    key={section.id}
+                                    section={section}
+                                    data={sectionsData[section.id]}
+                                    onDataChange={(newData) =>
+                                        handleSectionDataChange(section.id, newData)
+                                    }
+                                    onSave={() => handleSaveSection(section.id)}
+                                    saving={savingSection === section.id}
+                                    isActive={activeSection === section.id}
+                                    onActivate={() => setActiveSection(section.id)}
+                                />
+                            ))}
                         </div>
                     )}
                 </div>
+
+                <style jsx global>{`
+                    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+                    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+                    .custom-scrollbar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 3px; }
+                    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
+                `}</style>
             </AdminLayout>
         </>
     );

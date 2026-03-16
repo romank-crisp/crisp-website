@@ -40,8 +40,7 @@ export function CaseStudyTextReveal({ text, className }: TextRevealProps) {
     return (
         <div
             ref={containerRef}
-            className={`py-16 px-16 md:px-64 ${className || ''}`}
-            style={{ maxWidth: "65vw" }}
+            className={`py-16 px-16 md:px-64 max-w-full md:max-w-[65vw] ${className || ''}`}
         >
             {tokens.map((token, tIndex) => {
                 let tokenClass = "reveal-word";

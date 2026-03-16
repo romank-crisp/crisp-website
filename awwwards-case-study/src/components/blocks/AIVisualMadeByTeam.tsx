@@ -131,7 +131,7 @@ export const AIVisualMadeByTeam = ({ data }: Props) => {
             <div className="w-full overflow-x-auto md:overflow-visible select-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                 <div
                     ref={sliderRef}
-                    className="flex gap-[12px] md:gap-[24px] w-max group hover:cursor-grab active:cursor-grabbing px-6 md:px-0 pb-12 md:pb-0"
+                    className="flex gap-[16px] md:gap-[24px] w-max group hover:cursor-grab active:cursor-grabbing px-6 md:px-0 pb-16 md:pb-0"
                     onMouseEnter={(e) => {
                         if (tweenRef.current) {
                             const x = e.clientX;
@@ -182,11 +182,11 @@ export const AIVisualMadeByTeam = ({ data }: Props) => {
                                     className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                                     sizes="(max-width: 768px) 320px, 420px"
                                 />
-                                {/* Dark gradient overlay on hover so text is readable */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                {/* Dark gradient overlay — always visible on mobile, hover on desktop */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500" />
 
-                                {/* Info panel inside the image - visible on hover */}
-                                <div className="absolute inset-x-0 bottom-0 pl-[64px] pb-[64px] pr-8 pt-8 flex flex-col items-start text-left opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out">
+                                {/* Info panel — always visible on mobile, hover on desktop */}
+                                <div className="absolute inset-x-0 bottom-0 pl-[32px] md:pl-[64px] pb-[32px] md:pb-[64px] pr-8 pt-8 flex flex-col items-start text-left opacity-100 translate-y-0 md:opacity-0 md:translate-y-4 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all duration-500 ease-out">
                                     <h3 className="font-heading text-h3 text-white mb-1">{member.name}</h3>
                                     {member.position && (
                                         <span className="font-text text-text-sm text-white/90 block truncate">{member.position}</span>
@@ -201,7 +201,7 @@ export const AIVisualMadeByTeam = ({ data }: Props) => {
             {/* Content & List */}
             <div className="max-w-[1475px] w-full px-6 md:px-16 py-[128px] grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
                 <div className="lg:col-span-7">
-                    <h4 className="font-heading text-sm font-bold uppercase tracking-wider mb-[64px] opacity-40">
+                    <h4 className="font-heading text-sm font-bold uppercase tracking-wider mb-[32px] md:mb-[64px] opacity-40">
                         {leftColHeader}
                     </h4>
                     <CaseStudyTextReveal
@@ -210,7 +210,7 @@ export const AIVisualMadeByTeam = ({ data }: Props) => {
                     />
                 </div>
                 <div className="lg:col-span-4 lg:col-start-9 flex flex-col justify-center">
-                    <h4 className="font-heading text-sm font-bold uppercase tracking-wider mb-[64px] opacity-40">
+                    <h4 className="font-heading text-sm font-bold uppercase tracking-wider mb-[32px] md:mb-[64px] opacity-40">
                         {rightColHeader}
                     </h4>
                     <ul className="flex flex-col gap-6 text-text mt-[6px]">

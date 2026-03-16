@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -18,6 +18,7 @@ export interface VideoScrollOverlay {
 export interface VideoScrollData {
     sectionTitle?: string;
     videoSrc: string;
+    videoMobileSrc?: string;
     overlays: VideoScrollOverlay[];
 }
 
@@ -32,6 +33,19 @@ export function AIVisualVideoScroll({ data }: Props) {
     const videoWrapperRef = useRef<HTMLDivElement>(null);
     const headerRef = useRef<HTMLHeadingElement>(null);
     const overlayRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const check = () => setIsMobile(window.innerWidth < 768);
+        check();
+        window.addEventListener("resize", check);
+        return () => window.removeEventListener("resize", check);
+    }, []);
+
+    const videoSrc = isMobile && data.videoMobileSrc
+        ? getAssetUrl(data.videoMobileSrc)
+        : getAssetUrl(data.videoSrc);
 
     useGSAP(() => {
         const video = videoRef.current;
@@ -53,7 +67,7 @@ export function AIVisualVideoScroll({ data }: Props) {
                     timeoutId = setTimeout(setupAnimation, 100);
                     return;
                 }
-                duration = 8; // Fail-safe fallback to ensure text and zoom interactions still render
+                duration = 8; // Fail-safe fallback
             }
 
             // ─── Master timeline pinned to the scroll section ───
@@ -67,73 +81,81 @@ export function AIVisualVideoScroll({ data }: Props) {
                 },
             });
 
-            // 1) Scrub video from 0 → full duration (1 timeline unit)
+            // 1) Scrub video from 0 → full duration
             master.to(video, {
                 currentTime: duration,
                 ease: "none",
                 duration: 1,
             }, 0);
 
-            // 2) Zoom: video wrapper goes from max-width contained → 100vw
-            master.fromTo(wrapper, {
-                maxWidth: "80vw",
-                borderRadius: "16px",
-            }, {
-                maxWidth: "100vw",
-                borderRadius: "0px",
-                ease: "power2.inOut",
-                duration: 0.3, // first 30% of timeline
-            }, 0);
+            // 2) Zoom: video wrapper goes from contained → full viewport (desktop only)
+            if (!isMobile) {
+                master.fromTo(wrapper, {
+                    width: "100%",
+                    maxWidth: "1475px",
+                    borderRadius: "16px",
+                    margin: "0 auto",
+                }, {
+                    width: "100vw",
+                    maxWidth: "100vw",
+                    borderRadius: "0px",
+                    margin: "0",
+                    ease: "power2.inOut",
+                    duration: 0.3,
+                }, 0);
+            }
 
-            // 3) Text overlays — show at specific video timestamps
-            //    Each phrase scrolls upward continuously
-            //    Positioned: left (cols 2-5), right (cols 8-11), left (cols 2-5)
+            // 3) Text overlays — all travel from 90vh, different destinations
+            const lastIdx = data.overlays.length - 1;
+
             data.overlays.forEach((overlay, i) => {
                 const el = overlayRefs.current[i];
                 if (!el) return;
 
-                // Ensure overlays start AFTER zoom completes (0.3)
-                const rawFraction = overlay.timeSec / duration;
-                const fraction = Math.max(rawFraction, 0.35);
+                const isLast = i === lastIdx;
+                const startFraction = 0.2 + (i * 0.25);
+                const travelDuration = 0.25;
 
-                const fadeIn = Math.min(0.28 / duration, fraction - 0.3);
-                const fadeOut = 0.28 / duration;
+                // Destination: desktop 1st/2nd=50vh, desktop 3rd=60vh, mobile=70vh
+                let destination: string;
+                if (isMobile) {
+                    destination = "70vh";
+                } else {
+                    destination = isLast ? "60vh" : "50vh";
+                }
 
-                const maxVisibleDuration = 1.0 - fraction - fadeOut;
-                const visibleDuration = Math.min(1.2 / duration, Math.max(0, maxVisibleDuration));
+                gsap.set(el, { top: "90vh", opacity: 0 });
 
-                const totalDur = fadeIn + visibleDuration + fadeOut;
-
-                // Continuous upward scroll — 20% less travel (240px instead of 300px)
-                master.fromTo(el, {
-                    y: 240,
-                    opacity: 0,
-                }, {
-                    y: -240,
-                    opacity: 1,
-                    ease: "none",
-                    duration: totalDur,
-                }, fraction - fadeIn);
-
-                // Opacity: fade in
-                master.fromTo(el, {
-                    opacity: 0,
-                }, {
+                // Fade in
+                master.to(el, {
                     opacity: 1,
                     ease: "power2.out",
-                    duration: fadeIn,
-                }, fraction - fadeIn);
+                    duration: 0.08,
+                }, startFraction);
 
-                // Opacity: fade out
-                master.to(el, {
-                    opacity: 0,
-                    ease: "power2.in",
-                    duration: fadeOut,
-                }, fraction + visibleDuration);
+                // Travel up
+                master.fromTo(el, {
+                    top: "90vh",
+                }, {
+                    top: destination,
+                    ease: "power3.out",
+                    duration: travelDuration,
+                }, startFraction);
+
+                if (isLast) {
+                    // Lock in place (no fade out)
+                } else {
+                    // Fade out before next appears
+                    const fadeOutStart = startFraction + travelDuration + 0.05;
+                    master.to(el, {
+                        opacity: 0,
+                        ease: "power2.in",
+                        duration: 0.08,
+                    }, fadeOutStart);
+                }
             });
 
-            // 4) Header title — always visible by default.
-            //    After zoom completes (0.3), scroll it up & fade out.
+            // 4) Header title
             if (headerRef.current) {
                 gsap.set(headerRef.current, { opacity: 1, y: 0 });
                 master.to(headerRef.current, {
@@ -164,7 +186,7 @@ export function AIVisualVideoScroll({ data }: Props) {
             clearTimeout(timeoutId);
             video.removeEventListener("loadedmetadata", setupAnimation);
         };
-    }, { scope: containerRef });
+    }, { scope: containerRef, dependencies: [isMobile] });
 
 
     return (
@@ -177,19 +199,22 @@ export function AIVisualVideoScroll({ data }: Props) {
                 ref={stickyRef}
                 className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden"
             >
-                {/* Video wrapper — starts constrained, zooms to full viewport */}
+                {/* Video wrapper */}
                 <div
                     ref={videoWrapperRef}
-                    className="relative w-full overflow-hidden will-change-transform"
+                    className="relative overflow-hidden will-change-transform"
                     style={{
-                        maxWidth: "80vw",
-                        borderRadius: "16px",
-                        aspectRatio: "16/9",
+                        width: isMobile ? "calc(100% - 48px)" : "100%",
+                        maxWidth: isMobile ? undefined : "1475px",
+                        borderRadius: isMobile ? "12px" : "16px",
+                        aspectRatio: isMobile ? undefined : "16/9",
+                        height: isMobile ? "100vh" : undefined,
+                        margin: "0 auto",
                     }}
                 >
                     <video
                         ref={videoRef}
-                        src={getAssetUrl(data.videoSrc)}
+                        src={videoSrc}
                         crossOrigin="anonymous"
                         className="absolute inset-0 w-full h-full object-cover"
                         muted
@@ -197,16 +222,18 @@ export function AIVisualVideoScroll({ data }: Props) {
                         preload="auto"
                     />
 
-                    {/* Slight vignette overlay for text readability */}
+                    {/* Vignette overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/30 pointer-events-none" />
 
-                    {/* Text overlays — positioned on 12-col grid: left/right/left */}
+                    {/* Text overlays */}
                     {data.overlays.map((overlay, i) => {
-                        // Alternating: 0=left(cols 2-5), 1=right(cols 8-11), 2=left(cols 2-5)
                         const isRight = i % 2 === 1;
-                        const posClass = isRight
-                            ? "right-0 pr-[8.33%] pl-[66.67%]"   // cols 8-11
-                            : "left-0 pl-[8.33%] pr-[66.67%]"; // cols 2-5
+                        // Mobile: full-width single-column; Desktop: alternating left/right
+                        const posClass = isMobile
+                            ? "inset-x-0 px-6"
+                            : isRight
+                                ? "right-0 pr-[8.33%] pl-[66.67%]"
+                                : "left-0 pl-[8.33%] pr-[66.67%]";
 
                         return (
                             <div
@@ -215,7 +242,7 @@ export function AIVisualVideoScroll({ data }: Props) {
                                 className={`absolute inset-y-0 flex items-center pointer-events-none ${posClass}`}
                                 style={{ opacity: 0 }}
                             >
-                                <p className="font-text text-text-lg text-white drop-shadow-lg leading-relaxed text-left">
+                                <p className="font-text text-text-sm md:text-text-lg text-white drop-shadow-lg leading-relaxed text-left">
                                     {overlay.text}
                                 </p>
                             </div>
@@ -223,11 +250,11 @@ export function AIVisualVideoScroll({ data }: Props) {
                     })}
                 </div>
 
-                {/* Section title — rendered ABOVE the video wrapper, always visible by default */}
+                {/* Section title */}
                 {data.sectionTitle && (
                     <h1
                         ref={headerRef}
-                        className="absolute inset-0 flex items-center justify-center font-heading text-h1 text-white text-center z-20 pointer-events-none drop-shadow-lg"
+                        className="absolute inset-0 flex items-center justify-center font-heading text-h2 md:text-h1 text-white text-center z-20 pointer-events-none drop-shadow-lg"
                     >
                         <span className="max-w-[800px] px-8">{data.sectionTitle}</span>
                     </h1>

@@ -115,7 +115,7 @@ function WhatWeOfferCardItem({ card, index }: { card: WhatWeOfferCard; index: nu
 
     const text = (
         <div className="flex flex-col justify-center gap-16">
-            <h3 className="font-heading text-h1 text-brand">
+            <h3 className="font-heading text-h2 md:text-h1 text-brand">
                 {card.title}
             </h3>
             <p className="font-text text-text-md text-text/70">
@@ -127,7 +127,7 @@ function WhatWeOfferCardItem({ card, index }: { card: WhatWeOfferCard; index: nu
     return (
         <div
             ref={cardRef}
-            className="grid grid-cols-1 md:grid-cols-11 items-center"
+            className="grid grid-cols-1 md:grid-cols-11 items-center gap-24 md:gap-0"
         >
             {isMediaLeft ? (
                 <>

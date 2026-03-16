@@ -90,7 +90,7 @@ function ArrayItem({
     onRemove: () => void;
     parentPath: string;
 }) {
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(true);
     const isObject = typeof value === "object" && value !== null && !Array.isArray(value);
 
     return (
@@ -272,7 +272,7 @@ function ObjectFields({
                 // Nested object
                 if (typeof value === "object" && value !== null && !Array.isArray(value)) {
                     return (
-                        <CollapsibleSection key={key} label={humanLabel(key)} defaultOpen={true}>
+                        <CollapsibleSection key={key} label={humanLabel(key)} defaultOpen={false}>
                             <ObjectFields
                                 data={value}
                                 onChange={(newVal) => handleFieldChange(key, newVal)}
@@ -365,7 +365,7 @@ function ArrayField({
     return (
         <CollapsibleSection
             label={`${humanLabel(fieldKey)} (${value.length})`}
-            defaultOpen={value.length <= 5}
+            defaultOpen={false}
         >
             <div>
                 {value.map((item, i) => (
@@ -396,7 +396,7 @@ function ArrayField({
 
 function CollapsibleSection({
     label,
-    defaultOpen = true,
+    defaultOpen = false,
     children,
 }: {
     label: string;
@@ -606,6 +606,88 @@ export function FormEditor({
                 .custom-scrollbar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 3px; }
                 .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
             `}</style>
+        </div>
+    );
+}
+
+/* ─── SectionEditor: lightweight form for multi-section page view ── */
+
+interface SectionEditorProps {
+    data: any;
+    onChange: (newData: any) => void;
+    sectionId: string;
+}
+
+export function SectionEditor({ data, onChange, sectionId }: SectionEditorProps) {
+    const [mode, setMode] = useState<"form" | "json">("form");
+    const [jsonText, setJsonText] = useState("");
+    const [jsonError, setJsonError] = useState(false);
+
+    // Sync JSON text when switching to JSON mode
+    useEffect(() => {
+        if (mode === "json") {
+            setJsonText(JSON.stringify(data, null, 2));
+            setJsonError(false);
+        }
+    }, [mode]);
+
+    const handleJsonChange = (text: string) => {
+        setJsonText(text);
+        try {
+            const parsed = JSON.parse(text);
+            onChange(parsed);
+            setJsonError(false);
+        } catch {
+            setJsonError(true);
+        }
+    };
+
+    return (
+        <div className="space-y-3">
+            {/* Mode toggle */}
+            <div className="flex items-center gap-1 bg-gray-100 p-0.5 rounded-lg w-fit">
+                <button
+                    type="button"
+                    onClick={() => setMode("form")}
+                    className={`px-3 py-1 font-text text-xs font-medium rounded-md transition-colors ${mode === "form"
+                            ? "bg-white text-black shadow-sm"
+                            : "text-gray-500 hover:text-black"
+                        }`}
+                >
+                    Editor
+                </button>
+                <button
+                    type="button"
+                    onClick={() => setMode("json")}
+                    className={`px-3 py-1 font-text text-xs font-medium rounded-md transition-colors ${mode === "json"
+                            ? "bg-white text-black shadow-sm"
+                            : "text-gray-500 hover:text-black"
+                        }`}
+                >
+                    JSON
+                </button>
+            </div>
+
+            {/* Editor content */}
+            {mode === "form" ? (
+                <ObjectFields data={data} onChange={onChange} path={`section-${sectionId}`} />
+            ) : (
+                <div className="relative">
+                    <textarea
+                        value={jsonText}
+                        onChange={(e) => handleJsonChange(e.target.value)}
+                        className={`w-full min-h-[300px] font-mono text-sm p-4 bg-gray-50 rounded-xl border
+                                    focus:outline-none focus:ring-2 focus:ring-black/5 resize-y transition-all ${jsonError
+                                ? "border-red-300 focus:border-red-400"
+                                : "border-gray-200 focus:border-black/20"
+                            }`}
+                        spellCheck={false}
+                    />
+                    {jsonError && (
+                        <p className="text-red-500 text-xs mt-1 font-text">Invalid JSON</p>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

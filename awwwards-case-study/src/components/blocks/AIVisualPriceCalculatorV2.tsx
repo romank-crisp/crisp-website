@@ -244,7 +244,7 @@ function DeliverableCard({
             {/* Card — fills full height, enforced min-height */}
             <div
                 className={`
-                    relative w-full aspect-square h-[338px] rounded-[24px] overflow-hidden
+                    relative w-full aspect-square h-[180px] md:h-[338px] rounded-[16px] md:rounded-[24px] overflow-hidden
                     transition-all duration-500 ease-out
                     ${active
                         ? "border-2 border-brand/60 shadow-[0_0_30px_rgba(224,12,51,0.15)]"
@@ -441,23 +441,23 @@ export function AIVisualPriceCalculatorV2({ data }: AIVisualPriceCalculatorV2Pro
     return (
         <section
             ref={sectionRef}
-            className="w-full bg-text text-white overflow-hidden relative py-[120px] md:py-[160px]"
+            className="w-full bg-text text-white overflow-hidden relative pt-[120px] pb-[60px] md:py-[160px]"
         >
             <div className="w-full max-w-[1475px] mx-auto px-6 md:px-16">
 
                 {/* ── Title ── */}
-                <h2 className="calc-v2-reveal font-mega text-[80px] md:text-[120px] lg:text-[150px] uppercase text-white leading-[0.88] tracking-[4.5px] mb-[80px] md:mb-[100px]">
+                <h2 className="calc-v2-reveal font-mega text-mega-h2 uppercase text-white leading-[0.88] tracking-[4.5px] mb-[48px] md:mb-[100px]">
                     TRANSPARENT{" "}
                     <span className="text-white">Fair pricing</span>
                 </h2>
 
 
                 {/* ── Calculator Row: Counter + Deliverable Cards ── */}
-                <div className="calc-v2-reveal flex flex-col md:flex-row gap-4 md:gap-5 mb-[80px] md:mb-[100px]">
+                <div className="calc-v2-reveal flex flex-col md:flex-row gap-3 md:gap-5 mb-[48px] md:mb-[100px]">
 
-                    {/* Product Counter Card */}
-                    <div className="flex-shrink-0 w-full md:w-[280px] lg:w-[320px] flex flex-col">
-                        <div className="relative border border-white/10 rounded-[24px] h-[338px] flex flex-col items-center justify-center px-[32px]">
+                    {/* Product Counter Card — appears after deliverables on mobile */}
+                    <div className="flex-shrink-0 w-full md:w-[280px] lg:w-[320px] flex flex-col order-2 md:order-1">
+                        <div className="relative border border-white/10 rounded-[24px] h-[180px] md:h-[338px] flex flex-col items-center justify-center px-[32px]">
                             {/* Label inside card at top */}
                             <span className="absolute top-5 left-5 right-5 font-heading text-[11px] md:text-[13px] tracking-[2px] uppercase text-white/50 text-center">
                                 {config.productLabel}
@@ -467,7 +467,7 @@ export function AIVisualPriceCalculatorV2({ data }: AIVisualPriceCalculatorV2Pro
                             <button
                                 onClick={decrement}
                                 disabled={productCount <= minProducts}
-                                className="absolute left-[32px] top-1/2 -translate-y-1/2 w-[44px] h-[44px] flex items-center justify-center rounded-full text-white/40 hover:text-white hover:bg-white/10 transition-all duration-200 disabled:opacity-20 disabled:cursor-not-allowed"
+                                className="absolute left-[24px] md:left-[32px] top-1/2 -translate-y-1/2 w-[32px] h-[32px] md:w-[44px] md:h-[44px] flex items-center justify-center rounded-full text-white/40 hover:text-white hover:bg-white/10 transition-all duration-200 disabled:opacity-20 disabled:cursor-not-allowed"
                                 aria-label="Decrease product count"
                             >
                                 <svg width="20" height="2" viewBox="0 0 20 2" fill="none">
@@ -478,14 +478,14 @@ export function AIVisualPriceCalculatorV2({ data }: AIVisualPriceCalculatorV2Pro
                             {/* Animated Count */}
                             <AnimatedCount
                                 value={productCount}
-                                className="font-text text-[96px] md:text-[120px] font-normal text-white leading-none"
+                                className="font-text text-[64px] md:text-[120px] font-normal text-white leading-none"
                             />
 
                             {/* Plus */}
                             <button
                                 onClick={increment}
                                 disabled={productCount >= config.maxProducts}
-                                className="absolute right-[32px] top-1/2 -translate-y-1/2 w-[44px] h-[44px] flex items-center justify-center rounded-full text-brand hover:text-white hover:bg-white/10 transition-all duration-200 disabled:opacity-20 disabled:cursor-not-allowed"
+                                className="absolute right-[24px] md:right-[32px] top-1/2 -translate-y-1/2 w-[32px] h-[32px] md:w-[44px] md:h-[44px] flex items-center justify-center rounded-full text-brand hover:text-white hover:bg-white/10 transition-all duration-200 disabled:opacity-20 disabled:cursor-not-allowed"
                                 aria-label="Increase product count"
                             >
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -497,7 +497,7 @@ export function AIVisualPriceCalculatorV2({ data }: AIVisualPriceCalculatorV2Pro
                     </div>
 
                     {/* Deliverable Cards — same-height flex column */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 flex-1">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 flex-1 order-1 md:order-2">
                         {config.deliverables.map((deliverable) => (
                             <DeliverableCard
                                 key={deliverable.id}
@@ -511,10 +511,10 @@ export function AIVisualPriceCalculatorV2({ data }: AIVisualPriceCalculatorV2Pro
 
 
                 {/* ── Results Row ── */}
-                <div className="calc-v2-reveal flex flex-col md:flex-row items-start md:items-end justify-between gap-8 md:gap-12">
+                <div className="calc-v2-reveal flex flex-col md:flex-row items-start md:items-end justify-between gap-[32px] md:gap-12 pb-[16px] md:pb-0">
 
                     {/* Estimated delivery */}
-                    <div className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-1 md:gap-5">
                         <span className="font-heading text-[11px] md:text-[13px] tracking-[2px] uppercase text-white/50">
                             {config.estimatedCostLabel}
                         </span>
@@ -530,7 +530,7 @@ export function AIVisualPriceCalculatorV2({ data }: AIVisualPriceCalculatorV2Pro
                     </div>
 
                     {/* Assets delivered */}
-                    <div className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-1 md:gap-5">
                         <span className="font-heading text-[11px] md:text-[13px] tracking-[2px] uppercase text-white/50">
                             {config.assetsDeliveredLabel}
                         </span>
@@ -546,7 +546,7 @@ export function AIVisualPriceCalculatorV2({ data }: AIVisualPriceCalculatorV2Pro
                     </div>
 
                     {/* Total cost with discount */}
-                    <div className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-1 md:gap-5">
                         <span className="font-heading text-[11px] md:text-[13px] tracking-[2px] uppercase text-white/50">
                             {config.totalCostLabel}
                             {progressiveDiscount > 0 && hasAnyDeliverable && (

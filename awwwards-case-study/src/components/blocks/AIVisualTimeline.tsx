@@ -22,6 +22,15 @@ export function AIVisualTimeline({ data }: AIVisualTimelineProps) {
     const blocksRef = useRef<(HTMLDivElement | null)[]>([]);
     const contentsRef = useRef<(HTMLDivElement | null)[]>([]);
 
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const check = () => setIsMobile(window.innerWidth < 768);
+        check();
+        window.addEventListener("resize", check);
+        return () => window.removeEventListener("resize", check);
+    }, []);
+
     const [expandedSet, setExpandedSet] = useState<Set<number>>(
         () => new Set(data.steps?.map((_, i) => i) || [])
     );
@@ -57,35 +66,30 @@ export function AIVisualTimeline({ data }: AIVisualTimelineProps) {
         });
     }, []);
 
+    // Desktop only: scroll-activated accordion
     useEffect(() => {
+        if (isMobile) return;
         const stepCount = data?.steps?.length ?? 0;
         setExpandedSet(prev => {
             const next = new Set(prev);
-
-            // If activeIndex is within bounds, expand it
             if (activeIndex < stepCount && !next.has(activeIndex)) {
                 next.add(activeIndex);
                 expandPanel(activeIndex);
             }
-
-            // Collapse all steps before the active one
             for (let i = 0; i < activeIndex; i++) {
                 if (next.has(i)) {
                     next.delete(i);
                     collapsePanel(i);
                 }
             }
-
-            // If activeIndex is past the last step, we no longer collapse it
-            // per the requirement to let the last item stay open when scrolling past.
-
             return next;
         });
-    }, [activeIndex, collapsePanel, expandPanel, data?.steps?.length]);
+    }, [activeIndex, collapsePanel, expandPanel, data?.steps?.length, isMobile]);
 
+    // Desktop only: GSAP ScrollTriggers
     useGSAP(() => {
+        if (isMobile) return;
         if (!containerRef.current || !data?.steps?.length) return;
-        const lastIndex = data.steps.length - 1;
 
         blocksRef.current.forEach((block, index) => {
             if (!block) return;
@@ -98,20 +102,90 @@ export function AIVisualTimeline({ data }: AIVisualTimelineProps) {
             });
         });
 
-        // Refresh all ScrollTriggers after a frame so downstream
-        // components (calculator, team) recalculate their positions
         requestAnimationFrame(() => {
             ScrollTrigger.refresh();
         });
-    }, { scope: containerRef, dependencies: [data] });
+    }, { scope: containerRef, dependencies: [data, isMobile] });
 
     if (!data?.steps?.length) return null;
 
+    // ── Mobile: simple static accordion (no GSAP, no sticky, no spacers) ──
+    if (isMobile) {
+        return (
+            <section className="w-full bg-white pt-[160px] pb-0">
+                <div className="max-w-[1475px] mx-auto px-6">
+                    <h2
+                        className="font-mega text-mega-h2 uppercase text-text max-w-[900px] mb-24"
+                        dangerouslySetInnerHTML={{ __html: data.sectionTitle }}
+                    />
+
+                    <div className="flex flex-col border-t border-gray-200">
+                        {data.steps.map((step, i) => {
+                            const isExpanded = expandedSet.has(i);
+                            return (
+                                <div
+                                    key={step.id}
+                                    className="border-b border-gray-200 last:border-b-0 cursor-pointer"
+                                    onClick={() => {
+                                        setExpandedSet(prev => {
+                                            const next = new Set(prev);
+                                            if (next.has(i)) {
+                                                next.delete(i);
+                                            } else {
+                                                next.add(i);
+                                            }
+                                            return next;
+                                        });
+                                    }}
+                                >
+                                    <div className="py-[32px] flex flex-col gap-2">
+                                        <span className="font-heading font-bold text-h3 text-brand whitespace-nowrap">
+                                            {step.day}
+                                        </span>
+                                        <h3 className="font-heading text-h3 text-text">
+                                            {step.title}
+                                        </h3>
+
+                                        {/* Collapsible body — pure CSS transition on mobile */}
+                                        <div
+                                            className="overflow-hidden transition-all duration-500"
+                                            style={{
+                                                maxHeight: isExpanded ? "500px" : "0px",
+                                                opacity: isExpanded ? 1 : 0,
+                                            }}
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            <div className="pt-[24px] pb-4">
+                                                <ul className="space-y-4 w-full">
+                                                    {(step.list || [step.description]).map((listItem, listIndex) => (
+                                                        <li key={listIndex} className="flex items-start gap-4 w-full">
+                                                            <div className="shrink-0 mt-[9px]">
+                                                                <ArrowRight className="w-5 h-5 text-brand" />
+                                                            </div>
+                                                            <p className="font-text text-text-sm text-text/70 leading-relaxed text-left m-0 flex-1">
+                                                                <TextFormatter text={listItem} />
+                                                            </p>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+    // ── Desktop: full GSAP sticky + scroll-activated timeline ──
     return (
         <section ref={containerRef} className="w-full bg-white pt-[160px] pb-0">
             <div className="max-w-[1475px] mx-auto px-6 md:px-16">
 
-                {/* Sticky Title — pins at 10vh and gets covered by the accordion */}
+                {/* Sticky Title */}
                 <h2
                     className="sticky top-[10vh] z-0 font-mega text-mega-h2 uppercase text-text max-w-[900px] pl-[5px] mb-24 md:mb-48 bg-white"
                     dangerouslySetInnerHTML={{ __html: data.sectionTitle }}
@@ -119,7 +193,7 @@ export function AIVisualTimeline({ data }: AIVisualTimelineProps) {
 
                 <div className="relative">
 
-                    {/* Sticky Accordion — pins directly over the title at 10vh */}
+                    {/* Sticky Accordion */}
                     <div className="sticky top-[10vh] z-10 bg-white w-full">
                         <div className="flex flex-col border-t justify-start border-gray-200 bg-white pt-4">
                             {data.steps.map((step, i) => (
@@ -186,10 +260,8 @@ export function AIVisualTimeline({ data }: AIVisualTimelineProps) {
                         </div>
                     </div>
 
-                    {/* Invisible spacers — these set the height of the outer `relative` div
-                        so the sticky accordion has room to scroll within it */}
+                    {/* Invisible spacers */}
                     <div className="absolute inset-0 pointer-events-none flex flex-col">
-                        {/* Top guard — push spacers down past the title */}
                         <div className="shrink-0" style={{ height: "0px" }} />
                         {data.steps.map((_, i) => (
                             <div
@@ -201,7 +273,7 @@ export function AIVisualTimeline({ data }: AIVisualTimelineProps) {
                         ))}
                     </div>
 
-                    {/* Height setter — the total height this section needs to scroll */}
+                    {/* Height setter */}
                     <div style={{ height: `${data.steps.length * 90}vh` }} />
 
                 </div>
@@ -210,5 +282,3 @@ export function AIVisualTimeline({ data }: AIVisualTimelineProps) {
         </section>
     );
 }
-
-
