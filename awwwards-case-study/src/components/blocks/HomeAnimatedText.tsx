@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState, useCallback } from "react";
+import { getAssetUrl } from "@/lib/utils";
 
 const WORDS = ["DREAM", "PLAN", "CREATE"];
 let BRAND_COLOR = "rgb(224, 12, 51)"; // will be overridden from CSS var
@@ -149,7 +150,7 @@ export function HomeAnimatedText() {
             {/* Background Video */}
             <video
                 ref={videoRef}
-                src="/img/home-hero/home-hero-06.webm"
+                src={getAssetUrl("/img/home-hero/home-hero-06.webm")}
                 autoPlay
                 loop
                 muted

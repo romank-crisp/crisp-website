@@ -5,20 +5,11 @@ import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ServicesData } from "@/content/services";
+import { ServicesData, CloudImage } from "@/content/services";
 import { getAssetUrl } from "@/lib/utils";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export interface AIVisualHeaderZoomProps {
     data?: ServicesData["hero"];
-}
-
-interface CloudImage {
-    src: string;
-    videoSrc?: string;
-    gridClass: string;
-    isCenter?: boolean;
 }
 
 const cloudImages: CloudImage[] = [
@@ -43,6 +34,8 @@ const cloudImages: CloudImage[] = [
 ];
 
 export function AIVisualHeaderZoom({ data }: AIVisualHeaderZoomProps) {
+    const activeImages = data?.bentoImages && data.bentoImages.length > 0 ? data.bentoImages : cloudImages;
+
     const containerRef = useRef<HTMLDivElement>(null);
     const scrollSectionRef = useRef<HTMLDivElement>(null);
     const gridRef = useRef<HTMLDivElement>(null);
@@ -69,7 +62,7 @@ export function AIVisualHeaderZoom({ data }: AIVisualHeaderZoomProps) {
         gsap.set(gridRef.current, { xPercent: -50, yPercent: -52, scale: initialScale, transformOrigin: "center center" });
 
         // Apply fade out to outer images
-        cloudImages.forEach((img, idx) => {
+        activeImages.forEach((img, idx) => {
             const el = outerImagesRef.current[idx];
             if (!el || img.isCenter) return;
             gsap.set(el, { opacity: 0, scale: 0.85 });
@@ -83,7 +76,7 @@ export function AIVisualHeaderZoom({ data }: AIVisualHeaderZoomProps) {
         }, 0);
 
         // Animation: fade in outer images
-        cloudImages.forEach((img, idx) => {
+        activeImages.forEach((img, idx) => {
             if (!img.isCenter && outerImagesRef.current[idx]) {
                 // Stagger their arrival slightly randomly
                 tl.to(outerImagesRef.current[idx], {
@@ -129,7 +122,7 @@ export function AIVisualHeaderZoom({ data }: AIVisualHeaderZoomProps) {
                         ref={gridRef}
                         className="absolute top-[50%] left-[50%] w-[280vw] md:w-[240vw] h-[210vw] md:h-[180vw] grid grid-cols-8 grid-rows-6 gap-[64px] will-change-transform"
                     >
-                        {cloudImages.map((img, idx) => {
+                        {activeImages.map((img, idx) => {
                             const isCenter = img.isCenter;
 
                             return (
@@ -140,17 +133,17 @@ export function AIVisualHeaderZoom({ data }: AIVisualHeaderZoomProps) {
                                 >
                                     {img.videoSrc ? (
                                         <video
-                                            src={img.videoSrc}
+                                            src={getAssetUrl(img.videoSrc)}
                                             className="absolute inset-0 w-full h-full object-cover"
                                             muted
                                             autoPlay
                                             loop
                                             playsInline
-                                            poster={img.src}
+                                            poster={getAssetUrl(img.src)}
                                         />
                                     ) : (
                                         <Image
-                                            src={img.src}
+                                            src={getAssetUrl(img.src)}
                                             alt={`Product visual ${idx}`}
                                             fill
                                             className="object-cover"

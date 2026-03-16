@@ -17,7 +17,15 @@ export interface ServicesData {
         title?: string;
         description?: string;
         image?: string;
+        bentoImages?: CloudImage[];
     };
+}
+
+export interface CloudImage {
+    src: string;
+    videoSrc?: string;
+    gridClass: string;
+    isCenter?: boolean;
 }
 
 export interface TimelineImage {

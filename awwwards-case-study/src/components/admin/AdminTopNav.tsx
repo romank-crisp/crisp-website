@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { clsx } from "clsx";
+import { getAssetUrl } from "@/lib/utils";
 
 /* ─── Sections ──────────────────────────────────────────────────── */
 
@@ -10,6 +10,7 @@ const SECTIONS = [
     { label: "CMS", href: "/admin" },
     { label: "Design System", href: "/admin/design-system" },
     { label: "Patterns", href: "/admin/patterns" },
+    { label: "Tools", href: "/admin/tools" },
 ] as const;
 
 /* ─── Component ─────────────────────────────────────────────────── */
@@ -30,8 +31,8 @@ export function AdminTopNav() {
             <div className="relative flex items-center h-full">
                 {/* Brand */}
                 <div className="flex items-center gap-6 z-10">
-                    <Image
-                        src="/img/crisp-logo.svg"
+                    <img
+                        src={getAssetUrl("/img/crisp-logo.svg")}
                         alt="crisp logo"
                         width={100}
                         height={40}

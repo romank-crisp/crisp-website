@@ -35,7 +35,7 @@ function HomeLottieBottom({ src }: { src: string }) {
             animationData={animationData}
             loop
             autoplay
-            style={{ height: "auto", width: "100%", display: "block" }}
+            style={{ display: "block" }}
         />
     );
 }
@@ -95,9 +95,9 @@ export function HomeHorizontalMasonry({ columns: initialColumns, className }: Ho
                 if (colIdx === 3 && cellIdx === 1) {
                     return {
                         ...cell,
-                        className: cn(cell.className, "overflow-hidden p-0"),
+                        className: cn(cell.className, "overflow-hidden p-0 !scale-100"),
                         content: (
-                            <div className="absolute inset-0 w-full h-full pointer-events-none flex items-end">
+                            <div className="absolute inset-0 w-full h-full pointer-events-none flex items-end justify-center">
                                 <HomeLottieBottom src="/img/home-hero/home-hero-05.json" />
                             </div>
                         )

@@ -1,0 +1,448 @@
+# Admin Panel Architecture Analysis
+
+## 1. Current Architecture Audit
+
+### How It Works Today
+
+```mermaid
+graph LR
+    A[Admin Panel] -->|readContent / updateContent| B[GCS Bucket]
+    C[Public Pages] -->|readContent via lib/content.ts| B
+    B -->|JSON files| D[28 JSON files in data/]
+    C -->|force-dynamic| E[Cloud Run Node.js]
+    A -->|raw JSON editing| F[JsonEditor + Prism.js]
+```
+
+| Aspect | Current State |
+|--------|--------------|
+| **Data store** | 28 JSON files in GCS (`data/*.json`) |
+| **Rendering** | `force-dynamic` on **all 18 routes** — every visitor request hits Cloud Run |
+| **Caching** | `unstable_cache` with 1hr TTL in `lib/content.ts`, but the admin uses `actions/content.ts` (no cache) |
+| **Admin editor** | Raw JSON code editor (Prism.js syntax highlighting) + AI prompt tab |
+| **Auth** | Client-side `sessionStorage` with env-var credentials |
+| **Deployment** | Docker → standalone Next.js → Cloud Run |
+| **Admin components** | `AdminLayout`, `AdminTreeNav`, `AdminTopNav`, `JsonEditor`, `PriceCalculatorEditor`, `MediaConverter` |
+
+### Key Files
+
+| File | Role |
+|------|------|
+| [page.tsx](file:///Users/roman/Documents/Dev/crisp-website/awwwards-case-study/src/app/admin/page.tsx) | Main admin page — CMS tree, JSON editor, preview iframe |
+| [content.ts (lib)](file:///Users/roman/Documents/Dev/crisp-website/awwwards-case-study/src/lib/content.ts) | Public read with `unstable_cache` (1hr revalidation) |
+| [content.ts (actions)](file:///Users/roman/Documents/Dev/crisp-website/awwwards-case-study/src/app/actions/content.ts) | Admin read/write — direct GCS, cache bust via `revalidateTag` |
+| [JsonEditor.tsx](file:///Users/roman/Documents/Dev/crisp-website/awwwards-case-study/src/components/admin/JsonEditor.tsx) | Raw JSON editor + AI tab + preview iframe |
+| [next.config.ts](file:///Users/roman/Documents/Dev/crisp-website/awwwards-case-study/next.config.ts) | `output: 'standalone'`, no ISR/SSG config |
+
+---
+
+## 2. Does JSON Affect Page Loading Time?
+
+**Short answer: somewhat, but it's not the primary bottleneck.**
+
+### What's Actually Happening
+
+1. **Every page request** → Cloud Run server starts, calls GCS to download 5–8 JSON files (one per block)
+2. `unstable_cache` keeps responses in memory for **1 hour**, so repeat requests are fast
+3. After a cold-start or cache expiry, each GCS download takes **30–80ms** depending on file size
+4. The home page fetches **8 JSON files** in parallel → ~80ms wall-clock on warm, ~200ms+ on cold
+
+### Where Time Is Actually Spent
+
+| Factor | Impact | Notes |
+|--------|--------|-------|
+| **Cloud Run cold starts** | 🔴 **High** (2–5s) | Node.js standalone server boots from scratch |
+| **GCS network calls** | 🟡 **Medium** (~80ms warm, 200ms+ cold) | 5–8 parallel `storage.download()` per page |
+| **JSON parsing** | 🟢 **Low** (<5ms) | Files are small (1–20KB each) |
+| **No CDN/edge caching** | 🟡 **Medium** | Every request goes all the way to Cloud Run |
+| **`force-dynamic`** | 🔴 **High** | Defeats all Next.js static optimizations |
+
+### The Real Problem
+
+> The JSON data layer itself is fine. The real performance killers are:
+> 1. **`force-dynamic` on every route** — prevents any static optimization
+> 2. **Cloud Run cold starts** — can add 2–5s to first requests
+> 3. **No edge caching** — Cloud Run is a single region (europe-west1)
+
+---
+
+## 3. Next.js Static Site Generation (SSG) — Pros & Cons
+
+### How It Would Work
+
+Remove `force-dynamic`, enable SSG/ISR. Pages pre-render at build time with JSON data baked in. On content change, trigger a rebuild or use ISR (Incremental Static Regeneration) to update specific pages.
+
+### Pros
+
+| Benefit | Details |
+|---------|---------|
+| ⚡ **Instant page loads** | HTML is pre-built, served from CDN edge. No server round-trip |
+| 🚀 **No cold starts** | Static files don't need a running server |
+| 💰 **Lower costs** | Static hosting (Cloud Storage + CDN) is cheaper than Cloud Run |
+| 🌍 **Global performance** | CDN edge nodes worldwide vs. single Cloud Run region |
+| 🔒 **Higher reliability** | No server to crash, no GCS outages affecting visitors |
+| 📊 **Better Lighthouse scores** | Pre-rendered HTML = faster TTFB, better Core Web Vitals |
+
+### Cons
+
+| Tradeoff | Details |
+|----------|---------|
+| ⏱ **Content update delay** | Changes aren't instant. Full rebuild takes 1–3min, ISR revalidates in background |
+| 🔧 **Build complexity** | Need GCS access at build time (already configured in `Dockerfile`) |
+| 🔄 **Webhook/trigger needed** | Admin save → trigger rebuild or on-demand revalidation API |
+| 🧩 **Dynamic features affected** | Contact form, price calculator still need client-side/API routes |
+| 📦 **Build time scales** | More pages = longer builds (currently ~15 pages, manageable) |
+
+### Can We Do It?
+
+> [!IMPORTANT]
+> **Yes, and it's relatively straightforward.** The codebase is 90% ready:
+> - All content fetching is already in server components (page-level `readContent()`)
+> - Dynamic parts (forms, calculators) are already client-side
+> - Only change: remove `force-dynamic`, add `revalidate` export or ISR
+> - Admin panel stays as a dynamic route (excluded from SSG)
+
+### Recommended Approach: ISR (Incremental Static Regeneration)
+
+```
+Pages: SSG with revalidate: 3600 (1hr) or on-demand revalidation
+Admin: stays force-dynamic (unchanged)
+Rebuild trigger: admin save → call /api/revalidate → pages regenerate
+```
+
+This gives you static performance with near-instant content updates.
+
+---
+
+## 4. Headless CMS Options — Full Comparison
+
+### The Core Question
+
+Should you replace the custom JSON + GCS system with a proper headless CMS that provides a GUI?
+
+### Option A: Strapi (Self-Hosted, Free)
+
+> [!NOTE]
+> Strapi is an open-source headless CMS with a content builder UI, REST/GraphQL APIs, and role-based access.
+
+| Aspect | Details |
+|--------|---------|
+| **Cost** | Free (Community Edition). Enterprise starts at $29/user/mo |
+| **Admin UI** | ✅ Full GUI — content types, media library, WYSIWYG, relations |
+| **Self-hosted** | ✅ Run on Cloud Run or any VPS. You control the data |
+| **Content modeling** | Visual content type builder — define fields, relations, components |
+| **Media** | Built-in media library with upload providers (GCS, S3, etc.) |
+| **API** | REST + GraphQL out of the box |
+| **Auth** | Built-in user/role management with proper sessions |
+
+**Pros:**
+- Full GUI editor — no JSON knowledge needed
+- Visual content modeling — can define all block schemas in UI
+- Proper media management with thumbnails, alt text
+- User roles (editor, admin, super admin)
+- Webhooks to trigger rebuilds on publish
+- Large plugin ecosystem
+- Self-hosted = you own the data
+
+**Cons:**
+- 🔴 **Separate service to deploy and maintain** — another Docker container, another database (PostgreSQL/MySQL)
+- 🔴 **Migration effort** — need to recreate all 28 JSON schemas as Strapi content types, migrate data
+- 🟡 **Resource overhead** — Strapi needs ~512MB RAM minimum
+- 🟡 **Learning curve** — team needs to learn Strapi admin + API patterns
+- 🟡 **Strapi v5 is still maturing** — some plugins lag behind
+- 🟡 **Node.js version constraints** — Strapi has specific Node.js requirements
+- Content modeling must happen in Strapi, not in your codebase
+
+---
+
+### Option B: Payload CMS (Self-Hosted, Free)
+
+> [!TIP]
+> Payload is a TypeScript-first headless CMS that can run inside your existing Next.js app.
+
+| Aspect | Details |
+|--------|---------|
+| **Cost** | Free and open source. No paid tiers |
+| **Admin UI** | ✅ Full GUI — custom field types, rich text, media, relationships |
+| **Self-hosted** | ✅ Runs **inside your Next.js app** — no separate service |
+| **Content modeling** | Code-based config (TypeScript). Feels native to your stack |
+| **Media** | Built-in upload with cloud storage adapters |
+| **API** | REST + GraphQL + Local API (zero-overhead, same process) |
+| **Auth** | Built-in with JWT, can use existing auth |
+
+**Pros:**
+- **Runs inside your Next.js app** — no extra service, no extra deployment
+- TypeScript-first — content types defined in code, fully type-safe
+- Local API — fetch content without HTTP overhead
+- Beautiful admin UI out of the box
+- Perfect for your stack (Next.js + TypeScript)
+- Built-in media/upload management
+- Supports MongoDB or PostgreSQL
+- Custom React components in admin panel
+
+**Cons:**
+- 🔴 **Requires a database** — MongoDB or PostgreSQL (need to add to infrastructure)
+- 🟡 **Migration effort** — need to define collection configs and migrate data
+- 🟡 **Adds weight to your app** — more dependencies, larger bundle
+- 🟡 **Newer project** — smaller community than Strapi (but growing fast)
+- Admin UI is part of your build — changes affect your deploy
+
+---
+
+### Option C: Sanity (Hosted, Free Tier)
+
+| Aspect | Details |
+|--------|---------|
+| **Cost** | Free tier: 3 users, 500K API requests/mo. Growth: $15/user/mo |
+| **Admin UI** | ✅ Sanity Studio — customizable React-based editor |
+| **Hosting** | Hosted backend. Studio can be self-hosted or hosted |
+| **Content modeling** | Schema-as-code (JavaScript/TypeScript) |
+| **Media** | Hosted CDN with image transformations |
+| **API** | GROQ query language + GraphQL |
+
+**Pros:**
+- No infrastructure to manage — hosted backend
+- Real-time collaboration
+- Extremely flexible, customizable admin (Sanity Studio)
+- Image CDN with on-the-fly transformations
+- Free tier is generous for your use case
+
+**Cons:**
+- 🔴 **Vendor lock-in** — data lives on Sanity's servers
+- 🟡 **Cost scales** — can get expensive with more users/requests
+- 🟡 **GROQ learning curve** — proprietary query language
+- 🟡 **Latency** — API calls to Sanity servers vs. local data
+
+---
+
+### Option D: TinaCMS (Git-Based, Free Tier)
+
+| Aspect | Details |
+|--------|---------|
+| **Cost** | Free for 2 users. Team plan $29/user/mo |
+| **Admin UI** | ✅ Visual editing with live preview (inline editing on actual page) |
+| **Hosting** | Hybrid — content stored in Git (your repo), Tina Cloud for auth/API |
+| **Content modeling** | Schema-as-code (TypeScript) |
+
+**Pros:**
+- **Git-based** — content lives in your repo as JSON/MDX files
+- Visual/inline editing — edit directly on the live page
+- Closest to your current JSON file approach
+- No database needed
+- Free for personal/small team use
+
+**Cons:**
+- 🔴 **Depends on Tina Cloud** for auth and content API (vendor dependency)
+- 🟡 **Git-based workflow** — every content change = git commit (can be noisy)
+- 🟡 **Smaller community** — fewer resources, plugins
+- 🟡 **Limited scale** — not ideal for thousands of content items
+
+---
+
+### Option E: Enhanced Custom Admin (No CMS Framework)
+
+Upgrade the existing admin panel to a proper GUI — keep the JSON/GCS architecture but build form-based editors instead of raw JSON.
+
+**Pros:**
+- 🟢 **Minimal migration** — same data layer, same deployment
+- 🟢 **No new infrastructure** — no database, no extra services
+- 🟢 **Full control** — build exactly what you need
+- 🟢 **Fastest to implement** — incremental, per-block improvements
+- 🟢 **Keep AI editor feature** — unique differentiator
+
+**Cons:**
+- 🟡 **More custom code to maintain** — form components for each content type
+- 🟡 **No built-in media library** — would need to build one
+- 🟡 **Still JSON/GCS at heart** — same limitations persist
+
+---
+
+## 5. Comparison Matrix
+
+| Criteria | Custom (Current) | Enhanced Custom | Strapi | Payload CMS | Sanity | TinaCMS |
+|----------|:-:|:-:|:-:|:-:|:-:|:-:|
+| **100% GUI** | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **No extra infra** | ✅ | ✅ | ❌ | ⚠️ (DB) | ✅ | ⚠️ |
+| **Free** | ✅ | ✅ | ✅ | ✅ | ⚠️ | ⚠️ |
+| **SSG compatible** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **Migration effort** | — | Low | High | Medium | High | Medium |
+| **Self-hosted** | ✅ | ✅ | ✅ | ✅ | ❌ | ⚠️ |
+| **Media management** | ❌ | Build | ✅ | ✅ | ✅ | ❌ |
+| **Type safety** | ⚠️ | ✅ | ⚠️ | ✅ | ⚠️ | ✅ |
+| **AI content editing** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
+| **Maintenance burden** | Low | Medium | High | Medium | Low | Low |
+
+---
+
+## 6. Recommendations
+
+### For Performance (SSG)
+
+> [!IMPORTANT]
+> **Migrate to ISR regardless of CMS choice.** This is independent of the admin panel and gives you the biggest performance win with the least effort.
+
+Steps:
+1. Remove `force-dynamic` from all public routes
+2. Add `export const revalidate = 3600` (or on-demand)
+3. Create `/api/revalidate` endpoint triggered by admin saves
+4. Deploy to Cloud Run (works with ISR) or move to Vercel for native ISR
+
+### For the Admin Panel
+
+**My recommended path, in order of pragmatism:**
+
+1. **Short-term (1–2 weeks): Enhanced Custom Admin**
+   - Build form-based editors per block type (replacing raw JSON)
+   - Keep GCS as data store
+   - Add media browser component for GCS images
+   - Keep the AI editor as a power-user feature
+   - Implement ISR for instant performance gains
+
+2. **Medium-term (if scaling): Payload CMS**
+   - Best fit for your Next.js + TypeScript stack
+   - Runs inside your app (no extra service)
+   - Would require adding a database (PostgreSQL on Cloud SQL)
+   - Most elegant long-term architecture
+
+3. **Avoid Strapi** unless you want to run a completely separate service — the operational overhead isn't worth it for your scale (1–2 editors, ~30 content pieces)
+
+### Questions for You
+
+1. **How often do you edit content?** If rarely, enhanced custom admin is fine. If daily, a proper CMS (Payload) pays off faster.
+2. **Who will be editing?** If it's always developers, the current approach isn't terrible. If non-technical editors join, a GUI CMS is essential.
+3. **Are you open to adding a database** (PostgreSQL via Cloud SQL)? This unlocks Payload CMS.
+4. **Do you want to pursue ISR immediately?** This is a quick win regardless of other decisions.
+
+---
+
+## 7. Parallel Development & Safe Rollback Strategy
+
+### Overview
+
+The key insight: **both old and new admin panels read/write the same GCS JSON files.** This means they can coexist safely — the data layer is the shared contract.
+
+```mermaid
+graph TD
+    subgraph "Production (main branch)"
+        A["/admin — Current JSON editor"]
+    end
+    subgraph "Development (feature branch)"
+        B["/admin — New GUI editor"]
+    end
+    A -->|read/write| C["GCS: data/*.json"]
+    B -->|read/write| C
+    subgraph "Public Site (unchanged)"
+        D["All pages read from GCS"]
+    end
+    D -->|readContent| C
+```
+
+### Git Branching Strategy
+
+```
+main ─────────────────────────────── (production, current admin)
+  │
+  └── feature/admin-v2 ──────────── (new admin, parallel dev)
+         │
+         ├── commit: scaffold GUI forms
+         ├── commit: home-hero editor
+         ├── commit: media browser
+         └── ... (merge to main when ready)
+```
+
+**Rules:**
+- `main` stays deployable at all times — current admin works
+- `feature/admin-v2` branches from `main`, gets regular rebases
+- New admin code lives under **the same `/admin` route** but on the branch
+- No data migration needed — both versions use the same `readContent()` / `updateContent()`
+
+### Development Setup
+
+| Environment | Branch | URL | Purpose |
+|-------------|--------|-----|---------|
+| **Production** | `main` | `new.crisp-studio.com` | Live site + current admin |
+| **Staging** | `feature/admin-v2` | `staging.crisp-studio.com` | New admin testing |
+| **Local** | `feature/admin-v2` | `localhost:3000` | Development |
+
+> [!TIP]
+> **Staging option:** Deploy the feature branch to a second Cloud Run service (`crisp-website-staging`) pointing at the **same GCS bucket**. Both production and staging share data — edits in staging show up in production immediately.
+
+If you want isolated staging, use a separate GCS prefix:
+```
+Production: data/*.json
+Staging:    data-staging/*.json
+```
+Set via `DATA_PREFIX` env var (already configurable in `content.ts`).
+
+### Rollback Safety Net
+
+#### Layer 1: Git (instant rollback)
+
+```bash
+# If new admin has issues, revert to main
+git checkout main
+# Deploy main branch to Cloud Run
+docker buildx build ... && gcloud run deploy ...
+```
+
+**Recovery time: ~5 minutes** (build + deploy).
+
+#### Layer 2: Feature Flag (zero-downtime switch)
+
+Add a simple env-var toggle so both admin versions exist in the same build:
+
+```typescript
+// In /admin/page.tsx
+const USE_NEW_ADMIN = process.env.NEXT_PUBLIC_ADMIN_VERSION === 'v2';
+
+export default function AdminPage() {
+    if (USE_NEW_ADMIN) return <AdminV2Page />;
+    return <AdminV1Page />;  // current JSON editor
+}
+```
+
+**Rollback:** Change env var `ADMIN_VERSION=v1` and redeploy (or restart Cloud Run service). No code changes needed.
+
+#### Layer 3: GCS Data Backup (content safety)
+
+The existing `src/content/data/` git directory already serves as a backup. Strengthen it:
+
+1. **Before each save**, the admin auto-commits JSON to `src/content/data/` (already exists)
+2. **GCS versioning** — enable object versioning on the GCS bucket so every overwrite keeps the previous version
+3. **Restore command**: `gsutil cp gs://bucket/data/filename.json#previous-version gs://bucket/data/filename.json`
+
+```bash
+# Enable GCS object versioning (one-time)
+gsutil versioning set on gs://crisp-website-485112_cloudbuild
+```
+
+### Migration Path (Step by Step)
+
+```mermaid
+gantt
+    title Admin V2 Migration Timeline
+    dateFormat  YYYY-MM-DD
+    section Phase 1 - Foundation
+    Branch + scaffold        :a1, 2026-03-17, 2d
+    Feature flag setup       :a2, after a1, 1d
+    section Phase 2 - GUI Editors
+    Home page editors        :b1, after a2, 3d
+    Services page editors    :b2, after b1, 3d
+    Case study editors       :b3, after b2, 2d
+    SEO + shared editors     :b4, after b3, 2d
+    section Phase 3 - Polish
+    Media browser            :c1, after b4, 3d
+    ISR migration            :c2, after b4, 2d
+    section Phase 4 - Ship
+    Staging testing          :d1, after c1, 3d
+    Merge to main            :d2, after d1, 1d
+```
+
+| Phase | What | Risk | Rollback |
+|-------|------|------|----------|
+| **1. Foundation** | Create branch, add feature flag, scaffold `AdminV2Page` | None — flag defaults to V1 | Remove flag |
+| **2. GUI Editors** | Build form-based editors per block, one at a time | Low — V1 always available | Switch flag to V1 |
+| **3. Polish** | Media browser, ISR, UX refinements | Low | Switch flag to V1 |
+| **4. Ship** | Merge to main, set flag to V2, remove V1 code | Medium | Revert merge, set flag |
+
+> [!IMPORTANT]
+> **The data layer never changes.** Both V1 and V2 read/write the same `data/*.json` files in GCS. This is what makes parallel development and rollback safe — there's zero data migration.

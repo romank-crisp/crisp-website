@@ -4,6 +4,7 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { getAssetUrl } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -39,9 +40,21 @@ export function AIVisualVideoScroll({ data }: Props) {
         const wrapper = videoWrapperRef.current;
         if (!video || !container || !sticky || !wrapper) return;
 
+        let retryCount = 0;
+        let timeoutId: NodeJS.Timeout;
+
         const setupAnimation = () => {
-            const duration = video.duration;
-            if (!duration || duration <= 0) return;
+            let duration = video.duration;
+
+            // Handle cross-origin edge cases where duration is NaN or Infinity initially
+            if (!duration || isNaN(duration) || duration === Infinity || duration <= 0) {
+                if (retryCount < 20) {
+                    retryCount++;
+                    timeoutId = setTimeout(setupAnimation, 100);
+                    return;
+                }
+                duration = 8; // Fail-safe fallback to ensure text and zoom interactions still render
+            }
 
             // ─── Master timeline pinned to the scroll section ───
             const master = gsap.timeline({
@@ -148,6 +161,7 @@ export function AIVisualVideoScroll({ data }: Props) {
         }
 
         return () => {
+            clearTimeout(timeoutId);
             video.removeEventListener("loadedmetadata", setupAnimation);
         };
     }, { scope: containerRef });
@@ -175,7 +189,8 @@ export function AIVisualVideoScroll({ data }: Props) {
                 >
                     <video
                         ref={videoRef}
-                        src={data.videoSrc}
+                        src={getAssetUrl(data.videoSrc)}
+                        crossOrigin="anonymous"
                         className="absolute inset-0 w-full h-full object-cover"
                         muted
                         playsInline
