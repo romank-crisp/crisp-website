@@ -3,18 +3,13 @@
 import { useEffect, useState, useCallback } from "react";
 import { useSearchParams, usePathname } from "next/navigation";
 import { readContent, updateContent } from "@/app/actions/content";
-import { JsonEditor } from "@/components/admin/JsonEditor";
-import { PriceCalculatorEditor } from "@/components/admin/PriceCalculatorEditor";
-import { AdminV2Page } from "@/components/admin/AdminV2Page";
+import { FormEditor } from "@/components/admin/FormEditor";
 import { Toast, type ToastType } from "@/components/ui/Toast";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import type { TreeGroup } from "@/components/admin/AdminTreeNav";
 import { FileText, Navigation, LayoutTemplate } from "lucide-react";
 
-/* ─── Feature Flag: v1 (JSON editor) or v2 (GUI forms) ──────────── */
-const USE_V2 = process.env.NEXT_PUBLIC_ADMIN_VERSION === "v2";
-
-/* ─── CMS tree data (migrated from AdminSidebar) ────────────────── */
+/* ─── CMS tree data (shared with V1) ────────────────────────────── */
 
 const CMS_TREE: TreeGroup[] = [
     {
@@ -35,7 +30,6 @@ const CMS_TREE: TreeGroup[] = [
                     { id: "home-faq.json", label: "FAQ Section" },
                 ],
             },
-
             {
                 id: "about-us-group",
                 label: "About Us",
@@ -152,10 +146,9 @@ const CMS_TREE: TreeGroup[] = [
     },
 ];
 
-/* ─── Map each JSON tab to its single-block preview URL ─────────── */
+/* ─── Block preview map ──────────────────────────────────────────── */
 
 const BLOCK_PREVIEW_MAP: Record<string, string> = {
-    // Home Page
     "home-hero.json": "/pattern-library/preview/SharedServicesHero",
     "home-services.json": "/pattern-library/preview/HomeWhereWeCanHelp",
     "home-quote.json": "/pattern-library/preview/SharedCenteredQuote",
@@ -164,17 +157,14 @@ const BLOCK_PREVIEW_MAP: Record<string, string> = {
     "home-stats.json": "/pattern-library/preview/SharedStatsBlock",
     "home-testimonials.json": "/pattern-library/preview/SharedTestimonials",
     "home-faq.json": "/pattern-library/preview/SharedFAQ",
-    // About Us
     "about": "/pattern-library/preview/AboutPlaneHero",
     "about-capabilities.json": "/pattern-library/preview/AboutServicesList",
     "locations": "/pattern-library/preview/AboutLocationsMap",
     "services": "/pattern-library/preview/AboutServicesList",
     "clients": "/pattern-library/preview/SharedClientLogos",
     "team": "/pattern-library/preview/AboutTeamAccordion",
-    // Works
     "works": "/works",
     "works-content": "/works",
-    // AI Visual Content
     "aivisuals.json": "/pattern-library/preview/AIVisualHeaderZoom",
     "aivisuals-what-we-offer.json": "/service/ai-visual-content",
     "aivisuals-video-scroll.json": "/pattern-library/preview/AIVisualVideoScroll",
@@ -183,19 +173,15 @@ const BLOCK_PREVIEW_MAP: Record<string, string> = {
     "aivisuals-made-by-team.json": "/pattern-library/preview/AIVisualMadeByTeam",
     "aivisuals-faq.json": "/pattern-library/preview/SharedFAQ",
     "aivisuals-cta.json": "/pattern-library/preview/SharedVideoScrollingCTA",
-    // Case Studies — CentroGreen
     "case-studies/centrogreen-general.json": "/pattern-library/preview/CaseStudyHeroVideo",
     "case-studies/centrogreen-case-details.json": "/pattern-library/preview/CaseStudyDetails",
     "case-studies/centrogreen-case-stats.json": "/pattern-library/preview/SharedStatsBlock",
-    // Case Studies — Folkeuniversitetet
     "case-studies/folkeuniversitetet-general.json": "/pattern-library/preview/CaseStudyHeroVideo",
     "case-studies/folkeuniversitetet-case-details.json": "/pattern-library/preview/CaseStudyDetails",
     "case-studies/folkeuniversitetet-case-stats.json": "/pattern-library/preview/SharedStatsBlock",
-    // Case Studies — TheyTalk
     "case-studies/theytalk-general.json": "/pattern-library/preview/CaseStudyHeroVideo",
     "case-studies/theytalk-case-details.json": "/pattern-library/preview/CaseStudyDetails",
     "case-studies/theytalk-case-stats.json": "/pattern-library/preview/SharedStatsBlock",
-    // SEO — no visual preview
     "seo/seo-home.json": "/",
     "seo/seo-about.json": "/about",
     "seo/seo-aivisuals.json": "/service/ai-visual-content",
@@ -205,36 +191,22 @@ const BLOCK_PREVIEW_MAP: Record<string, string> = {
     "seo/seo-centrogreen.json": "/works/centrogreen",
     "seo/seo-folkeuniversitetet.json": "/works/folkeuniversitetet",
     "seo/seo-theytalk.json": "/works/theytalk",
-    // Shared
     "navigation": "/",
     "footer": "/",
 };
 
 function getBlockPreviewUrl(tab: string): string {
-    const key = tab.endsWith(".json") ? tab : tab;
-    return BLOCK_PREVIEW_MAP[key] || "/";
+    return BLOCK_PREVIEW_MAP[tab] || "/";
 }
 
-/* ─── CMS Admin Page ────────────────────────────────────────────── */
+/* ─── Admin V2 Page ──────────────────────────────────────────────── */
 
-export default function AdminPage() {
-    /* V2 feature flag — render GUI editor instead */
-    if (USE_V2) return <AdminV2Page />;
-
-    /* ─── V1: Original JSON editor ──────────────────────────────── */
+export function AdminV2Page() {
     const searchParams = useSearchParams();
     const pathname = usePathname();
 
-    const initialTab = searchParams.get("tab") || "locations";
+    const initialTab = searchParams.get("tab") || "home-hero.json";
     const [activeTab, setActiveTab] = useState(initialTab);
-
-    // Sync URL when activeTab changes
-    const handleTabChange = useCallback((tab: string) => {
-        setActiveTab(tab);
-        const params = new URLSearchParams(searchParams.toString());
-        params.set("tab", tab);
-        window.history.replaceState(null, "", `${pathname}?${params.toString()}`);
-    }, [searchParams, pathname]);
     const [currentData, setCurrentData] = useState<any>(null);
     const [loading, setLoading] = useState(false);
 
@@ -244,10 +216,17 @@ export default function AdminPage() {
         visible: false,
     });
 
-    const getFilename = (tab: string) => {
-        if (tab.endsWith(".json")) return tab;
-        return `${tab}.json`;
-    };
+    const handleTabChange = useCallback(
+        (tab: string) => {
+            setActiveTab(tab);
+            const params = new URLSearchParams(searchParams.toString());
+            params.set("tab", tab);
+            window.history.replaceState(null, "", `${pathname}?${params.toString()}`);
+        },
+        [searchParams, pathname]
+    );
+
+    const getFilename = (tab: string) => (tab.endsWith(".json") ? tab : `${tab}.json`);
 
     useEffect(() => {
         const loadTabContent = async () => {
@@ -269,7 +248,6 @@ export default function AdminPage() {
                 setLoading(false);
             }
         };
-
         loadTabContent();
     }, [activeTab]);
 
@@ -306,7 +284,7 @@ export default function AdminPage() {
                         </div>
                     ) : (
                         <div className="flex-1 h-full w-full">
-                            <JsonEditor
+                            <FormEditor
                                 key={activeTab}
                                 filename={getFilename(activeTab)}
                                 title={
@@ -322,15 +300,6 @@ export default function AdminPage() {
                                 onSave={async (_, data) => {
                                     handleSave(data);
                                 }}
-                                settingsPanel={
-                                    activeTab === "aivisuals-price-calculator.json"
-                                        ? <PriceCalculatorEditor
-                                            key={`settings-${activeTab}`}
-                                            data={currentData || {}}
-                                            onSave={(data) => handleSave(data)}
-                                        />
-                                        : undefined
-                                }
                             />
                         </div>
                     )}

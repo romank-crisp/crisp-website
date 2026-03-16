@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // ISR: regenerate every hour
 
 import { parseSeoData } from "@/lib/seo";
 import { SeoData } from "@/types/seo";

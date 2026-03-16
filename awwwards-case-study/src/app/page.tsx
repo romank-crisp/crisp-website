@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // ISR: regenerate every hour
 
 import Home from "./home-page";
 import { readContent } from "@/lib/content";

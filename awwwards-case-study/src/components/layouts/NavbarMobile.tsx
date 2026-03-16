@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
-// Removed module import to use public path instead
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import Link from "next/link";
@@ -28,16 +27,13 @@ export function NavbarMobile() {
     const { openContactForm, isNavHidden } = useContactForm();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navbarRef = useRef<HTMLElement>(null);
-    const innerRef = useRef<HTMLDivElement>(null);
-    const mobileContentRef = useRef<HTMLDivElement>(null);
-    const hasMounted = useRef(false);
 
     const handleOpenContact = () => {
         setIsMenuOpen(false);
         openContactForm();
     };
 
-    // 1. Scroll-based resizing
+    // Scroll-based resizing (lightweight — keep)
     useGSAP(() => {
         if (!navbarRef.current || isMenuOpen) return;
 
@@ -57,84 +53,7 @@ export function NavbarMobile() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, { dependencies: [isMenuOpen] });
 
-    // 2. Expansion & Closing Animation
-    useGSAP(() => {
-        if (!innerRef.current || !mobileContentRef.current) return;
-
-        if (isMenuOpen) {
-            gsap.killTweensOf([navbarRef.current, innerRef.current, ".mobile-item", ".mobile-footer-item"]);
-            const tl = gsap.timeline();
-
-            tl.to(navbarRef.current, {
-                top: 0,
-                width: "100%",
-                maxWidth: "100%",
-                left: "50%",
-                xPercent: -50,
-                scale: 1,
-                y: 0,
-                height: "100vh", // Force full height
-                borderRadius: 0,
-                boxShadow: "none",
-                duration: 0.6,
-                ease: "expo.inOut"
-            }, 0);
-
-            tl.to(innerRef.current, {
-                height: "100vh",
-                padding: "32px",
-                duration: 0.6,
-                ease: "expo.inOut"
-            }, 0);
-
-            tl.set(mobileContentRef.current, { display: "flex", opacity: 0 }, "-=0.2");
-            tl.to(mobileContentRef.current, { opacity: 1, duration: 0.3 });
-
-            tl.fromTo(".mobile-item",
-                { x: -30, opacity: 0 },
-                { x: 0, opacity: 1, duration: 0.5, stagger: 0.06, ease: "power4.out" },
-                "-=0.1"
-            );
-
-            tl.fromTo(".mobile-footer-item",
-                { y: 20, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.5, stagger: 0.06, ease: "power3.out" },
-                "-=0.3"
-            );
-        } else if (hasMounted.current) {
-            const tl = gsap.timeline({
-                onComplete: () => {
-                    if (mobileContentRef.current) gsap.set(mobileContentRef.current, { display: "none" });
-                }
-            });
-
-            tl.to(mobileContentRef.current, { opacity: 0, duration: 0.2 });
-
-            tl.to(innerRef.current, {
-                height: "72px",
-                padding: "12px 16px",
-                duration: 0.6,
-                ease: "expo.inOut"
-            }, "+=0.1");
-
-            tl.to(navbarRef.current, {
-                top: "24px",
-                width: "calc(100% - 32px)",
-                maxWidth: "600px",
-                xPercent: -50,
-                scale: window.scrollY > 20 ? 0.8 : 1,
-                height: "auto", // Reset height to auto
-                borderRadius: "2rem",
-                boxShadow: "0 8px 32px rgba(0,0,0,0.04)", // Restore shadow
-                duration: 0.6,
-                ease: "expo.inOut"
-            }, "<");
-        }
-
-        if (!hasMounted.current) hasMounted.current = true;
-    }, { dependencies: [isMenuOpen] });
-
-    // 3. Visibility logic
+    // Visibility logic (lightweight — keep)
     useGSAP(() => {
         if (isMenuOpen) return;
         gsap.to(navbarRef.current, {
@@ -155,15 +74,26 @@ export function NavbarMobile() {
         return () => { document.body.style.overflow = ""; };
     }, [isMenuOpen]);
 
+    // Reset scale/transform when menu opens/closes
+    useEffect(() => {
+        if (!navbarRef.current) return;
+        if (isMenuOpen) {
+            gsap.set(navbarRef.current, { scale: 1, y: 0 });
+        }
+    }, [isMenuOpen]);
+
     return (
         <header
             ref={navbarRef}
-            className="fixed z-[9100] top-24 left-1/2 -translate-x-1/2 lg:hidden bg-white border border-black/[0.03] shadow-[0_8px_32px_rgba(0,0,0,0.04)] rounded-[2rem] pointer-events-auto overflow-hidden origin-top"
-            style={{ width: "calc(100% - 32px)", maxWidth: "600px" }}
+            className={`fixed z-[9100] left-1/2 -translate-x-1/2 lg:hidden bg-white border border-black/[0.03] pointer-events-auto overflow-hidden origin-top transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] ${isMenuOpen
+                    ? "top-0 w-full !max-w-full h-dvh rounded-none shadow-none"
+                    : "top-24 rounded-[2rem] shadow-[0_8px_32px_rgba(0,0,0,0.04)]"
+                }`}
+            style={isMenuOpen ? {} : { width: "calc(100% - 32px)", maxWidth: "600px" }}
         >
             <div
-                ref={innerRef}
-                className="flex flex-col w-full relative p-3 px-4 h-[72px] justify-center"
+                className={`flex flex-col w-full relative transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] ${isMenuOpen ? "h-dvh p-8" : "h-[72px] p-3 px-4 justify-center"
+                    }`}
             >
                 <div className="flex items-center justify-between w-full shrink-0">
                     <Link href="/" onClick={() => setIsMenuOpen(false)} className="flex items-center pl-8">
@@ -207,17 +137,23 @@ export function NavbarMobile() {
                     </div>
                 </div>
 
+                {/* Mobile Content — CSS transition driven */}
                 <div
-                    ref={mobileContentRef}
-                    className="hidden flex-col justify-between pt-64 pb-64 w-full h-full"
+                    className={`flex flex-col justify-between pt-64 pb-64 w-full flex-1 transition-opacity duration-300 ${isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none hidden"
+                        }`}
                 >
                     <nav className="flex flex-col gap-24 px-8 items-start text-left mt-32">
-                        {menuItems.map((item) => (
+                        {menuItems.map((item, i) => (
                             <Link
                                 key={item.label}
                                 href={item.path}
                                 onClick={() => setIsMenuOpen(false)}
-                                className="mobile-item text-h1 font-bold leading-none tracking-tight hover:text-brand transition-colors opacity-0"
+                                className="text-h1 font-bold leading-none tracking-tight hover:text-brand transition-all duration-500"
+                                style={{
+                                    opacity: isMenuOpen ? 1 : 0,
+                                    transform: isMenuOpen ? "translateX(0)" : "translateX(-20px)",
+                                    transitionDelay: isMenuOpen ? `${150 + i * 60}ms` : "0ms",
+                                }}
                             >
                                 {item.label}
                             </Link>
@@ -226,45 +162,30 @@ export function NavbarMobile() {
 
                     <div className="flex-1 flex flex-col justify-end">
                         <div className="flex flex-col gap-12 px-8 items-start w-full">
-                            <Button
-                                variant="filled"
-                                size="medium"
-                                className="mobile-footer-item w-full justify-center gap-12 px-24 h-[56px] rounded-2xl opacity-0 !text-[16px]"
-                                rightIcon={ArrowRight}
-                                onClick={handleOpenContact}
-                            >
-                                Discuss a project
-                            </Button>
-
-                            <Button
-                                variant="outline"
-                                size="medium"
-                                className="mobile-footer-item w-full justify-center gap-12 px-24 h-[56px] rounded-2xl opacity-0 !text-[16px]"
-                                leftIcon={Calendar}
-                                href="https://calendly.com/roman-crisp-studio/30-minute-meeting-clone"
-                            >
-                                Book a meeting
-                            </Button>
-
-                            <Button
-                                variant="outline"
-                                size="medium"
-                                className="mobile-footer-item w-full justify-center gap-12 px-24 h-[56px] rounded-2xl opacity-0 !text-[16px]"
-                                leftIcon={Mail}
-                                href="mailto:hello@crisp-studio.com"
-                            >
-                                Email us
-                            </Button>
-
-                            <Button
-                                variant="outline"
-                                size="medium"
-                                className="mobile-footer-item w-full justify-center gap-12 px-24 h-[56px] rounded-2xl opacity-0 !text-[16px]"
-                                leftIcon={MessageSquare}
-                                href="https://api.whatsapp.com/send/?phone=41794540545&text=hi%20crisp,%20lets%20discuss%20a%20project"
-                            >
-                                Contact via Whatsapp
-                            </Button>
+                            {[
+                                { label: "Discuss a project", icon: ArrowRight, iconPos: "right" as const, variant: "filled" as const, onClick: handleOpenContact },
+                                { label: "Book a meeting", icon: Calendar, iconPos: "left" as const, variant: "outline" as const, href: "https://calendly.com/roman-crisp-studio/30-minute-meeting-clone" },
+                                { label: "Email us", icon: Mail, iconPos: "left" as const, variant: "outline" as const, href: "mailto:hello@crisp-studio.com" },
+                                { label: "Contact via Whatsapp", icon: MessageSquare, iconPos: "left" as const, variant: "outline" as const, href: "https://api.whatsapp.com/send/?phone=41794540545&text=hi%20crisp,%20lets%20discuss%20a%20project" },
+                            ].map((btn, i) => (
+                                <Button
+                                    key={btn.label}
+                                    variant={btn.variant}
+                                    size="medium"
+                                    className="w-full justify-center gap-12 px-24 h-[56px] rounded-2xl !text-[16px] transition-all duration-500"
+                                    leftIcon={btn.iconPos === "left" ? btn.icon : undefined}
+                                    rightIcon={btn.iconPos === "right" ? btn.icon : undefined}
+                                    onClick={btn.onClick}
+                                    href={btn.href}
+                                    style={{
+                                        opacity: isMenuOpen ? 1 : 0,
+                                        transform: isMenuOpen ? "translateY(0)" : "translateY(16px)",
+                                        transitionDelay: isMenuOpen ? `${350 + i * 60}ms` : "0ms",
+                                    }}
+                                >
+                                    {btn.label}
+                                </Button>
+                            ))}
                         </div>
                     </div>
                 </div>

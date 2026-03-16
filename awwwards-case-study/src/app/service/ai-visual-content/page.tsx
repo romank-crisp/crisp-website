@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // ISR: regenerate every hour
 
 import AIVisualContentPage from './ai-visual-content-page';
 import { readContent } from '@/lib/content';

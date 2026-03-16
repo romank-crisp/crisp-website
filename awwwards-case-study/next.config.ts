@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   env: {
     NEXT_PUBLIC_ADMIN_PASSWORD: process.env.NEXT_PUBLIC_ADMIN_PASSWORD ?? '',
+    NEXT_PUBLIC_ADMIN_VERSION: process.env.NEXT_PUBLIC_ADMIN_VERSION ?? 'v1',
   },
   async headers() {
     return [

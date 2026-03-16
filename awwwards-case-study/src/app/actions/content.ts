@@ -22,11 +22,33 @@ export async function updateContent(filename: string, data: any) {
     try {
         const filePath = path.join(DATA_PREFIX, filename);
         await storage.bucket(BUCKET_NAME).file(filePath).save(JSON.stringify(data, null, 2));
-        revalidateTag(`content-${filename}`, 'default');
+
+        // Invalidate cached content for this file
+        revalidateTag(`content-${filename}`, "default");
+
+        // Revalidate all public page paths so ISR picks up changes
+        const publicPaths = [
+            "/",
+            "/about",
+            "/works",
+            "/works/centrogreen",
+            "/works/folkeuniversitetet",
+            "/works/theytalk",
+            "/service/ai-visual-content",
+            "/services",
+            "/contact",
+            "/privacy-policy",
+        ];
+        for (const p of publicPaths) {
+            revalidatePath(p);
+        }
+        // Also revalidate the root layout
         revalidatePath("/", "layout");
+
         return { success: true };
     } catch (error) {
         console.error(`Error updating ${filename}:`, error);
         throw new Error(`Failed to update content file: ${filename}`);
     }
 }
+
