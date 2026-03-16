@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useSearchParams, usePathname } from "next/navigation";
 import { readContent, updateContent } from "@/app/actions/content";
 import { JsonEditor } from "@/components/admin/JsonEditor";
@@ -9,12 +9,12 @@ import { AdminV2Page } from "@/components/admin/AdminV2Page";
 import { Toast, type ToastType } from "@/components/ui/Toast";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import type { TreeGroup } from "@/components/admin/AdminTreeNav";
-import { FileText, Navigation, LayoutTemplate } from "lucide-react";
+import { FileText, Navigation, LayoutTemplate, Save } from "lucide-react";
 
 /* ─── Feature Flag: v1 (JSON editor) or v2 (GUI forms) ──────────── */
 const USE_V2 = process.env.NEXT_PUBLIC_ADMIN_VERSION === "v2";
 
-/* ─── CMS tree data (migrated from AdminSidebar) ────────────────── */
+/* ─── CMS tree data ─────────────────────────────────────────────── */
 
 const CMS_TREE: TreeGroup[] = [
     {
@@ -152,69 +152,6 @@ const CMS_TREE: TreeGroup[] = [
     },
 ];
 
-/* ─── Map each JSON tab to its single-block preview URL ─────────── */
-
-const BLOCK_PREVIEW_MAP: Record<string, string> = {
-    // Home Page
-    "home-hero.json": "/pattern-library/preview/SharedServicesHero",
-    "home-services.json": "/pattern-library/preview/HomeWhereWeCanHelp",
-    "home-quote.json": "/pattern-library/preview/SharedCenteredQuote",
-    "home-partner.json": "/pattern-library/preview/HomePartnerStatement",
-    "home-clients.json": "/pattern-library/preview/SharedClientLogos",
-    "home-stats.json": "/pattern-library/preview/SharedStatsBlock",
-    "home-testimonials.json": "/pattern-library/preview/SharedTestimonials",
-    "home-faq.json": "/pattern-library/preview/SharedFAQ",
-    // About Us
-    "about": "/pattern-library/preview/AboutPlaneHero",
-    "about-capabilities.json": "/pattern-library/preview/AboutServicesList",
-    "locations": "/pattern-library/preview/AboutLocationsMap",
-    "services": "/pattern-library/preview/AboutServicesList",
-    "clients": "/pattern-library/preview/SharedClientLogos",
-    "team": "/pattern-library/preview/AboutTeamAccordion",
-    // Works
-    "works": "/works",
-    "works-content": "/works",
-    // AI Visual Content
-    "aivisuals.json": "/pattern-library/preview/AIVisualHeaderZoom",
-    "aivisuals-what-we-offer.json": "/service/ai-visual-content",
-    "aivisuals-video-scroll.json": "/pattern-library/preview/AIVisualVideoScroll",
-    "aivisuals-timeline.json": "/pattern-library/preview/AIVisualTimeline",
-    "aivisuals-price-calculator.json": "/pattern-library/preview/AIVisualPriceCalculatorV2",
-    "aivisuals-made-by-team.json": "/pattern-library/preview/AIVisualMadeByTeam",
-    "aivisuals-faq.json": "/pattern-library/preview/SharedFAQ",
-    "aivisuals-cta.json": "/pattern-library/preview/SharedVideoScrollingCTA",
-    // Case Studies — CentroGreen
-    "case-studies/centrogreen-general.json": "/pattern-library/preview/CaseStudyHeroVideo",
-    "case-studies/centrogreen-case-details.json": "/pattern-library/preview/CaseStudyDetails",
-    "case-studies/centrogreen-case-stats.json": "/pattern-library/preview/SharedStatsBlock",
-    // Case Studies — Folkeuniversitetet
-    "case-studies/folkeuniversitetet-general.json": "/pattern-library/preview/CaseStudyHeroVideo",
-    "case-studies/folkeuniversitetet-case-details.json": "/pattern-library/preview/CaseStudyDetails",
-    "case-studies/folkeuniversitetet-case-stats.json": "/pattern-library/preview/SharedStatsBlock",
-    // Case Studies — TheyTalk
-    "case-studies/theytalk-general.json": "/pattern-library/preview/CaseStudyHeroVideo",
-    "case-studies/theytalk-case-details.json": "/pattern-library/preview/CaseStudyDetails",
-    "case-studies/theytalk-case-stats.json": "/pattern-library/preview/SharedStatsBlock",
-    // SEO — no visual preview
-    "seo/seo-home.json": "/",
-    "seo/seo-about.json": "/about",
-    "seo/seo-aivisuals.json": "/service/ai-visual-content",
-    "seo/seo-works.json": "/works",
-    "seo/seo-contact.json": "/",
-    "seo/seo-privacy-policy.json": "/privacy-policy",
-    "seo/seo-centrogreen.json": "/works/centrogreen",
-    "seo/seo-folkeuniversitetet.json": "/works/folkeuniversitetet",
-    "seo/seo-theytalk.json": "/works/theytalk",
-    // Shared
-    "navigation": "/",
-    "footer": "/",
-};
-
-function getBlockPreviewUrl(tab: string): string {
-    const key = tab.endsWith(".json") ? tab : tab;
-    return BLOCK_PREVIEW_MAP[key] || "/";
-}
-
 /* ─── CMS Admin Page ────────────────────────────────────────────── */
 
 export default function AdminPage() {
@@ -225,18 +162,29 @@ export default function AdminPage() {
     const searchParams = useSearchParams();
     const pathname = usePathname();
 
+
     const initialTab = searchParams.get("tab") || "locations";
     const [activeTab, setActiveTab] = useState(initialTab);
+    const [currentData, setCurrentData] = useState<any>(null);
+    const [loading, setLoading] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const [isDirty, setIsDirty] = useState(false);
+    const editorDataRef = useRef<string>("");
 
     // Sync URL when activeTab changes
     const handleTabChange = useCallback((tab: string) => {
+        // If there are unsaved changes, warn user
+        if (isDirty) {
+            const shouldSwitch = window.confirm("You have unsaved changes. Switch anyway?");
+            if (!shouldSwitch) return;
+        }
         setActiveTab(tab);
+        setIsDirty(false);
         const params = new URLSearchParams(searchParams.toString());
         params.set("tab", tab);
         window.history.replaceState(null, "", `${pathname}?${params.toString()}`);
-    }, [searchParams, pathname]);
-    const [currentData, setCurrentData] = useState<any>(null);
-    const [loading, setLoading] = useState(false);
+    }, [searchParams, pathname, isDirty]);
+
 
     const [toast, setToast] = useState<{ message: string; type: ToastType; visible: boolean }>({
         message: "",
@@ -253,10 +201,12 @@ export default function AdminPage() {
         const loadTabContent = async () => {
             setLoading(true);
             setCurrentData(null);
+            setIsDirty(false);
             try {
                 const filename = getFilename(activeTab);
                 const data = await readContent(filename);
                 setCurrentData(data);
+                editorDataRef.current = JSON.stringify(data, null, 2);
             } catch (error) {
                 console.error(`Failed to load data for ${activeTab}`, error);
                 setCurrentData(null);
@@ -273,17 +223,41 @@ export default function AdminPage() {
         loadTabContent();
     }, [activeTab]);
 
-    const handleSave = async (data: any) => {
+    const handleSave = useCallback(async () => {
+        if (!isDirty) return;
         const filename = getFilename(activeTab);
+        setSaving(true);
         try {
-            await updateContent(filename, data);
+            const parsed = JSON.parse(editorDataRef.current);
+            await updateContent(filename, parsed);
+            setCurrentData(parsed);
+            setIsDirty(false);
             setToast({ message: "Successfully saved", type: "success", visible: true });
-            setCurrentData(data);
         } catch (error) {
             console.error("Failed to save", error);
             setToast({ message: "Failed to save changes", type: "error", visible: true });
+        } finally {
+            setSaving(false);
         }
-    };
+    }, [activeTab, isDirty]);
+
+    const handleEditorChange = useCallback((value: string) => {
+        editorDataRef.current = value;
+        setIsDirty(true);
+    }, []);
+
+    // Keyboard shortcut for Cmd+S / Ctrl+S
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+                e.preventDefault();
+                handleSave();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [handleSave]);
 
     return (
         <>
@@ -300,12 +274,36 @@ export default function AdminPage() {
                 onTreeSelect={handleTabChange}
             >
                 <div className="flex-1 overflow-hidden relative h-full flex flex-col">
+                    {/* Page-level Save Button */}
+                    <div className="flex items-center justify-between mb-4 shrink-0">
+                        <div className="flex items-center gap-3">
+                            {isDirty && (
+                                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                                    Unsaved changes
+                                </span>
+                            )}
+                        </div>
+                        <button
+                            onClick={handleSave}
+                            disabled={!isDirty || saving}
+                            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-heading text-sm font-bold uppercase tracking-wider transition-all duration-200 ${
+                                isDirty
+                                    ? "bg-black text-white hover:bg-gray-800 shadow-sm"
+                                    : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                            }`}
+                        >
+                            <Save size={16} />
+                            {saving ? "Saving…" : "Save"}
+                        </button>
+                    </div>
+
                     {loading ? (
-                        <div className="absolute inset-0 flex items-center justify-center bg-white/80 z-10">
-                            <div className="animate-pulse text-gray-400">Loading...</div>
+                        <div className="flex-1 flex items-center justify-center">
+                            <div className="animate-pulse text-gray-400 font-text text-sm">Loading...</div>
                         </div>
                     ) : (
-                        <div className="flex-1 h-full w-full">
+                        <div className="flex-1 h-full w-full min-h-0">
                             <JsonEditor
                                 key={activeTab}
                                 filename={getFilename(activeTab)}
@@ -314,20 +312,20 @@ export default function AdminPage() {
                                         .split("/")
                                         .pop()
                                         ?.replace(".json", "")
-                                        .replace("-", " ") || activeTab
+                                        .replace(/-/g, " ") || activeTab
                                 }
-                                liveUrl={getBlockPreviewUrl(activeTab)}
                                 initialData={currentData || {}}
                                 isEditable={!["navigation", "footer"].includes(activeTab)}
-                                onSave={async (_, data) => {
-                                    handleSave(data);
-                                }}
+                                onChange={handleEditorChange}
                                 settingsPanel={
                                     activeTab === "aivisuals-price-calculator.json"
                                         ? <PriceCalculatorEditor
                                             key={`settings-${activeTab}`}
                                             data={currentData || {}}
-                                            onSave={(data) => handleSave(data)}
+                                            onSave={(data) => {
+                                                editorDataRef.current = JSON.stringify(data, null, 2);
+                                                setIsDirty(true);
+                                            }}
                                         />
                                         : undefined
                                 }

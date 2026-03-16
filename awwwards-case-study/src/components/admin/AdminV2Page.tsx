@@ -1,19 +1,19 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { useSearchParams, usePathname } from "next/navigation";
 import { readContent, updateContent } from "@/app/actions/content";
 import { SectionEditor } from "@/components/admin/FormEditor";
 import { Toast, type ToastType } from "@/components/ui/Toast";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import type { TreeGroup } from "@/components/admin/AdminTreeNav";
+import * as Accordion from "@radix-ui/react-accordion";
 import {
     FileText,
     Navigation,
     LayoutTemplate,
     Search,
     ChevronDown,
-    ChevronRight,
     Save,
     Loader2,
 } from "lucide-react";
@@ -23,7 +23,6 @@ import {
 interface SectionDef {
     id: string;       // filename without .json
     label: string;
-    previewUrl?: string;
 }
 
 interface PageDef {
@@ -43,14 +42,14 @@ const PAGES: PageDef[] = [
         icon: FileText,
         pageUrl: "/",
         sections: [
-            { id: "home-hero.json", label: "Hero Section", previewUrl: "/pattern-library/preview/SharedServicesHero" },
-            { id: "home-services.json", label: "Services", previewUrl: "/pattern-library/preview/HomeWhereWeCanHelp" },
-            { id: "home-quote.json", label: "Centered Quote", previewUrl: "/pattern-library/preview/SharedCenteredQuote" },
-            { id: "home-partner.json", label: "Partner Statement", previewUrl: "/pattern-library/preview/HomePartnerStatement" },
-            { id: "home-clients.json", label: "Clients", previewUrl: "/pattern-library/preview/SharedClientLogos" },
-            { id: "home-stats.json", label: "Stats", previewUrl: "/pattern-library/preview/SharedStatsBlock" },
-            { id: "home-testimonials.json", label: "Testimonials", previewUrl: "/pattern-library/preview/SharedTestimonials" },
-            { id: "home-faq.json", label: "FAQ Section", previewUrl: "/pattern-library/preview/SharedFAQ" },
+            { id: "home-hero.json", label: "Hero Section" },
+            { id: "home-services.json", label: "Services" },
+            { id: "home-quote.json", label: "Centered Quote" },
+            { id: "home-partner.json", label: "Partner Statement" },
+            { id: "home-clients.json", label: "Clients" },
+            { id: "home-stats.json", label: "Stats" },
+            { id: "home-testimonials.json", label: "Testimonials" },
+            { id: "home-faq.json", label: "FAQ Section" },
         ],
     },
     {
@@ -59,12 +58,12 @@ const PAGES: PageDef[] = [
         icon: FileText,
         pageUrl: "/about",
         sections: [
-            { id: "about.json", label: "About Page", previewUrl: "/pattern-library/preview/AboutPlaneHero" },
-            { id: "about-capabilities.json", label: "Capabilities", previewUrl: "/pattern-library/preview/AboutServicesList" },
-            { id: "locations.json", label: "Locations", previewUrl: "/pattern-library/preview/AboutLocationsMap" },
-            { id: "services.json", label: "Services", previewUrl: "/pattern-library/preview/AboutServicesList" },
-            { id: "clients.json", label: "Clients", previewUrl: "/pattern-library/preview/SharedClientLogos" },
-            { id: "team.json", label: "Team", previewUrl: "/pattern-library/preview/AboutTeamAccordion" },
+            { id: "about.json", label: "About Page" },
+            { id: "about-capabilities.json", label: "Capabilities" },
+            { id: "locations.json", label: "Locations" },
+            { id: "services.json", label: "Services" },
+            { id: "clients.json", label: "Clients" },
+            { id: "team.json", label: "Team" },
         ],
     },
     {
@@ -73,8 +72,8 @@ const PAGES: PageDef[] = [
         icon: FileText,
         pageUrl: "/works",
         sections: [
-            { id: "works.json", label: "Works List", previewUrl: "/works" },
-            { id: "works-content.json", label: "Page Content", previewUrl: "/works" },
+            { id: "works.json", label: "Works List" },
+            { id: "works-content.json", label: "Page Content" },
         ],
     },
     {
@@ -83,14 +82,14 @@ const PAGES: PageDef[] = [
         icon: FileText,
         pageUrl: "/service/ai-visual-content",
         sections: [
-            { id: "aivisuals.json", label: "Hero", previewUrl: "/pattern-library/preview/AIVisualHeaderZoom" },
-            { id: "aivisuals-what-we-offer.json", label: "What We Offer", previewUrl: "/service/ai-visual-content" },
-            { id: "aivisuals-video-scroll.json", label: "Video Scroll", previewUrl: "/pattern-library/preview/AIVisualVideoScroll" },
-            { id: "aivisuals-timeline.json", label: "Timeline", previewUrl: "/pattern-library/preview/AIVisualTimeline" },
-            { id: "aivisuals-made-by-team.json", label: "Made by Team", previewUrl: "/pattern-library/preview/AIVisualMadeByTeam" },
-            { id: "aivisuals-price-calculator.json", label: "Price Calculator", previewUrl: "/pattern-library/preview/AIVisualPriceCalculatorV2" },
-            { id: "aivisuals-faq.json", label: "FAQ", previewUrl: "/pattern-library/preview/SharedFAQ" },
-            { id: "aivisuals-cta.json", label: "Video CTA", previewUrl: "/pattern-library/preview/SharedVideoScrollingCTA" },
+            { id: "aivisuals.json", label: "Hero" },
+            { id: "aivisuals-what-we-offer.json", label: "What We Offer" },
+            { id: "aivisuals-video-scroll.json", label: "Video Scroll" },
+            { id: "aivisuals-timeline.json", label: "Timeline" },
+            { id: "aivisuals-made-by-team.json", label: "Made by Team" },
+            { id: "aivisuals-price-calculator.json", label: "Price Calculator" },
+            { id: "aivisuals-faq.json", label: "FAQ" },
+            { id: "aivisuals-cta.json", label: "Video CTA" },
         ],
     },
     {
@@ -99,9 +98,9 @@ const PAGES: PageDef[] = [
         icon: FileText,
         pageUrl: "/works/centrogreen",
         sections: [
-            { id: "case-studies/centrogreen-general.json", label: "General", previewUrl: "/pattern-library/preview/CaseStudyHeroVideo" },
-            { id: "case-studies/centrogreen-case-details.json", label: "Details", previewUrl: "/pattern-library/preview/CaseStudyDetails" },
-            { id: "case-studies/centrogreen-case-stats.json", label: "Stats", previewUrl: "/pattern-library/preview/SharedStatsBlock" },
+            { id: "case-studies/centrogreen-general.json", label: "General" },
+            { id: "case-studies/centrogreen-case-details.json", label: "Details" },
+            { id: "case-studies/centrogreen-case-stats.json", label: "Stats" },
         ],
     },
     {
@@ -110,9 +109,9 @@ const PAGES: PageDef[] = [
         icon: FileText,
         pageUrl: "/works/folkeuniversitetet",
         sections: [
-            { id: "case-studies/folkeuniversitetet-general.json", label: "General", previewUrl: "/pattern-library/preview/CaseStudyHeroVideo" },
-            { id: "case-studies/folkeuniversitetet-case-details.json", label: "Details", previewUrl: "/pattern-library/preview/CaseStudyDetails" },
-            { id: "case-studies/folkeuniversitetet-case-stats.json", label: "Stats", previewUrl: "/pattern-library/preview/SharedStatsBlock" },
+            { id: "case-studies/folkeuniversitetet-general.json", label: "General" },
+            { id: "case-studies/folkeuniversitetet-case-details.json", label: "Details" },
+            { id: "case-studies/folkeuniversitetet-case-stats.json", label: "Stats" },
         ],
     },
     {
@@ -121,9 +120,9 @@ const PAGES: PageDef[] = [
         icon: FileText,
         pageUrl: "/works/theytalk",
         sections: [
-            { id: "case-studies/theytalk-general.json", label: "General", previewUrl: "/pattern-library/preview/CaseStudyHeroVideo" },
-            { id: "case-studies/theytalk-case-details.json", label: "Details", previewUrl: "/pattern-library/preview/CaseStudyDetails" },
-            { id: "case-studies/theytalk-case-stats.json", label: "Stats", previewUrl: "/pattern-library/preview/SharedStatsBlock" },
+            { id: "case-studies/theytalk-general.json", label: "General" },
+            { id: "case-studies/theytalk-case-details.json", label: "Details" },
+            { id: "case-studies/theytalk-case-stats.json", label: "Stats" },
         ],
     },
     {
@@ -131,15 +130,15 @@ const PAGES: PageDef[] = [
         label: "SEO Settings",
         icon: Search,
         sections: [
-            { id: "seo/seo-home.json", label: "Home", previewUrl: "/" },
-            { id: "seo/seo-about.json", label: "About", previewUrl: "/about" },
-            { id: "seo/seo-aivisuals.json", label: "Services", previewUrl: "/service/ai-visual-content" },
-            { id: "seo/seo-works.json", label: "Works", previewUrl: "/works" },
-            { id: "seo/seo-contact.json", label: "Contact", previewUrl: "/contact" },
-            { id: "seo/seo-privacy-policy.json", label: "Privacy Policy", previewUrl: "/privacy-policy" },
-            { id: "seo/seo-centrogreen.json", label: "CentroGreen", previewUrl: "/works/centrogreen" },
-            { id: "seo/seo-folkeuniversitetet.json", label: "Folkeuniversitetet", previewUrl: "/works/folkeuniversitetet" },
-            { id: "seo/seo-theytalk.json", label: "TheyTalk", previewUrl: "/works/theytalk" },
+            { id: "seo/seo-home.json", label: "Home" },
+            { id: "seo/seo-about.json", label: "About" },
+            { id: "seo/seo-aivisuals.json", label: "Services" },
+            { id: "seo/seo-works.json", label: "Works" },
+            { id: "seo/seo-contact.json", label: "Contact" },
+            { id: "seo/seo-privacy-policy.json", label: "Privacy Policy" },
+            { id: "seo/seo-centrogreen.json", label: "CentroGreen" },
+            { id: "seo/seo-folkeuniversitetet.json", label: "Folkeuniversitetet" },
+            { id: "seo/seo-theytalk.json", label: "TheyTalk" },
         ],
     },
     {
@@ -147,7 +146,7 @@ const PAGES: PageDef[] = [
         label: "Navigation",
         icon: Navigation,
         sections: [
-            { id: "navigation.json", label: "Navigation", previewUrl: "/" },
+            { id: "navigation.json", label: "Navigation" },
         ],
     },
     {
@@ -155,7 +154,7 @@ const PAGES: PageDef[] = [
         label: "Footer",
         icon: LayoutTemplate,
         sections: [
-            { id: "footer.json", label: "Footer", previewUrl: "/" },
+            { id: "footer.json", label: "Footer" },
         ],
     },
 ];
@@ -197,119 +196,6 @@ const CMS_TREE: TreeGroup[] = [
     },
 ];
 
-/* ─── Section Panel (two-column: editor | preview) ───────────────── */
-
-function SectionPanel({
-    section,
-    data,
-    onDataChange,
-    onSave,
-    saving,
-    isActive,
-    onActivate,
-}: {
-    section: SectionDef;
-    data: any;
-    onDataChange: (newData: any) => void;
-    onSave: () => void;
-    saving: boolean;
-    isActive: boolean;
-    onActivate: () => void;
-}) {
-    const [expanded, setExpanded] = useState(false);
-    const sectionRef = useRef<HTMLDivElement>(null);
-
-    const handleToggle = () => {
-        const willExpand = !expanded;
-        setExpanded(willExpand);
-        if (willExpand) {
-            onActivate();
-            // Scroll into view when expanding
-            setTimeout(() => {
-                sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-            }, 50);
-        }
-    };
-
-    return (
-        <div
-            ref={sectionRef}
-            className={`border rounded-xl overflow-hidden transition-all ${isActive
-                    ? "border-black/20 shadow-sm"
-                    : "border-gray-200 hover:border-gray-300"
-                }`}
-        >
-            {/* Section header */}
-            <button
-                type="button"
-                onClick={handleToggle}
-                className={`w-full flex items-center gap-3 px-5 py-3.5 text-left transition-colors ${expanded
-                        ? "bg-gray-50 border-b border-gray-200"
-                        : "bg-white hover:bg-gray-50/50"
-                    }`}
-            >
-                <span className="text-gray-400 transition-transform">
-                    {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-                </span>
-                <span className="font-heading text-sm font-bold text-gray-800 uppercase tracking-wide flex-1">
-                    {section.label}
-                </span>
-                {expanded && (
-                    <button
-                        type="button"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onSave();
-                        }}
-                        disabled={saving}
-                        className="flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-white bg-black rounded-lg
-                                   hover:bg-gray-800 disabled:bg-gray-300 transition-colors"
-                    >
-                        {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
-                        {saving ? "Saving…" : "Save"}
-                    </button>
-                )}
-            </button>
-
-            {/* Section body: two-column */}
-            {expanded && data !== undefined && (
-                <div className="grid grid-cols-1 xl:grid-cols-2 divide-y xl:divide-y-0 xl:divide-x divide-gray-200 min-h-[300px]">
-                    {/* Left column: Editor */}
-                    <div className="p-4 overflow-y-auto max-h-[70vh]">
-                        <SectionEditor
-                            data={data}
-                            onChange={onDataChange}
-                            sectionId={section.id}
-                        />
-                    </div>
-
-                    {/* Right column: Preview */}
-                    <div className="bg-gray-50 relative min-h-[300px]">
-                        {section.previewUrl ? (
-                            <iframe
-                                src={section.previewUrl}
-                                className="w-full h-full min-h-[300px] border-none"
-                                title={`Preview: ${section.label}`}
-                            />
-                        ) : (
-                            <div className="flex items-center justify-center h-full text-gray-400 font-text text-sm">
-                                No preview available
-                            </div>
-                        )}
-                    </div>
-                </div>
-            )}
-
-            {/* Loading placeholder */}
-            {expanded && data === undefined && (
-                <div className="flex items-center justify-center py-12">
-                    <Loader2 size={20} className="animate-spin text-gray-300" />
-                </div>
-            )}
-        </div>
-    );
-}
-
 /* ─── Admin V2 Page ──────────────────────────────────────────────── */
 
 export function AdminV2Page() {
@@ -318,11 +204,13 @@ export function AdminV2Page() {
 
     const initialPage = searchParams.get("page") || "home";
     const [activePage, setActivePage] = useState(initialPage);
-    const [activeSection, setActiveSection] = useState<string | null>(null);
     const [sectionsData, setSectionsData] = useState<Record<string, any>>({});
     const [loading, setLoading] = useState(false);
-    const [savingSection, setSavingSection] = useState<string | null>(null);
+    const [saving, setSaving] = useState(false);
 
+    // Track original loaded data to detect dirty state
+    const originalDataRef = useRef<Record<string, string>>({});
+    
     const [toast, setToast] = useState<{ message: string; type: ToastType; visible: boolean }>({
         message: "",
         type: "success",
@@ -332,17 +220,35 @@ export function AdminV2Page() {
     // Get current page definition
     const currentPage = PAGES.find((p) => p.id === activePage) || PAGES[0];
 
+    // Compute dirty sections
+    const dirtySections = useMemo(() => {
+        const dirty: string[] = [];
+        for (const [sectionId, data] of Object.entries(sectionsData)) {
+            const currentJson = JSON.stringify(data);
+            if (originalDataRef.current[sectionId] !== currentJson) {
+                dirty.push(sectionId);
+            }
+        }
+        return dirty;
+    }, [sectionsData]);
+
+    const isDirty = dirtySections.length > 0;
+
     // Handle page selection from sidebar
     const handlePageChange = useCallback(
         (pageId: string) => {
+            if (isDirty) {
+                const shouldSwitch = window.confirm("You have unsaved changes. Switch anyway?");
+                if (!shouldSwitch) return;
+            }
             setActivePage(pageId);
-            setActiveSection(null);
             setSectionsData({});
+            originalDataRef.current = {};
             const params = new URLSearchParams(searchParams.toString());
             params.set("page", pageId);
             window.history.replaceState(null, "", `${pathname}?${params.toString()}`);
         },
-        [searchParams, pathname]
+        [searchParams, pathname, isDirty]
     );
 
     // Load all sections for the current page
@@ -350,6 +256,7 @@ export function AdminV2Page() {
         const loadAllSections = async () => {
             setLoading(true);
             const results: Record<string, any> = {};
+            const originals: Record<string, string> = {};
             const page = PAGES.find((p) => p.id === activePage);
             if (!page) return;
 
@@ -358,6 +265,7 @@ export function AdminV2Page() {
                     try {
                         const data = await readContent(section.id);
                         results[section.id] = data;
+                        originals[section.id] = JSON.stringify(data);
                     } catch (error) {
                         console.error(`Failed to load ${section.id}:`, error);
                         results[section.id] = null;
@@ -366,6 +274,7 @@ export function AdminV2Page() {
             );
 
             setSectionsData(results);
+            originalDataRef.current = originals;
             setLoading(false);
         };
 
@@ -377,37 +286,49 @@ export function AdminV2Page() {
         setSectionsData((prev) => ({ ...prev, [sectionId]: newData }));
     }, []);
 
-    // Save a single section
-    const handleSaveSection = useCallback(
-        async (sectionId: string) => {
-            setSavingSection(sectionId);
-            try {
-                const data = sectionsData[sectionId];
-                await updateContent(sectionId, data);
-                setToast({ message: `Saved ${sectionId}`, type: "success", visible: true });
-            } catch (error) {
-                console.error(`Failed to save ${sectionId}:`, error);
-                setToast({ message: `Failed to save ${sectionId}`, type: "error", visible: true });
-            } finally {
-                setSavingSection(null);
-            }
-        },
-        [sectionsData]
-    );
+    // Save ALL dirty sections at once
+    const handleSaveAll = useCallback(async () => {
+        if (dirtySections.length === 0) return;
 
-    // Cmd+S to save active section
+        setSaving(true);
+        let hasError = false;
+
+        await Promise.all(
+            dirtySections.map(async (sectionId) => {
+                try {
+                    const data = sectionsData[sectionId];
+                    await updateContent(sectionId, data);
+                    // Update the original reference so it's no longer dirty
+                    originalDataRef.current[sectionId] = JSON.stringify(data);
+                } catch (error) {
+                    console.error(`Failed to save ${sectionId}:`, error);
+                    hasError = true;
+                }
+            })
+        );
+
+        setSaving(false);
+        // Force re-render to update dirty state
+        setSectionsData((prev) => ({ ...prev }));
+
+        if (hasError) {
+            setToast({ message: "Some sections failed to save", type: "error", visible: true });
+        } else {
+            setToast({ message: `Saved ${dirtySections.length} section${dirtySections.length > 1 ? "s" : ""}`, type: "success", visible: true });
+        }
+    }, [dirtySections, sectionsData]);
+
+    // Cmd+S to save all
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
             if ((e.metaKey || e.ctrlKey) && e.key === "s") {
                 e.preventDefault();
-                if (activeSection) {
-                    handleSaveSection(activeSection);
-                }
+                handleSaveAll();
             }
         };
         window.addEventListener("keydown", handler);
         return () => window.removeEventListener("keydown", handler);
-    }, [activeSection, handleSaveSection]);
+    }, [handleSaveAll]);
 
     return (
         <>
@@ -424,24 +345,50 @@ export function AdminV2Page() {
                 onTreeSelect={handlePageChange}
             >
                 <div className="flex-1 h-full flex flex-col min-h-0">
-                    {/* Page header */}
+                    {/* Page header with Save button */}
                     <div className="flex items-center gap-4 mb-6 shrink-0">
-                        <h1 className="font-heading text-2xl font-bold text-black">
-                            {currentPage.label}
-                        </h1>
-                        {currentPage.pageUrl && (
-                            <a
-                                href={currentPage.pageUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="font-text text-xs text-gray-400 hover:text-brand transition-colors underline underline-offset-2"
+                        <div className="flex-1 min-w-0">
+                            <h1 className="font-heading text-xl font-bold text-black">
+                                {currentPage.label}
+                            </h1>
+                            <div className="flex items-center gap-3 mt-1">
+                                {currentPage.pageUrl && (
+                                    <a
+                                        href={currentPage.pageUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="font-text text-xs text-gray-400 hover:text-brand transition-colors underline underline-offset-2"
+                                    >
+                                        View live page →
+                                    </a>
+                                )}
+                                <span className="font-text text-xs text-gray-300">
+                                    {currentPage.sections.length} sections
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Dirty indicator + Save button */}
+                        <div className="flex items-center gap-3 shrink-0">
+                            {isDirty && (
+                                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                                    {dirtySections.length} unsaved
+                                </span>
+                            )}
+                            <button
+                                onClick={handleSaveAll}
+                                disabled={!isDirty || saving}
+                                className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-heading text-sm font-bold uppercase tracking-wider transition-all duration-200 ${
+                                    isDirty
+                                        ? "bg-black text-white hover:bg-gray-800 shadow-sm"
+                                        : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                                }`}
                             >
-                                View live page →
-                            </a>
-                        )}
-                        <span className="ml-auto font-text text-xs text-gray-400">
-                            {currentPage.sections.length} sections
-                        </span>
+                                {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                                {saving ? "Saving…" : "Save All"}
+                            </button>
+                        </div>
                     </div>
 
                     {/* Sections list */}
@@ -450,31 +397,62 @@ export function AdminV2Page() {
                             <Loader2 size={24} className="animate-spin text-gray-300" />
                         </div>
                     ) : (
-                        <div className="flex-1 overflow-y-auto pr-2 space-y-3 custom-scrollbar">
-                            {currentPage.sections.map((section) => (
-                                <SectionPanel
-                                    key={section.id}
-                                    section={section}
-                                    data={sectionsData[section.id]}
-                                    onDataChange={(newData) =>
-                                        handleSectionDataChange(section.id, newData)
-                                    }
-                                    onSave={() => handleSaveSection(section.id)}
-                                    saving={savingSection === section.id}
-                                    isActive={activeSection === section.id}
-                                    onActivate={() => setActiveSection(section.id)}
-                                />
-                            ))}
+                        <div className="flex-1 overflow-y-auto pr-1">
+                            <Accordion.Root
+                                type="multiple"
+                                className="space-y-3"
+                            >
+                                {currentPage.sections.map((section) => {
+                                    const sectionDirty = dirtySections.includes(section.id);
+
+                                    return (
+                                        <Accordion.Item
+                                            key={section.id}
+                                            value={section.id}
+                                            className="border border-gray-200 rounded-xl overflow-hidden transition-shadow hover:shadow-sm data-[state=open]:shadow-sm data-[state=open]:border-gray-300"
+                                        >
+                                            <Accordion.Trigger
+                                                className="w-full flex items-center gap-3 px-5 py-4 text-left transition-colors
+                                                           bg-white hover:bg-gray-50/50 cursor-pointer group
+                                                           [&[data-state=open]]:bg-gray-50 [&[data-state=open]]:border-b [&[data-state=open]]:border-gray-200"
+                                            >
+                                                <ChevronDown
+                                                    size={16}
+                                                    className="text-gray-400 transition-transform duration-200
+                                                               group-data-[state=closed]:-rotate-90 shrink-0"
+                                                />
+                                                <span className="font-heading text-sm font-bold text-gray-800 uppercase tracking-wide flex-1">
+                                                    {section.label}
+                                                </span>
+                                                {sectionDirty && (
+                                                    <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
+                                                )}
+                                            </Accordion.Trigger>
+
+                                            <Accordion.Content className="overflow-hidden data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up">
+                                                {sectionsData[section.id] !== undefined ? (
+                                                    <div className="p-5">
+                                                        <SectionEditor
+                                                            data={sectionsData[section.id]}
+                                                            onChange={(newData) =>
+                                                                handleSectionDataChange(section.id, newData)
+                                                            }
+                                                            sectionId={section.id}
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center justify-center py-12">
+                                                        <Loader2 size={20} className="animate-spin text-gray-300" />
+                                                    </div>
+                                                )}
+                                            </Accordion.Content>
+                                        </Accordion.Item>
+                                    );
+                                })}
+                            </Accordion.Root>
                         </div>
                     )}
                 </div>
-
-                <style jsx global>{`
-                    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-                    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-                    .custom-scrollbar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 3px; }
-                    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
-                `}</style>
             </AdminLayout>
         </>
     );

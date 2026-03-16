@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import { clsx } from "clsx";
-import { Plus, Minus } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import * as Accordion from "@radix-ui/react-accordion";
 
 /* ─── Types ─────────────────────────────────────────────────────── */
 
@@ -35,201 +36,110 @@ function isBranch(item: any): item is TreeBranch {
     return Array.isArray(item.children);
 }
 
-/* ─── Expandable group ──────────────────────────────────────────── */
-
-function TreeBranchItem({
-    item,
-    activeId,
-    onSelect,
-}: {
-    item: TreeBranch;
-    activeId: string;
-    onSelect: (id: string) => void;
-}) {
-    const isChildActive = item.children.some((c) => c.id === activeId);
-    const [isExpanded, setIsExpanded] = useState(isChildActive);
-
-    // Auto-expand if a child becomes active externally
-    useEffect(() => {
-        if (isChildActive) setIsExpanded(true);
-    }, [isChildActive]);
-
-    return (
-        <div className="border-b border-gray-200/60 last:border-0 py-2">
-            {/* Parent label */}
-            <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className={clsx(
-                    "w-full flex items-center justify-between gap-3 px-4 py-2 text-lg transition-colors group",
-                    isChildActive
-                        ? "text-black font-semibold"
-                        : "text-gray-700 hover:text-black hover:font-medium"
-                )}
-            >
-                <div className="flex items-center gap-3">
-                    <span className="text-gray-400 group-hover:text-black transition-colors">
-                        {isExpanded ? <Minus size={20} strokeWidth={2} /> : <Plus size={20} strokeWidth={2} />}
-                    </span>
-                    <span>{item.label}</span>
-                </div>
-            </button>
-
-            {/* Children */}
-            {isExpanded && (
-                <div className="ml-[44px] space-y-1 mt-1 mb-2">
-                    {item.children.map((child) => {
-                        const isActive = activeId === child.id;
-                        return (
-                            <button
-                                key={child.id}
-                                onClick={() => onSelect(child.id)}
-                                className={clsx(
-                                    "w-full text-left py-1.5 text-[15px] transition-colors",
-                                    isActive
-                                        ? "text-brand font-medium"
-                                        : "text-gray-500 hover:text-black hover:font-medium"
-                                )}
-                            >
-                                {child.label}
-                            </button>
-                        );
-                    })}
-                </div>
-            )}
-        </div>
-    );
-}
-
-/* ─── Clickable branch (auto-expand on click) ───────────────────── */
-
-function ClickableBranchItem({
-    item,
-    activeId,
-    onSelect,
-}: {
-    item: TreeBranch;
-    activeId: string;
-    onSelect: (id: string) => void;
-}) {
-    const isChildActive = item.children.some((c) => c.id === activeId);
-    const [isExpanded, setIsExpanded] = useState(isChildActive);
-
-    // Auto-expand if a child becomes active externally
-    useEffect(() => {
-        if (isChildActive) setIsExpanded(true);
-    }, [isChildActive]);
-
-    const handleIconClick = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        setIsExpanded(!isExpanded);
-    };
-
-    const handleParentClick = () => {
-        // Expand if it isn't already
-        if (!isExpanded) {
-            setIsExpanded(true);
-        }
-
-        // Select first child to load immediately
-        if (item.children.length > 0 && !isChildActive) {
-            onSelect(item.children[0].id);
-        } else if (isChildActive) {
-            // If already active, just collapse
-            setIsExpanded(false);
-        }
-    };
-
-    return (
-        <div className="border-b border-gray-200/60 last:border-0 py-2">
-            {/* Parent label — clickable */}
-            <div className={clsx(
-                "w-full flex items-center gap-3 px-4 py-2 hover:bg-black/5 rounded-md transition-colors cursor-pointer group",
-                isChildActive ? "text-black" : "text-gray-700 hover:text-black"
-            )} onClick={handleParentClick}>
-                <button
-                    onClick={handleIconClick}
-                    className="p-1 -ml-1 flex items-center justify-center rounded-sm hover:bg-black/10 transition-colors text-gray-400 group-hover:text-black"
-                >
-                    {isExpanded ? <Minus size={18} strokeWidth={2.5} /> : <Plus size={18} strokeWidth={2.5} />}
-                </button>
-                <span className={clsx("text-lg", isChildActive ? "font-semibold" : "font-medium group-hover:font-semibold")}>
-                    {item.label}
-                </span>
-            </div>
-
-            {/* Children */}
-            {isExpanded && (
-                <div className="ml-[40px] space-y-1 mt-1 mb-2">
-                    {item.children.map((child) => {
-                        const isActive = activeId === child.id;
-                        return (
-                            <button
-                                key={child.id}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onSelect(child.id);
-                                }}
-                                className={clsx(
-                                    "w-full text-left py-1.5 px-2 rounded-md transition-colors text-[15px]",
-                                    isActive
-                                        ? "bg-black/5 text-black font-semibold"
-                                        : "text-gray-500 hover:bg-black/5 hover:text-black font-medium"
-                                )}
-                            >
-                                {child.label}
-                            </button>
-                        );
-                    })}
-                </div>
-            )}
-        </div>
-    );
-}
-
 /* ─── Main component ────────────────────────────────────────────── */
 
 export function AdminTreeNav({ groups, activeId, onSelect }: AdminTreeNavProps) {
+    // Auto-expand accordion items whose children contain the active item
+    const expandedValues = useMemo(() => {
+        const values: string[] = [];
+        groups.forEach((group) => {
+            group.items.forEach((item) => {
+                if (isBranch(item) && item.children.some((c) => c.id === activeId)) {
+                    values.push(item.id);
+                }
+            });
+        });
+        return values;
+    }, [groups, activeId]);
+
     return (
-        <div className="w-[260px] min-w-[260px] bg-[#f5f5f5] flex flex-col h-full overflow-hidden">
-            <nav className="flex-1 overflow-y-auto py-6 px-2">
+        <div className="w-[260px] min-w-[260px] bg-[#fafafa] flex flex-col h-full overflow-hidden border-r border-gray-200">
+            <nav className="flex-1 overflow-y-auto py-4 px-3">
                 {groups.map((group, gi) => (
-                    <div key={group.title || `g-${gi}`} className="mb-6 last:mb-0">
+                    <div key={group.title || `g-${gi}`} className="mb-5 last:mb-0">
                         {group.title && (
-                            <h3 className="px-4 text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-3">
+                            <h3 className="px-3 text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2">
                                 {group.title}
                             </h3>
                         )}
-                        <div className="border-t border-gray-200/60 mt-4">
+
+                        <Accordion.Root
+                            type="multiple"
+                            defaultValue={expandedValues}
+                            className="space-y-0.5"
+                        >
                             {group.items.map((item) => {
                                 if (isBranch(item)) {
+                                    const isChildActive = item.children.some(
+                                        (c) => c.id === activeId
+                                    );
+
                                     return (
-                                        <ClickableBranchItem
+                                        <Accordion.Item
                                             key={item.id}
-                                            item={item}
-                                            activeId={activeId}
-                                            onSelect={onSelect}
-                                        />
+                                            value={item.id}
+                                            className="rounded-lg overflow-hidden"
+                                        >
+                                            <Accordion.Trigger
+                                                className={clsx(
+                                                    "w-full flex items-center justify-between gap-2 px-3 py-2 text-[13px] font-medium rounded-lg transition-colors group",
+                                                    "hover:bg-black/5 cursor-pointer",
+                                                    "[&[data-state=open]>svg]:rotate-90",
+                                                    isChildActive
+                                                        ? "text-black font-semibold"
+                                                        : "text-gray-600"
+                                                )}
+                                            >
+                                                <span className="truncate">{item.label}</span>
+                                                <ChevronRight
+                                                    size={14}
+                                                    className="shrink-0 text-gray-400 transition-transform duration-200"
+                                                />
+                                            </Accordion.Trigger>
+
+                                            <Accordion.Content className="overflow-hidden data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up">
+                                                <div className="ml-3 pl-3 border-l border-gray-200 space-y-0.5 py-1">
+                                                    {item.children.map((child) => {
+                                                        const isActive = activeId === child.id;
+                                                        return (
+                                                            <button
+                                                                key={child.id}
+                                                                onClick={() => onSelect(child.id)}
+                                                                className={clsx(
+                                                                    "w-full text-left px-3 py-1.5 text-[13px] rounded-md transition-colors truncate",
+                                                                    isActive
+                                                                        ? "bg-black text-white font-medium"
+                                                                        : "text-gray-500 hover:bg-black/5 hover:text-black"
+                                                                )}
+                                                            >
+                                                                {child.label}
+                                                            </button>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </Accordion.Content>
+                                        </Accordion.Item>
                                     );
                                 }
 
+                                // Standalone leaf item
                                 const isActive = activeId === item.id;
                                 return (
                                     <button
                                         key={item.id}
                                         onClick={() => onSelect(item.id)}
                                         className={clsx(
-                                            "w-full flex items-center gap-3 px-4 py-2.5 text-lg transition-colors border-b border-gray-200/60 last:border-0",
+                                            "w-full flex items-center gap-2 px-3 py-2 text-[13px] font-medium rounded-lg transition-colors",
                                             isActive
-                                                ? "text-black font-semibold"
-                                                : "text-gray-700 hover:text-black hover:font-medium"
+                                                ? "bg-black text-white"
+                                                : "text-gray-600 hover:bg-black/5 hover:text-black"
                                         )}
                                     >
-                                        <Plus size={24} className="opacity-0" />
                                         {item.label}
                                     </button>
                                 );
                             })}
-                        </div>
+                        </Accordion.Root>
                     </div>
                 ))}
             </nav>

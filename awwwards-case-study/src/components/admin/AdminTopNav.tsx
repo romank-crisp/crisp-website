@@ -27,26 +27,26 @@ export function AdminTopNav() {
         )?.href ?? "/admin";
 
     return (
-        <header className="bg-white px-16 py-[30px] border-b border-gray-200">
+        <header className="bg-white px-8 py-3 border-b border-gray-200 shrink-0">
             <div className="relative flex items-center h-full">
                 {/* Brand */}
-                <div className="flex items-center gap-6 z-10">
+                <div className="flex items-center gap-4 z-10">
                     <img
                         src={getAssetUrl("/img/crisp-logo.svg")}
                         alt="crisp logo"
-                        width={100}
-                        height={40}
+                        width={80}
+                        height={32}
                         className="select-none"
                     />
-                    <span className="text-gray-200 text-3xl font-light select-none pb-1">|</span>
-                    <span className="text-brand font-heading text-3xl font-bold tracking-tight select-none">
-                        Website Admin
+                    <span className="text-gray-200 text-xl font-light select-none">|</span>
+                    <span className="text-brand font-heading text-xl font-bold tracking-tight select-none">
+                        Admin
                     </span>
                 </div>
 
                 {/* Navigation - Centered absolute */}
                 <nav className="absolute inset-x-0 flex items-center justify-center pointer-events-none">
-                    <div className="flex items-center gap-32 pointer-events-auto">
+                    <div className="flex items-center gap-12 pointer-events-auto">
                         {SECTIONS.map((section) => {
                             const isActive = activeHref === section.href;
                             return (
@@ -54,10 +54,10 @@ export function AdminTopNav() {
                                     key={section.href}
                                     onClick={() => router.push(section.href)}
                                     className={clsx(
-                                        "text-xl font-text transition-all duration-200 text-black",
+                                        "text-sm font-text transition-all duration-200 text-black px-4 py-3",
                                         isActive
                                             ? "opacity-100 font-semibold"
-                                            : "opacity-80 hover:opacity-100"
+                                            : "opacity-60 hover:opacity-100"
                                     )}
                                 >
                                     {section.label}

@@ -150,6 +150,27 @@
   }
 }
 
+/* Radix Accordion animations */
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+
+[data-state="open"] > .animate-accordion-down,
+.animate-accordion-down[data-state="open"] {
+  animation: accordion-down 200ms ease-out;
+}
+
+[data-state="closed"] > .animate-accordion-up,
+.animate-accordion-up[data-state="closed"] {
+  animation: accordion-up 200ms ease-out;
+}
+
 @keyframes textGradient {
   0% {
     background-position: 0% center;

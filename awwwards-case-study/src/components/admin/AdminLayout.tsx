@@ -10,12 +10,12 @@ interface AdminLayoutProps {
     activeTreeId: string;
     /** Callback when a tree item is selected */
     onTreeSelect: (id: string) => void;
+    /** Content to render in the main panel */
+    children: React.ReactNode;
     /** Optional header for the content panel */
     contentHeader?: string;
     /** Optional subheader for the content panel */
     contentSubheader?: string;
-    /** Content to render in the right panel */
-    children: React.ReactNode;
     /** Optional panel to render on the far right (e.g. Page Builder) */
     rightPanel?: React.ReactNode;
 }
@@ -24,9 +24,9 @@ export function AdminLayout({
     treeGroups,
     activeTreeId,
     onTreeSelect,
+    children,
     contentHeader,
     contentSubheader,
-    children,
     rightPanel,
 }: AdminLayoutProps) {
     return (
@@ -43,18 +43,18 @@ export function AdminLayout({
                     onSelect={onTreeSelect}
                 />
 
-                {/* Right: Content panel */}
-                <main className="flex-1 overflow-y-auto bg-white border-l border-gray-200 flex flex-col">
-                    <div className="flex-1 py-[48px] px-[96px] flex flex-col">
+                {/* Main: Content panel */}
+                <main className="flex-1 overflow-y-auto bg-white flex flex-col">
+                    <div className="flex-1 py-6 px-8 flex flex-col">
                         {(contentHeader || contentSubheader) && (
-                            <div className="mb-8">
+                            <div className="mb-6">
                                 {contentHeader && (
-                                    <h1 className="font-heading text-3xl text-black">
+                                    <h1 className="font-heading text-2xl text-black">
                                         {contentHeader}
                                     </h1>
                                 )}
                                 {contentSubheader && (
-                                    <p className="font-text text-base text-gray-500 mt-1">
+                                    <p className="font-text text-sm text-gray-500 mt-1">
                                         {contentSubheader}
                                     </p>
                                 )}
