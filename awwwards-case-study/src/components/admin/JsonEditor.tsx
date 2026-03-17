@@ -3,17 +3,16 @@
 import { useState, useEffect, useCallback } from "react";
 
 // styles
-import "prismjs/themes/prism.css"; // Basic theme
+import "prismjs/themes/prism.css";
 
-// Default import for Prism instance
+// Prism
 import Prism from "prismjs";
-// Language definition (runs side effects, needs Prism)
 import "prismjs/components/prism-json";
 
 import Editor from "react-simple-code-editor";
 import { suggestJsonUpdate } from "@/app/actions/ai-editor";
+import * as Tabs from "@radix-ui/react-tabs";
 
-// Use Prism directly for highlight and languages
 const { highlight, languages } = Prism;
 
 interface JsonEditorProps {
@@ -21,16 +20,13 @@ interface JsonEditorProps {
     title?: string;
     initialData: any;
     isEditable?: boolean;
-    /** Called whenever the editor value changes (for dirty tracking) */
     onChange?: (data: string) => void;
-    /** Optional custom settings panel rendered as a tab */
     settingsPanel?: React.ReactNode;
 }
 
 export function JsonEditor({ filename, title, initialData, isEditable = true, onChange, settingsPanel }: JsonEditorProps) {
     const [data, setData] = useState<string>("");
     const [error, setError] = useState<string | null>(null);
-    const [activeTab, setActiveTab] = useState<"json" | "ai" | "settings">(isEditable ? "json" : "json");
 
     useEffect(() => {
         if (initialData && Object.keys(initialData).length > 0) {
@@ -47,7 +43,7 @@ export function JsonEditor({ filename, title, initialData, isEditable = true, on
             JSON.parse(value);
             setError(null);
         } catch (e) {
-            // valid json check
+            // wait for valid json
         }
     }, [onChange]);
 
@@ -62,12 +58,10 @@ export function JsonEditor({ filename, title, initialData, isEditable = true, on
         try {
             const currentJson = JSON.parse(data);
             const result = await suggestJsonUpdate(currentJson, prompt);
-
             if (result.success && result.data) {
                 const newData = JSON.stringify(result.data, null, 2);
                 setData(newData);
                 onChange?.(newData);
-                setActiveTab("json");
                 setPrompt("");
             } else {
                 setAiError(result.error || "Failed to generate suggestion.");
@@ -79,52 +73,55 @@ export function JsonEditor({ filename, title, initialData, isEditable = true, on
         }
     };
 
+    const tabValues = ["json", "ai", ...(settingsPanel ? ["settings"] : [])];
+
     return (
-        <div className="flex flex-col h-full">
-            {/* Header / Tabs */}
-            <div className="flex items-center justify-between pb-3 border-b border-gray-200 mb-4 shrink-0">
-                {/* Left: Title */}
+        <Tabs.Root defaultValue="json" className="flex flex-col h-full">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-4 border-b border-gray-200 mb-5 shrink-0">
                 <h2 className="font-heading text-lg font-bold capitalize text-black">
                     {title || filename.replace(".json", "").replace(/-/g, " ")}
                 </h2>
 
-                {/* Right: Tabs */}
                 {isEditable && (
-                    <div className="flex gap-1 bg-gray-100 p-1 rounded-lg">
-                        <button
-                            onClick={() => setActiveTab("json")}
-                            className={`px-4 py-3 font-text text-xs font-medium rounded-md transition-colors ${activeTab === "json" ? "bg-white text-black shadow-sm" : "text-gray-500 hover:text-black"
-                                }`}
+                    <Tabs.List className="flex gap-1 bg-gray-100 p-1 rounded-lg">
+                        <Tabs.Trigger
+                            value="json"
+                            className="px-4 py-2 font-text text-xs font-medium rounded-md transition-colors cursor-pointer
+                                       data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-sm
+                                       data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:text-black"
                         >
                             JSON
-                        </button>
-                        <button
-                            onClick={() => setActiveTab("ai")}
-                            className={`px-4 py-3 font-text text-xs font-medium rounded-md transition-colors ${activeTab === "ai" ? "bg-white text-black shadow-sm" : "text-gray-500 hover:text-black"
-                                }`}
+                        </Tabs.Trigger>
+                        <Tabs.Trigger
+                            value="ai"
+                            className="px-4 py-2 font-text text-xs font-medium rounded-md transition-colors cursor-pointer
+                                       data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-sm
+                                       data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:text-black"
                         >
                             AI Prompt
-                        </button>
+                        </Tabs.Trigger>
                         {settingsPanel && (
-                            <button
-                                onClick={() => setActiveTab("settings")}
-                                className={`px-4 py-3 font-text text-xs font-medium rounded-md transition-colors ${activeTab === "settings" ? "bg-white text-black shadow-sm" : "text-gray-500 hover:text-black"
-                                    }`}
+                            <Tabs.Trigger
+                                value="settings"
+                                className="px-4 py-2 font-text text-xs font-medium rounded-md transition-colors cursor-pointer
+                                           data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-sm
+                                           data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:text-black"
                             >
                                 Settings
-                            </button>
+                            </Tabs.Trigger>
                         )}
-                    </div>
+                    </Tabs.List>
                 )}
 
-                {/* Error indicator */}
                 {error && <span className="font-text text-red-500 text-xs">{error}</span>}
             </div>
 
-            {/* Content Area */}
+            {/* Tab content */}
             <div className="flex-grow flex flex-col min-h-0">
-                {activeTab === "json" ? (
-                    <div className="flex-grow w-full bg-gray-50 rounded-xl border border-transparent focus-within:ring-2 focus-within:ring-black/5 focus-within:border-black/10 overflow-hidden relative">
+                {/* JSON tab */}
+                <Tabs.Content value="json" className="flex-grow flex flex-col min-h-0 outline-none">
+                    <div className="flex-grow w-full bg-gray-50 rounded-xl border border-gray-200 focus-within:ring-2 focus-within:ring-black/10 focus-within:border-gray-400 overflow-hidden relative transition-all">
                         <div className="absolute inset-0 overflow-auto custom-scrollbar">
                             <Editor
                                 value={data}
@@ -140,6 +137,7 @@ export function JsonEditor({ filename, title, initialData, isEditable = true, on
                                 style={{
                                     fontFamily: '"Fira code", "Fira Mono", monospace',
                                     fontSize: 13,
+                                    lineHeight: 1.6,
                                     backgroundColor: 'transparent',
                                     minHeight: '100%'
                                 }}
@@ -147,13 +145,19 @@ export function JsonEditor({ filename, title, initialData, isEditable = true, on
                             />
                         </div>
                     </div>
-                ) : activeTab === "settings" && settingsPanel ? (
-                    <div className="flex-grow w-full overflow-hidden">
+                </Tabs.Content>
+
+                {/* Settings tab */}
+                {settingsPanel && (
+                    <Tabs.Content value="settings" className="flex-grow w-full overflow-hidden outline-none">
                         {settingsPanel}
-                    </div>
-                ) : activeTab === "ai" ? (
+                    </Tabs.Content>
+                )}
+
+                {/* AI tab */}
+                <Tabs.Content value="ai" className="flex-grow flex flex-col outline-none">
                     <div className="flex flex-col h-full max-w-4xl mx-auto w-full">
-                        <div className="w-full space-y-4 pt-2">
+                        <div className="w-full space-y-5 pt-2">
                             <div className="text-left">
                                 <h3 className="font-heading text-base font-semibold text-gray-900 flex items-center gap-2">
                                     <span className="text-brand">✦</span> AI Content Editor
@@ -170,7 +174,7 @@ export function JsonEditor({ filename, title, initialData, isEditable = true, on
                                         }
                                     }}
                                     placeholder="Paste new text here or suggest AI improvement (e.g. 'Make the title more engaging')"
-                                    className="font-text w-full h-[60vh] p-6 pr-36 bg-white rounded-2xl border-2 border-gray-200 focus:outline-none focus:border-black text-sm resize-none placeholder:text-gray-400"
+                                    className="font-text w-full h-[60vh] p-6 pr-36 bg-white rounded-2xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 text-sm resize-none placeholder:text-gray-400 leading-relaxed transition-all"
                                     disabled={aiLoading}
                                 />
 
@@ -194,51 +198,32 @@ export function JsonEditor({ filename, title, initialData, isEditable = true, on
                             </div>
 
                             {aiLoading && (
-                                <div className="text-center">
-                                    <p className="font-text text-sm text-gray-500 animate-pulse">Generating suggestions...</p>
-                                </div>
+                                <p className="font-text text-sm text-gray-500 animate-pulse text-center">Generating suggestions...</p>
                             )}
 
                             {aiError && (
-                                <div className="font-text p-3 bg-red-50 text-red-600 text-sm rounded-xl border border-red-100 text-center">
+                                <div className="font-text p-4 bg-red-50 text-red-600 text-sm rounded-xl border border-red-100 text-center">
                                     {aiError}
                                 </div>
                             )}
 
-                            <div className="text-center">
-                                <p className="font-text text-xs text-gray-400">Press ⌘ + Enter to send</p>
-                            </div>
+                            <p className="font-text text-xs text-gray-400 text-center">Press ⌘ + Enter to send</p>
                         </div>
                     </div>
-                ) : null}
+                </Tabs.Content>
             </div>
 
             <style jsx global>{`
-                .custom-scrollbar::-webkit-scrollbar {
-                    width: 8px;
-                    height: 8px;
-                }
-                .custom-scrollbar::-webkit-scrollbar-track {
-                    background: transparent;
-                }
-                .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: #e5e7eb;
-                    border-radius: 4px;
-                }
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                    background: #d1d5db;
-                }
-                
-                code[class*="language-"],
-                pre[class*="language-"] {
-                    text-shadow: none !important;
-                    font-family: inherit !important;
-                }
+                .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
+                code[class*="language-"], pre[class*="language-"] { text-shadow: none !important; font-family: inherit !important; }
                 .token.property { color: #0d9488; }
                 .token.string { color: #d97706; }
                 .token.number { color: #2563eb; }
                 .token.boolean { color: #7c3aed; }
             `}</style>
-        </div>
+        </Tabs.Root>
     );
 }

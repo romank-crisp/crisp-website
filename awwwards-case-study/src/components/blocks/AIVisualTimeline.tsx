@@ -1,13 +1,12 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { TimelineData, TimelineStep } from "@/content/services";
-import { clsx } from "clsx";
-import { ArrowRight } from "lucide-react";
+import { TimelineData } from "@/content/services";
 import { TextFormatter } from "@/components/ui/TextFormatter";
+import { ArrowRight } from "lucide-react";
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
@@ -19,263 +18,194 @@ interface AIVisualTimelineProps {
 
 export function AIVisualTimeline({ data }: AIVisualTimelineProps) {
     const containerRef = useRef<HTMLElement>(null);
-    const blocksRef = useRef<(HTMLDivElement | null)[]>([]);
-    const contentsRef = useRef<(HTMLDivElement | null)[]>([]);
+    const columnsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        const check = () => setIsMobile(window.innerWidth < 768);
-        check();
-        window.addEventListener("resize", check);
-        return () => window.removeEventListener("resize", check);
-    }, []);
-
-    const [expandedSet, setExpandedSet] = useState<Set<number>>(
-        () => new Set(data.steps?.map((_, i) => i) || [])
-    );
-    const [activeIndex, setActiveIndex] = useState(0);
-
-    const expandPanel = useCallback((index: number) => {
-        const el = contentsRef.current[index];
-        if (!el) return;
-        const currentH = el.offsetHeight;
-        gsap.set(el, { height: "auto", visibility: "hidden" });
-        const naturalH = el.scrollHeight;
-        gsap.set(el, { height: currentH, visibility: "visible" });
-        gsap.to(el, {
-            height: naturalH,
-            opacity: 1,
-            duration: 0.9,
-            ease: "power2.inOut",
-            overwrite: true,
-            onComplete: () => { gsap.set(el, { height: "auto" }); ScrollTrigger.refresh(); },
-        });
-    }, []);
-
-    const collapsePanel = useCallback((index: number) => {
-        const el = contentsRef.current[index];
-        if (!el) return;
-        gsap.to(el, {
-            height: 0,
-            opacity: 0,
-            duration: 0.9,
-            ease: "power2.inOut",
-            overwrite: true,
-            onComplete: () => { ScrollTrigger.refresh(); },
-        });
-    }, []);
-
-    // Desktop only: scroll-activated accordion
-    useEffect(() => {
-        if (isMobile) return;
-        const stepCount = data?.steps?.length ?? 0;
-        setExpandedSet(prev => {
-            const next = new Set(prev);
-            if (activeIndex < stepCount && !next.has(activeIndex)) {
-                next.add(activeIndex);
-                expandPanel(activeIndex);
-            }
-            for (let i = 0; i < activeIndex; i++) {
-                if (next.has(i)) {
-                    next.delete(i);
-                    collapsePanel(i);
-                }
-            }
-            return next;
-        });
-    }, [activeIndex, collapsePanel, expandPanel, data?.steps?.length, isMobile]);
-
-    // Desktop only: GSAP ScrollTriggers
     useGSAP(() => {
-        if (isMobile) return;
         if (!containerRef.current || !data?.steps?.length) return;
 
-        blocksRef.current.forEach((block, index) => {
-            if (!block) return;
-            ScrollTrigger.create({
-                trigger: block,
-                start: "top 40%",
-                end: "bottom 40%",
-                onEnter: () => setActiveIndex(index),
-                onEnterBack: () => setActiveIndex(index),
-            });
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: containerRef.current,
+                start: "top 60%", // starts when scroll reaches the block (lowered from 80%)
+            }
         });
 
-        requestAnimationFrame(() => {
-            ScrollTrigger.refresh();
-        });
-    }, { scope: containerRef, dependencies: [data, isMobile] });
+        // Animate section title matching AIVisualTimeline style
+        tl.fromTo(
+            ".timeline-title",
+            { opacity: 0, y: 50 },
+            { opacity: 1, y: 0, duration: 1, ease: "power3.out" },
+            0
+        );
+
+        // Animate the timeline horizontal line
+        tl.fromTo(
+            ".timeline-line",
+            { scaleX: 0 },
+            { scaleX: 1, duration: 1, ease: "power2.inOut", transformOrigin: "left center" },
+            0.2
+        );
+
+        // Arrow appears slightly before line finishes
+        tl.fromTo(
+            ".timeline-arrow",
+            { opacity: 0, x: -20 },
+            { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" },
+            1.0
+        );
+
+        // Animate days on the timeline after line is animated
+        tl.fromTo(
+            ".day-label",
+            { opacity: 0, x: -10 },
+            { opacity: 1, x: 0, duration: 0.6, stagger: 0.15, ease: "power2.out" },
+            1.2
+        );
+
+        // Animate dates/boxes sequentially, drawn out 4 sec
+        const columns = columnsRef.current.filter(Boolean);
+        if (columns.length > 0) {
+            tl.fromTo(
+                columns,
+                { opacity: 0, y: 30 },
+                { opacity: 1, y: 0, duration: 4, stagger: 0.3, ease: "power3.out" },
+                1.2
+            );
+        }
+
+    }, { scope: containerRef, dependencies: [data] });
 
     if (!data?.steps?.length) return null;
 
-    // ── Mobile: simple static accordion (no GSAP, no sticky, no spacers) ──
-    if (isMobile) {
-        return (
-            <section className="w-full bg-white pt-[160px] pb-0">
-                <div className="max-w-[1475px] mx-auto px-6">
+    return (
+        <section ref={containerRef} className="w-full bg-white relative py-[120px] lg:py-[160px] min-h-screen flex flex-col justify-center overflow-hidden">
+            <div className="w-full max-w-[1475px] mx-auto flex flex-col h-full flex-1 relative px-6 lg:px-0">
+                
+                {/* Max-width Title Wrapper to align with content on desktop */}
+                <div className="w-full text-left relative z-20">
                     <h2
-                        className="font-mega text-mega-h2 uppercase text-text max-w-[900px] mb-24"
+                        className="timeline-title font-mega text-mega-h2 uppercase text-text mb-16 lg:mb-[96px]"
                         dangerouslySetInnerHTML={{ __html: data.sectionTitle }}
                     />
+                </div>
 
-                    <div className="flex flex-col border-t border-gray-200">
+                {/* Full Container for Stages & Timeline */}
+                <div className="w-full flex flex-col relative flex-1 justify-center z-10">
+                    
+                    {/* Central Red Timeline Line - Only strictly centered on LG / Desktop */}
+                    <div className="hidden lg:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 items-center z-0 w-full max-w-[1200px] pointer-events-none">
+                        <div className="timeline-line flex-1 flex items-center h-[10px] origin-left">
+                            {[...Array(5)].map((_, idx) => (
+                                <div key={idx} className="flex-1 flex items-center h-full relative">
+                                    {/* Day Text above segment */}
+                                    <div className="absolute bottom-full left-[10px] pb-3 z-20 whitespace-nowrap pointer-events-none">
+                                        <h4 className="day-label font-heading text-h4 uppercase text-text/40">Day {idx + 1}</h4>
+                                    </div>
+                                    <div className="h-[4px] w-full bg-brand" />
+                                    {/* 10px vertical segment separator */}
+                                    {idx < 4 && (
+                                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[2px] h-[10px] bg-brand z-10" />
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                        <div className="timeline-arrow text-brand flex-shrink-0 ml-[-2px]">
+                           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="translate-x-[2px]">
+                                <path d="M5 12H19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M12 5L19 12L12 19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    {/* Columns Grid - 12-col on Desktop, Stacked on Mobile */}
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-[96px] lg:gap-y-0 gap-x-0 lg:gap-x-[24px] lg:grid-rows-2 relative z-10 w-full flex-1">
                         {data.steps.map((step, i) => {
-                            const isExpanded = expandedSet.has(i);
+                            // Assign grid span classes based on array index to match diagram:
+                            // All blocks should be identical width (span 4):
+                            // i=0 (Day 1): cols 1-4 (span 4)
+                            // i=1 (Day 2-3): cols 4-7 (span 4)
+                            // i=2 (Day 3-4): cols 6-9 (span 4)
+                            // i=3 (Day 5): cols 9-12 (span 4)
+                            let gridClass = "";
+                            const isTop = (i % 2 === 0);
+
+                            if (i === 0) gridClass = "lg:col-start-1 lg:col-span-4";
+                            else if (i === 1) gridClass = "lg:col-start-4 lg:col-span-4";
+                            else if (i === 2) gridClass = "lg:col-start-7 lg:col-span-4";
+                            else if (i === 3) gridClass = "lg:col-start-9 lg:col-span-4";
+
                             return (
                                 <div
                                     key={step.id}
-                                    className="border-b border-gray-200 last:border-b-0 cursor-pointer"
-                                    onClick={() => {
-                                        setExpandedSet(prev => {
-                                            const next = new Set(prev);
-                                            if (next.has(i)) {
-                                                next.delete(i);
-                                            } else {
-                                                next.add(i);
-                                            }
-                                            return next;
-                                        });
-                                    }}
+                                    ref={(el) => { columnsRef.current[i] = el; }}
+                                    className={`flex flex-col relative w-full ${gridClass} ${
+                                        isTop 
+                                            ? 'lg:row-start-1 lg:justify-end lg:pb-[96px]' 
+                                            : 'lg:row-start-2 lg:justify-start lg:pt-[96px]'
+                                    }`}
                                 >
-                                    <div className="py-[32px] flex flex-col gap-2">
-                                        <span className="font-heading font-bold text-h3 text-brand whitespace-nowrap">
-                                            {step.day}
-                                        </span>
-                                        <h3 className="font-heading text-h3 text-text">
+                                    <div className="bg-[#F5F5F5] rounded-[32px] p-[32px] md:p-[48px] flex flex-col relative z-20 w-full hover:bg-gray-200/60 transition-colors h-full lg:h-auto border border-gray-100/50">
+                                        <h3 className="font-heading text-h3 md:text-h2 text-text mb-6 md:mb-8 leading-tight">
                                             {step.title}
                                         </h3>
 
-                                        {/* Collapsible body — pure CSS transition on mobile */}
-                                        <div
-                                            className="overflow-hidden transition-all duration-500"
-                                            style={{
-                                                maxHeight: isExpanded ? "500px" : "0px",
-                                                opacity: isExpanded ? 1 : 0,
-                                            }}
-                                            onClick={(e) => e.stopPropagation()}
-                                        >
-                                            <div className="pt-[24px] pb-4">
-                                                <ul className="space-y-4 w-full">
-                                                    {(step.list || [step.description]).map((listItem, listIndex) => (
-                                                        <li key={listIndex} className="flex items-start gap-4 w-full">
-                                                            <div className="shrink-0 mt-[9px]">
-                                                                <ArrowRight className="w-5 h-5 text-brand" />
-                                                            </div>
-                                                            <p className="font-text text-text-sm text-text/70 leading-relaxed text-left m-0 flex-1">
-                                                                <TextFormatter text={listItem} />
-                                                            </p>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
+                                        <div className="flex-1 mt-2">
+                                            <p className="font-text text-text-md text-text/70 leading-relaxed m-0 text-left">
+                                                <TextFormatter text={step.description || ''} />
+                                            </p>
                                         </div>
                                     </div>
+                                    
+                                    {/* Connection Elements to Red Center Line */}
+                                    {isTop ? (
+                                        <>
+                                            {/* Dashed line extending down from grey placeholder */}
+                                            <div className="hidden lg:block absolute left-1/2 -translate-x-1/2 bottom-[0px] w-[2px] h-[96px] border-l-[2px] border-dashed border-brand z-10" />
+                                            {/* Red dot exactly on the line */}
+                                            <div className="hidden lg:block absolute left-1/2 -translate-x-1/2 bottom-[-6px] w-[12px] h-[12px] rounded-full bg-brand z-20" />
+                                        </>
+                                    ) : (
+                                        <>
+                                            {/* Dashed line extending up from grey placeholder */}
+                                            <div className="hidden lg:block absolute left-1/2 -translate-x-1/2 top-[0px] w-[2px] h-[96px] border-l-[2px] border-dashed border-brand z-10" />
+                                            {/* Red dot exactly on the line */}
+                                            <div className="hidden lg:block absolute left-1/2 -translate-x-1/2 top-[-6px] w-[12px] h-[12px] rounded-full bg-brand z-20" />
+                                        </>
+                                    )}
+
+                                    {/* Mobile/Tablet Connector Line (always downwards block to block) */}
+                                    <div className="block lg:hidden absolute left-[48px] bottom-[-96px] w-[2px] h-[96px] border-l-[2px] border-dashed border-gray-300 z-0" />
                                 </div>
                             );
                         })}
                     </div>
                 </div>
-            </section>
-        );
-    }
 
-    // ── Desktop: full GSAP sticky + scroll-activated timeline ──
-    return (
-        <section ref={containerRef} className="w-full bg-white pt-[160px] pb-0">
-            <div className="max-w-[1475px] mx-auto px-6 md:px-16">
-
-                {/* Sticky Title */}
-                <h2
-                    className="sticky top-[10vh] z-0 font-mega text-mega-h2 uppercase text-text max-w-[900px] pl-[5px] mb-24 md:mb-48 bg-white"
-                    dangerouslySetInnerHTML={{ __html: data.sectionTitle }}
-                />
-
-                <div className="relative">
-
-                    {/* Sticky Accordion */}
-                    <div className="sticky top-[10vh] z-10 bg-white w-full">
-                        <div className="flex flex-col border-t justify-start border-gray-200 bg-white pt-4">
-                            {data.steps.map((step, i) => (
-                                <div
-                                    key={step.id}
-                                    className="bg-white border-b border-gray-200 last:border-b-0 cursor-pointer"
-                                    onClick={() => {
-                                        setExpandedSet(prev => {
-                                            const next = new Set(prev);
-                                            if (next.has(i)) {
-                                                next.delete(i);
-                                                collapsePanel(i);
-                                            } else {
-                                                next.add(i);
-                                                expandPanel(i);
-                                            }
-                                            return next;
-                                        });
-                                    }}
-                                >
-                                    <div className="py-[48px] flex flex-col md:flex-row md:items-baseline gap-2 md:gap-8">
-                                        <div className="w-[200px] shrink-0">
-                                            <span className={clsx(
-                                                "font-heading font-bold text-h2 transition-colors duration-700 whitespace-nowrap",
-                                                expandedSet.has(i) || activeIndex >= i ? "text-brand" : "text-gray-300"
-                                            )}>
-                                                {step.day}
-                                            </span>
-                                        </div>
-                                        <div className="flex-1 text-left">
-                                            <h3 className={clsx(
-                                                "font-heading text-h2 transition-colors duration-700",
-                                                expandedSet.has(i) || activeIndex >= i ? "text-text" : "text-gray-300"
-                                            )}>
-                                                {step.title}
-                                            </h3>
-
-                                            {/* Collapsible body */}
-                                            <div
-                                                ref={(el) => { contentsRef.current[i] = el; }}
-                                                className="overflow-hidden cursor-default"
-                                                style={{ height: "auto", opacity: 1 }}
-                                                onClick={(e) => e.stopPropagation()}
-                                            >
-                                                <div className="pt-[48px] pb-4">
-                                                    <ul className="space-y-4 w-full md:w-[60%]">
-                                                        {(step.list || [step.description]).map((listItem, listIndex) => (
-                                                            <li key={listIndex} className="flex items-start gap-4 w-full">
-                                                                <div className="shrink-0 mt-[9px]">
-                                                                    <ArrowRight className="w-5 h-5 text-brand" />
-                                                                </div>
-                                                                <p className="font-text text-text-md text-text/70 leading-relaxed text-left m-0 flex-1">
-                                                                    <TextFormatter text={listItem} />
-                                                                </p>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
+                {/* Mobile/Tablet Bottom Timeline Line */}
+                <div className="flex lg:hidden relative w-full pt-[48px] pb-[48px] overflow-hidden">
+                    <div className="flex items-center w-full">
+                        <div className="timeline-line flex-1 flex items-center h-[10px] origin-left">
+                            {[...Array(5)].map((_, idx) => (
+                                <div key={idx} className="flex-1 flex items-center h-full relative">
+                                    {/* Day Text above segment */}
+                                    <div className="absolute bottom-full left-[10px] pb-3 z-20 whitespace-nowrap pointer-events-none">
+                                        <h4 className="day-label font-heading text-base md:text-h4 uppercase text-text/40">Day {idx + 1}</h4>
                                     </div>
+                                    <div className="h-[4px] w-full bg-brand" />
+                                    {/* 10px vertical segment separator */}
+                                    {idx < 4 && (
+                                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[2px] h-[10px] bg-brand z-10" />
+                                    )}
                                 </div>
                             ))}
                         </div>
+                        <div className="timeline-arrow text-brand flex-shrink-0 ml-[-2px]">
+                           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="translate-x-[2px]">
+                                <path d="M5 12H19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M12 5L19 12L12 19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </div>
                     </div>
-
-                    {/* Invisible spacers */}
-                    <div className="absolute inset-0 pointer-events-none flex flex-col">
-                        <div className="shrink-0" style={{ height: "0px" }} />
-                        {data.steps.map((_, i) => (
-                            <div
-                                key={`spacer-${i}`}
-                                ref={(el) => { blocksRef.current[i] = el; }}
-                                className="w-full"
-                                style={{ height: "90vh" }}
-                            />
-                        ))}
-                    </div>
-
-                    {/* Height setter */}
-                    <div style={{ height: `${data.steps.length * 90}vh` }} />
-
                 </div>
 
             </div>

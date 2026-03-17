@@ -1,4 +1,5 @@
 import React from "react";
+import { ArrowRight } from "lucide-react";
 
 export function TypographySection() {
     return (
@@ -89,6 +90,59 @@ export function TypographySection() {
                                 </p>
                             </div>
                         ))}
+                    </div>
+                </div>
+
+                {/* Lists */}
+                <div className="space-y-24 mt-32 border-t border-text/10 pt-32">
+                    <div className="grid gap-32">
+                        {/* Bulleted List */}
+                        <div className="flex flex-col gap-8">
+                            <div className="flex items-center gap-12 mb-4">
+                                <span className="font-text text-sm opacity-40 uppercase tracking-widest">Bulleted List (with Arrow)</span>
+                                <code className="text-xs font-mono text-brand bg-brand/5 px-6 py-2 rounded">ul li flex + ArrowRight</code>
+                            </div>
+                            <ul className="space-y-4 w-full md:w-[60%] border p-8 rounded-2xl border-gray-100">
+                                <li className="flex items-start gap-4 w-full">
+                                    <div className="shrink-0 mt-[9px]">
+                                        <ArrowRight className="w-5 h-5 text-brand" />
+                                    </div>
+                                    <p className="font-text text-text-md text-text/70 leading-relaxed text-left m-0 flex-1">
+                                        The quick brown fox jumps over the lazy dog. A clear and readable list item.
+                                    </p>
+                                </li>
+                                <li className="flex items-start gap-4 w-full">
+                                    <div className="shrink-0 mt-[9px]">
+                                        <ArrowRight className="w-5 h-5 text-brand" />
+                                    </div>
+                                    <p className="font-text text-text-md text-text/70 leading-relaxed text-left m-0 flex-1">
+                                        Seamlessly integrate UI and UX components.
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
+
+                        {/* Numbered List */}
+                        <div className="flex flex-col gap-8">
+                            <div className="flex items-center gap-12 mb-4">
+                                <span className="font-text text-sm opacity-40 uppercase tracking-widest">Numbered List</span>
+                                <code className="text-xs font-mono text-brand bg-brand/5 px-6 py-2 rounded">ol list-decimal marker:text-brand marker:font-bold</code>
+                            </div>
+                            <div className="w-full md:w-[60%] border p-8 pl-12 rounded-2xl border-gray-100">
+                                <ol className="list-decimal list-outside ml-[1.25rem] space-y-4 marker:text-brand marker:font-bold">
+                                    <li className="pl-2">
+                                        <p className="font-text text-text-md text-text/70 leading-relaxed m-0">
+                                            First, the quick brown fox jumps over the lazy dog.
+                                        </p>
+                                    </li>
+                                    <li className="pl-2">
+                                        <p className="font-text text-text-md text-text/70 leading-relaxed m-0">
+                                            Then, it proceeds to navigate the design system.
+                                        </p>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

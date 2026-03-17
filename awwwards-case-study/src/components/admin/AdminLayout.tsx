@@ -37,11 +37,13 @@ export function AdminLayout({
             {/* Two-column body */}
             <div className="flex flex-1 overflow-hidden relative">
                 {/* Left: Tree navigation */}
-                <AdminTreeNav
-                    groups={treeGroups}
-                    activeId={activeTreeId}
-                    onSelect={onTreeSelect}
-                />
+                {treeGroups.length > 0 && (
+                    <AdminTreeNav
+                        groups={treeGroups}
+                        activeId={activeTreeId}
+                        onSelect={onTreeSelect}
+                    />
+                )}
 
                 {/* Main: Content panel */}
                 <main className="flex-1 overflow-y-auto bg-white flex flex-col">

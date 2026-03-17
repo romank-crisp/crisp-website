@@ -48,4 +48,4 @@ export interface TimelineData {
 }
 
 // Re-export price calculator data type
-export type { PriceCalculatorV2Data as PriceCalculatorData } from "@/components/blocks/AIVisualPriceCalculatorV2";
+export type { PriceCalculatorV2Data as PriceCalculatorData } from "@/components/blocks/AIVisualPriceCalculator";

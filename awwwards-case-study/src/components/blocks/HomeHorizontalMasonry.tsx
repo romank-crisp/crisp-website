@@ -78,14 +78,21 @@ export function HomeHorizontalMasonry({ columns: initialColumns, className }: Ho
                     };
                 }
 
-                // 4col (column index 3), upper block (index 0) -> Animated Text
+                // 4col (column index 3), upper block (index 0) -> Team Video
                 if (colIdx === 3 && cellIdx === 0) {
                     return {
                         ...cell,
                         className: cn(cell.className, "bg-white overflow-hidden"),
                         content: (
                             <div className="absolute inset-0 w-full h-full">
-                                <HomeAnimatedText />
+                                <video
+                                    src="https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/team.webm"
+                                    autoPlay
+                                    muted
+                                    loop
+                                    playsInline
+                                    className="object-cover w-full h-full"
+                                />
                             </div>
                         )
                     };

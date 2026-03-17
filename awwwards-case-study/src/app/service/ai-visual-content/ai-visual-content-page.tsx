@@ -5,7 +5,7 @@ import { SharedFAQ } from "@/components/blocks/SharedFAQ";
 import { AIVisualImageComparison } from "@/components/blocks/AIVisualImageComparison";
 import { AIVisualVideoScroll, VideoScrollData } from "@/components/blocks/AIVisualVideoScroll";
 import { AIVisualTimeline } from "@/components/blocks/AIVisualTimeline";
-import { AIVisualPriceCalculatorV2, PriceCalculatorV2Data } from "@/components/blocks/AIVisualPriceCalculatorV2";
+import { AIVisualPriceCalculator, PriceCalculatorV2Data } from "@/components/blocks/AIVisualPriceCalculator";
 import { AIVisualMadeByTeam, MadeByTeamData } from "@/components/blocks/AIVisualMadeByTeam";
 import { AIVisualWhatWeOffer } from "@/components/blocks/AIVisualWhatWeOffer";
 import { ServicesData, TimelineData } from "@/content/services";
@@ -49,7 +49,7 @@ export default function AIVisualContentPage({ servicesData, faqData, videoScroll
             <AIVisualMadeByTeam data={madeByTeamData} />
 
 
-            <AIVisualPriceCalculatorV2 data={priceCalculatorData} />
+            <AIVisualPriceCalculator data={priceCalculatorData} />
 
 
 

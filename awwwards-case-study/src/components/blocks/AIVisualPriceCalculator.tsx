@@ -318,11 +318,11 @@ function DeliverableCard({
 // Main Component
 // ---------------------------------------------------------------------------
 
-interface AIVisualPriceCalculatorV2Props {
+interface AIVisualPriceCalculatorProps {
     data?: PriceCalculatorV2Data;
 }
 
-export function AIVisualPriceCalculatorV2({ data }: AIVisualPriceCalculatorV2Props) {
+export function AIVisualPriceCalculator({ data }: AIVisualPriceCalculatorProps) {
     const config = data ?? DEFAULT_CONFIG;
     const sectionRef = useRef<HTMLElement>(null);
     const minProducts = config.minProducts ?? 5;

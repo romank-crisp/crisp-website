@@ -412,7 +412,7 @@ export function AdminV2Page() {
                                             className="border border-gray-200 rounded-xl overflow-hidden transition-shadow hover:shadow-sm data-[state=open]:shadow-sm data-[state=open]:border-gray-300"
                                         >
                                             <Accordion.Trigger
-                                                className="w-full flex items-center gap-3 px-5 py-4 text-left transition-colors
+                                                className="w-full flex items-center gap-3 px-5 py-8 text-left transition-colors
                                                            bg-white hover:bg-gray-50/50 cursor-pointer group
                                                            [&[data-state=open]]:bg-gray-50 [&[data-state=open]]:border-b [&[data-state=open]]:border-gray-200"
                                             >

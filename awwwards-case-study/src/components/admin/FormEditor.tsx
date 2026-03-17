@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { ChevronDown, ChevronRight, Plus, Trash2, GripVertical, Image as ImageIcon } from "lucide-react";
 import * as Collapsible from "@radix-ui/react-collapsible";
+import * as Switch from "@radix-ui/react-switch";
+import * as Tabs from "@radix-ui/react-tabs";
 
 /* ─── helpers ──────────────────────────────────────────────────────── */
 
@@ -32,13 +34,13 @@ function humanLabel(key: string): string {
         .trim();
 }
 
-/* ─── sub-components ───────────────────────────────────────────────── */
+/* ─── FieldLabel ───────────────────────────────────────────────────── */
 
 function FieldLabel({ label, htmlFor }: { label: string; htmlFor?: string }) {
     return (
         <label
             htmlFor={htmlFor}
-            className="block font-text text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5"
+            className="block font-text text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2"
         >
             {label}
         </label>
@@ -52,7 +54,7 @@ function MediaPreview({ url }: { url: string }) {
         return (
             <video
                 src={url}
-                className="w-full max-h-[160px] object-contain rounded-lg border border-gray-200 bg-gray-50 mt-2"
+                className="w-full max-h-[160px] object-contain rounded-lg border border-gray-100 bg-gray-50 mt-3"
                 muted
                 loop
                 autoPlay
@@ -65,7 +67,7 @@ function MediaPreview({ url }: { url: string }) {
             <img
                 src={url}
                 alt=""
-                className="w-full max-h-[160px] object-contain rounded-lg border border-gray-200 bg-gray-50 mt-2"
+                className="w-full max-h-[160px] object-contain rounded-lg border border-gray-100 bg-gray-50 mt-3"
                 onError={(e) => {
                     (e.target as HTMLImageElement).style.display = "none";
                 }}
@@ -93,25 +95,24 @@ function ArrayItem({
     const [open, setOpen] = useState(false);
     const isObject = typeof value === "object" && value !== null && !Array.isArray(value);
 
-    // Non-object primitives are always expanded
     if (!isObject) {
         return (
-            <div className="group relative border border-gray-200 rounded-xl bg-white mb-2 transition-shadow hover:shadow-sm">
-                <div className="flex items-center gap-2 px-4 py-2.5 border-b border-gray-100 bg-gray-50/50 rounded-t-xl">
+            <div className="group relative border border-gray-200 rounded-xl bg-white transition-shadow hover:shadow-sm">
+                <div className="flex items-center gap-2.5 px-4 py-3 border-b border-gray-100 bg-gray-50/50 rounded-t-xl">
                     <GripVertical size={14} className="text-gray-300 cursor-grab shrink-0" />
-                    <span className="font-text text-xs font-medium text-gray-400">
+                    <span className="font-text text-xs font-medium text-gray-400 flex-1">
                         #{index + 1}
                     </span>
                     <button
                         type="button"
                         onClick={onRemove}
-                        className="ml-auto opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 transition-all p-1 rounded-md hover:bg-red-50"
+                        className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 transition-all p-1.5 rounded-md hover:bg-red-50"
                         title="Remove item"
                     >
                         <Trash2 size={13} />
                     </button>
                 </div>
-                <div className="p-4">
+                <div className="p-5">
                     <PrimitiveField
                         fieldKey={`item-${index}`}
                         value={value}
@@ -125,13 +126,13 @@ function ArrayItem({
 
     return (
         <Collapsible.Root open={open} onOpenChange={setOpen}>
-            <div className="group relative border border-gray-200 rounded-xl bg-white mb-2 transition-shadow hover:shadow-sm">
-                <div className="flex items-center gap-2 px-4 py-2.5 border-b border-gray-100 bg-gray-50/50 rounded-t-xl">
+            <div className="group relative border border-gray-200 rounded-xl bg-white transition-shadow hover:shadow-sm">
+                <div className="flex items-center gap-2.5 px-4 py-3 border-b border-gray-100 bg-gray-50/50 rounded-t-xl">
                     <GripVertical size={14} className="text-gray-300 cursor-grab shrink-0" />
                     <Collapsible.Trigger asChild>
                         <button
                             type="button"
-                            className="flex items-center gap-2 text-gray-400 hover:text-gray-600 transition-colors"
+                            className="flex items-center gap-2 text-gray-400 hover:text-gray-600 transition-colors flex-1 text-left"
                         >
                             {open ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
                             <span className="font-text text-xs font-medium">
@@ -145,14 +146,14 @@ function ArrayItem({
                     <button
                         type="button"
                         onClick={onRemove}
-                        className="ml-auto opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 transition-all p-1 rounded-md hover:bg-red-50"
+                        className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 transition-all p-1.5 rounded-md hover:bg-red-50"
                         title="Remove item"
                     >
                         <Trash2 size={13} />
                     </button>
                 </div>
                 <Collapsible.Content className="overflow-hidden data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up">
-                    <div className="p-4">
+                    <div className="p-5">
                         <ObjectFields
                             data={value}
                             onChange={onChange}
@@ -180,25 +181,26 @@ function PrimitiveField({
 }) {
     const id = `field-${path}`;
 
+    /* Boolean → Radix Switch */
     if (typeof value === "boolean") {
         return (
-            <label className="inline-flex items-center gap-3 cursor-pointer select-none py-1" htmlFor={id}>
-                <div className="relative">
-                    <input
-                        id={id}
-                        type="checkbox"
-                        checked={value}
-                        onChange={(e) => onChange(e.target.checked)}
-                        className="sr-only peer"
-                    />
-                    <div className="w-9 h-5 bg-gray-200 peer-checked:bg-black rounded-full transition-colors" />
-                    <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-sm peer-checked:translate-x-4 transition-transform" />
-                </div>
-                <span className="font-text text-sm text-gray-700">{value ? "Yes" : "No"}</span>
-            </label>
+            <div className="flex items-center gap-3 py-1">
+                <Switch.Root
+                    id={id}
+                    checked={value}
+                    onCheckedChange={onChange}
+                    className="relative w-[42px] h-[25px] bg-gray-200 rounded-full data-[state=checked]:bg-black transition-colors cursor-pointer outline-none"
+                >
+                    <Switch.Thumb className="block w-[21px] h-[21px] bg-white rounded-full shadow-md transition-transform translate-x-[2px] data-[state=checked]:translate-x-[19px]" />
+                </Switch.Root>
+                <label htmlFor={id} className="font-text text-sm text-gray-600 cursor-pointer select-none">
+                    {value ? "Enabled" : "Disabled"}
+                </label>
+            </div>
         );
     }
 
+    /* Number */
     if (typeof value === "number") {
         return (
             <input
@@ -206,12 +208,13 @@ function PrimitiveField({
                 type="number"
                 value={value}
                 onChange={(e) => onChange(Number(e.target.value))}
-                className="font-text w-full px-[8px] py-2.5 text-sm bg-white border border-gray-200 rounded-lg
-                           focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black/20 transition-all"
+                className="font-text w-full h-10 px-3 text-sm bg-white border border-gray-200 rounded-lg
+                           focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-all"
             />
         );
     }
 
+    /* String */
     if (typeof value === "string") {
         const showMedia = isImageUrl(value) || isVideoUrl(value);
 
@@ -223,8 +226,9 @@ function PrimitiveField({
                         value={value}
                         onChange={(e) => onChange(e.target.value)}
                         rows={Math.min(8, Math.max(3, value.split("\n").length + 1))}
-                        className="font-text w-full px-[8px] py-2.5 text-sm bg-white border border-gray-200 rounded-lg
-                                   focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black/20 resize-y transition-all"
+                        className="font-text w-full px-3 py-2.5 text-sm bg-white border border-gray-200 rounded-lg
+                                   focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 resize-y transition-all
+                                   leading-relaxed"
                     />
                     {showMedia && <MediaPreview url={value} />}
                 </div>
@@ -235,19 +239,18 @@ function PrimitiveField({
             <div>
                 <div className="relative">
                     {showMedia && (
-                        <ImageIcon
-                            size={14}
-                            className="absolute left-[10px] top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none z-10"
-                        />
+                        <div className="absolute left-0 top-0 bottom-0 w-10 flex items-center justify-center pointer-events-none">
+                            <ImageIcon size={14} className="text-gray-400" />
+                        </div>
                     )}
                     <input
                         id={id}
                         type="text"
                         value={value}
                         onChange={(e) => onChange(e.target.value)}
-                        className={`font-text w-full py-2.5 text-sm bg-white border border-gray-200 rounded-lg
-                                    focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black/20 transition-all
-                                    ${showMedia ? "pl-[32px] pr-[8px]" : "px-[8px]"}`}
+                        className={`font-text w-full h-10 text-sm bg-white border border-gray-200 rounded-lg
+                                    focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-all
+                                    ${showMedia ? "pl-10 pr-3" : "px-3"}`}
                     />
                 </div>
                 {showMedia && <MediaPreview url={value} />}
@@ -255,7 +258,7 @@ function PrimitiveField({
         );
     }
 
-    // Fallback: render as JSON string
+    /* Fallback: JSON */
     return (
         <input
             id={id}
@@ -268,8 +271,8 @@ function PrimitiveField({
                     onChange(e.target.value);
                 }
             }}
-            className="font-text w-full px-[8px] py-2.5 text-sm bg-white border border-gray-200 rounded-lg
-                       focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black/20 transition-all"
+            className="font-text w-full h-10 px-3 text-sm bg-white border border-gray-200 rounded-lg
+                       focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-gray-400 transition-all"
         />
     );
 }
@@ -290,11 +293,10 @@ function ObjectFields({
     };
 
     return (
-        <div className="space-y-5">
+        <div className="space-y-6">
             {Object.entries(data).map(([key, value]) => {
                 const fieldPath = `${path}.${key}`;
 
-                // Nested object
                 if (typeof value === "object" && value !== null && !Array.isArray(value)) {
                     return (
                         <CollapsibleSection key={key} label={humanLabel(key)} defaultOpen={false}>
@@ -307,7 +309,6 @@ function ObjectFields({
                     );
                 }
 
-                // Array
                 if (Array.isArray(value)) {
                     return (
                         <ArrayField
@@ -320,7 +321,6 @@ function ObjectFields({
                     );
                 }
 
-                // Primitive
                 return (
                     <div key={key}>
                         <FieldLabel label={humanLabel(key)} htmlFor={`field-${fieldPath}`} />
@@ -389,7 +389,7 @@ function ArrayField({
             label={`${humanLabel(fieldKey)} (${value.length})`}
             defaultOpen={false}
         >
-            <div className="space-y-2">
+            <div className="space-y-3">
                 {value.map((item, i) => (
                     <ArrayItem
                         key={i}
@@ -403,7 +403,7 @@ function ArrayField({
                 <button
                     type="button"
                     onClick={handleAdd}
-                    className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-gray-500 hover:text-black
+                    className="flex items-center gap-2 px-4 py-2.5 text-xs font-medium text-gray-500 hover:text-black
                                border border-dashed border-gray-300 hover:border-gray-400 rounded-lg transition-all
                                hover:bg-gray-50 w-full justify-center"
                 >
@@ -433,22 +433,24 @@ function CollapsibleSection({
                 <Collapsible.Trigger asChild>
                     <button
                         type="button"
-                        className="w-full flex items-center gap-2 px-4 py-3 bg-gray-50/80 hover:bg-gray-100/80
+                        className="w-full flex items-center gap-2.5 px-5 py-3.5 bg-gray-50/80 hover:bg-gray-100/80
                                    font-text text-sm font-semibold text-gray-700 transition-colors text-left cursor-pointer"
                     >
-                        {open ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                        <span className="text-gray-400">
+                            {open ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                        </span>
                         {label}
                     </button>
                 </Collapsible.Trigger>
                 <Collapsible.Content className="overflow-hidden data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up">
-                    <div className="p-5 border-t border-gray-100">{children}</div>
+                    <div className="p-5 border-t border-gray-100 bg-white">{children}</div>
                 </Collapsible.Content>
             </div>
         </Collapsible.Root>
     );
 }
 
-/* ─── SectionEditor: lightweight form for multi-section page view ── */
+/* ─── SectionEditor: Radix Tabs for Editor/JSON mode ───────────────── */
 
 interface SectionEditorProps {
     data: any;
@@ -457,17 +459,13 @@ interface SectionEditorProps {
 }
 
 export function SectionEditor({ data, onChange, sectionId }: SectionEditorProps) {
-    const [mode, setMode] = useState<"form" | "json">("form");
     const [jsonText, setJsonText] = useState("");
     const [jsonError, setJsonError] = useState(false);
 
-    // Sync JSON text when switching to JSON mode
-    useEffect(() => {
-        if (mode === "json") {
-            setJsonText(JSON.stringify(data, null, 2));
-            setJsonError(false);
-        }
-    }, [mode]);
+    const handleJsonFocus = () => {
+        setJsonText(JSON.stringify(data, null, 2));
+        setJsonError(false);
+    };
 
     const handleJsonChange = (text: string) => {
         setJsonText(text);
@@ -481,51 +479,49 @@ export function SectionEditor({ data, onChange, sectionId }: SectionEditorProps)
     };
 
     return (
-        <div className="space-y-4">
-            {/* Mode toggle */}
-            <div className="flex items-center gap-1 bg-gray-100 p-0.5 rounded-lg w-fit">
-                <button
-                    type="button"
-                    onClick={() => setMode("form")}
-                    className={`px-4 py-3 font-text text-xs font-medium rounded-md transition-colors ${mode === "form"
-                            ? "bg-white text-black shadow-sm"
-                            : "text-gray-500 hover:text-black"
-                        }`}
+        <Tabs.Root defaultValue="form" className="flex flex-col gap-5">
+            <Tabs.List className="flex gap-1 bg-gray-100 p-1 rounded-lg w-fit">
+                <Tabs.Trigger
+                    value="form"
+                    className="px-4 py-2 font-text text-xs font-medium rounded-md transition-colors
+                               data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-sm
+                               data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:text-black cursor-pointer"
                 >
                     Editor
-                </button>
-                <button
-                    type="button"
-                    onClick={() => setMode("json")}
-                    className={`px-4 py-3 font-text text-xs font-medium rounded-md transition-colors ${mode === "json"
-                            ? "bg-white text-black shadow-sm"
-                            : "text-gray-500 hover:text-black"
-                        }`}
+                </Tabs.Trigger>
+                <Tabs.Trigger
+                    value="json"
+                    className="px-4 py-2 font-text text-xs font-medium rounded-md transition-colors
+                               data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-sm
+                               data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:text-black cursor-pointer"
                 >
                     JSON
-                </button>
-            </div>
+                </Tabs.Trigger>
+            </Tabs.List>
 
-            {/* Editor content */}
-            {mode === "form" ? (
+            <Tabs.Content value="form" className="outline-none">
                 <ObjectFields data={data} onChange={onChange} path={`section-${sectionId}`} />
-            ) : (
+            </Tabs.Content>
+
+            <Tabs.Content value="json" className="outline-none" onFocusCapture={handleJsonFocus}>
                 <div className="relative">
                     <textarea
                         value={jsonText}
+                        onFocus={handleJsonFocus}
                         onChange={(e) => handleJsonChange(e.target.value)}
                         className={`w-full min-h-[300px] font-mono text-sm p-4 bg-white rounded-xl border
-                                    focus:outline-none focus:ring-2 focus:ring-black/5 resize-y transition-all ${jsonError
-                                ? "border-red-300 focus:border-red-400"
-                                : "border-gray-200 focus:border-black/20"
-                            }`}
+                                    focus:outline-none focus:ring-2 focus:ring-black/10 resize-y transition-all leading-relaxed ${
+                                        jsonError
+                                            ? "border-red-300 focus:border-red-400"
+                                            : "border-gray-200 focus:border-gray-400"
+                                    }`}
                         spellCheck={false}
                     />
                     {jsonError && (
-                        <p className="text-red-500 text-xs mt-1.5 font-text">Invalid JSON</p>
+                        <p className="text-red-500 text-xs mt-2 font-text">Invalid JSON</p>
                     )}
                 </div>
-            )}
-        </div>
+            </Tabs.Content>
+        </Tabs.Root>
     );
 }

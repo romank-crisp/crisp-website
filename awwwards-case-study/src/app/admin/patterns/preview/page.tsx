@@ -38,7 +38,7 @@ import { FolkeuniversitetDesignSystem } from "@/components/blocks/Folkeuniversit
 import { AIVisualHeaderZoom } from "@/components/blocks/AIVisualHeaderZoom";
 import { AIVisualImageComparison } from "@/components/blocks/AIVisualImageComparison";
 import { AIVisualMadeByTeam } from "@/components/blocks/AIVisualMadeByTeam";
-import { AIVisualPriceCalculatorV2 } from "@/components/blocks/AIVisualPriceCalculatorV2";
+import { AIVisualPriceCalculator } from "@/components/blocks/AIVisualPriceCalculator";
 import { AIVisualVideoScroll } from "@/components/blocks/AIVisualVideoScroll";
 import { AIVisualTextIteration } from "@/components/blocks/AIVisualTextIteration";
 import { AIVisualTimeline } from "@/components/blocks/AIVisualTimeline";
@@ -309,7 +309,7 @@ async function renderBlock(block: string): Promise<React.ReactNode | null> {
             } catch {
                 data = undefined;
             }
-            return <AIVisualPriceCalculatorV2 data={data} />;
+            return <AIVisualPriceCalculator data={data} />;
         }
         case "AIVisualVideoScroll": {
             let data;

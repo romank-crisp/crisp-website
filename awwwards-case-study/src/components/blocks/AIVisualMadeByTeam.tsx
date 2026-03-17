@@ -114,10 +114,10 @@ export const AIVisualMadeByTeam = ({ data }: Props) => {
     return (
         <section
             ref={containerRef}
-            className="w-full relative z-10 overflow-hidden pt-[160px] pb-0 opacity-0 bg-white text-text flex flex-col items-center"
+            className="w-full relative z-10 overflow-hidden pt-[120px] pb-0 opacity-0 bg-white text-text flex flex-col items-center"
         >
             {/* Heading */}
-            <div className="max-w-[1475px] w-full px-6 md:px-16 mb-24 md:mb-32">
+            <div className="max-w-[1475px] w-full px-6 md:px-16 mb-[120px]">
                 <h2 className="font-mega text-mega-h2 uppercase">
                     {headingLine1}
                     <br />
@@ -199,9 +199,9 @@ export const AIVisualMadeByTeam = ({ data }: Props) => {
             </div>
 
             {/* Content & List */}
-            <div className="max-w-[1475px] w-full px-6 md:px-16 py-[128px] grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
-                <div className="lg:col-span-7">
-                    <h4 className="font-heading text-sm font-bold uppercase tracking-wider mb-[32px] md:mb-[64px] opacity-40">
+            <div className="max-w-[1475px] w-full px-6 md:px-16 pt-[120px] pb-[120px] grid grid-cols-1 lg:grid-cols-12 gap-y-[48px] lg:gap-24">
+                <div className="lg:col-span-7 flex flex-col gap-[48px]">
+                    <h4 className="font-heading text-sm font-bold uppercase tracking-wider opacity-40">
                         {leftColHeader}
                     </h4>
                     <CaseStudyTextReveal
@@ -209,8 +209,8 @@ export const AIVisualMadeByTeam = ({ data }: Props) => {
                         className="!p-0 !max-w-full font-text text-text-lg md:text-text-2xl text-text leading-[1.4]"
                     />
                 </div>
-                <div className="lg:col-span-4 lg:col-start-9 flex flex-col justify-center">
-                    <h4 className="font-heading text-sm font-bold uppercase tracking-wider mb-[32px] md:mb-[64px] opacity-40">
+                <div className="lg:col-span-4 lg:col-start-9 flex flex-col justify-center gap-[48px]">
+                    <h4 className="font-heading text-sm font-bold uppercase tracking-wider opacity-40">
                         {rightColHeader}
                     </h4>
                     <ul className="flex flex-col gap-6 text-text mt-[6px]">

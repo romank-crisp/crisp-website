@@ -8,7 +8,7 @@ import { SharedFAQ } from "@/components/blocks/SharedFAQ";
 
 import { AIVisualVideoScroll } from "@/components/blocks/AIVisualVideoScroll";
 import { AIVisualTimeline } from "@/components/blocks/AIVisualTimeline";
-import { AIVisualPriceCalculatorV2 } from "@/components/blocks/AIVisualPriceCalculatorV2";
+import { AIVisualPriceCalculator } from "@/components/blocks/AIVisualPriceCalculator";
 import { AIVisualMadeByTeam } from "@/components/blocks/AIVisualMadeByTeam";
 
 export default function PreviewClient({
@@ -33,7 +33,7 @@ export default function PreviewClient({
 
         { id: "AIVisualVideoScroll", label: "Video Scroll", render: () => videoScrollData ? <AIVisualVideoScroll data={videoScrollData} /> : <div>No Data</div> },
         { id: "AIVisualTimeline", label: "Timeline", render: () => timelineData ? <AIVisualTimeline data={timelineData} /> : <div>No Data</div> },
-        { id: "AIVisualPriceCalculator", label: "Price Calculator", render: () => <AIVisualPriceCalculatorV2 data={priceCalculatorData} /> },
+        { id: "AIVisualPriceCalculator", label: "Price Calculator", render: () => <AIVisualPriceCalculator data={priceCalculatorData} /> },
         { id: "AIVisualMadeByTeam", label: "Made By Team", render: () => <AIVisualMadeByTeam data={madeByTeamData} /> },
         { id: "SharedContactForm", label: "Contact Form", render: () => <div className="bg-white text-black text-white-override"><SharedContactForm data={servicesData.contactForm} /></div> },
         { id: "SharedFAQ", label: "FAQ", render: () => <SharedFAQ data={faqData} forceLightMode={true} /> },

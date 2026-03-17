@@ -14,7 +14,7 @@ export interface AIVisualHeaderZoomProps {
 
 const cloudImages: CloudImage[] = [
     // CENTER HERO (4×2 — widescreen ~1440x730)
-    { src: getAssetUrl("img/services/ai-case-study/visuals-01.jpg"), videoSrc: getAssetUrl("img/services/productvis.mp4"), isCenter: true, gridClass: "col-start-3 col-span-4 row-start-3 row-span-2" },
+    { src: getAssetUrl("img/services/ai-case-study/visuals-01.jpg"), videoSrc: "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/services/ai-case-study/productvis.webm", isCenter: true, gridClass: "col-start-3 col-span-4 row-start-3 row-span-2" },
 
     // Top row — four 2×2 blocks (rows 1-2)
     { src: getAssetUrl("img/services/ai-case-study/visuals-02.jpg"), gridClass: "col-start-1 col-span-2 row-start-1 row-span-2" },

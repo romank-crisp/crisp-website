@@ -108,11 +108,23 @@ export function AIVisualVideoScroll({ data }: Props) {
             // 3) Text overlays — all travel from 90vh, different destinations
             const lastIdx = data.overlays.length - 1;
 
+            // 4) Header title fades out early to prevent overlap
+            if (headerRef.current) {
+                gsap.set(headerRef.current, { opacity: 1, y: 0 });
+                master.to(headerRef.current, {
+                    opacity: 0,
+                    y: -80,
+                    ease: "power2.in",
+                    duration: 0.1,
+                }, 0.05); // Finishes by 0.15
+            }
+
             data.overlays.forEach((overlay, i) => {
                 const el = overlayRefs.current[i];
                 if (!el) return;
 
                 const isLast = i === lastIdx;
+                // Start overlaps after title finishes (0.15)
                 const startFraction = 0.2 + (i * 0.25);
                 const travelDuration = 0.25;
 
@@ -124,47 +136,23 @@ export function AIVisualVideoScroll({ data }: Props) {
                     destination = isLast ? "60vh" : "50vh";
                 }
 
-                gsap.set(el, { top: "90vh", opacity: 0 });
-
-                // Fade in
-                master.to(el, {
-                    opacity: 1,
-                    ease: "power2.out",
-                    duration: 0.08,
-                }, startFraction);
-
-                // Travel up
-                master.fromTo(el, {
-                    top: "90vh",
-                }, {
-                    top: destination,
-                    ease: "power3.out",
-                    duration: travelDuration,
-                }, startFraction);
+                gsap.set(el, { top: "80vh", opacity: 0 });
 
                 if (isLast) {
-                    // Lock in place (no fade out)
+                    // Last block fades in and locks at destination (shorter travel)
+                    master.to(el, { opacity: 1, ease: "power2.out", duration: travelDuration * 0.2 }, startFraction);
+                    master.fromTo(el, { top: "80vh" }, { top: destination, ease: "power3.out", duration: travelDuration }, startFraction);
                 } else {
-                    // Fade out before next appears
-                    const fadeOutStart = startFraction + travelDuration + 0.05;
-                    master.to(el, {
-                        opacity: 0,
-                        ease: "power2.in",
-                        duration: 0.08,
-                    }, fadeOutStart);
+                    // Other blocks scroll continuously Past the screen (shorter travel, e.g. 80vh -> 30vh)
+                    master.fromTo(el, { top: "80vh" }, { top: "30vh", ease: "none", duration: travelDuration }, startFraction);
+                    
+                    // 20% fade in
+                    master.to(el, { opacity: 1, ease: "none", duration: travelDuration * 0.2 }, startFraction);
+                    
+                    // 20% fade out at the end
+                    master.to(el, { opacity: 0, ease: "none", duration: travelDuration * 0.2 }, startFraction + (travelDuration * 0.8));
                 }
             });
-
-            // 4) Header title
-            if (headerRef.current) {
-                gsap.set(headerRef.current, { opacity: 1, y: 0 });
-                master.to(headerRef.current, {
-                    opacity: 0,
-                    y: -80,
-                    ease: "power2.in",
-                    duration: 0.12,
-                }, 0.3);
-            }
         };
 
         if (video.readyState >= 1) {
@@ -224,27 +212,37 @@ export function AIVisualVideoScroll({ data }: Props) {
 
                     {/* Vignette overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/30 pointer-events-none" />
+                </div>
 
-                    {/* Text overlays */}
+                {/* Text overlays strictly aligned to standard Crisp 1475px grid */}
+                <div className="absolute inset-x-0 top-0 h-screen pointer-events-none z-10 overflow-hidden text-center">
                     {data.overlays.map((overlay, i) => {
                         const isRight = i % 2 === 1;
-                        // Mobile: full-width single-column; Desktop: alternating left/right
-                        const posClass = isMobile
-                            ? "inset-x-0 px-6"
-                            : isRight
-                                ? "right-0 pr-[8.33%] pl-[66.67%]"
-                                : "left-0 pl-[8.33%] pr-[66.67%]";
 
                         return (
                             <div
                                 key={overlay.id}
                                 ref={(el) => { overlayRefs.current[i] = el; }}
-                                className={`absolute inset-y-0 flex items-center pointer-events-none ${posClass}`}
-                                style={{ opacity: 0 }}
+                                className="absolute left-0 right-0 pointer-events-none mx-auto w-full max-w-[1475px] px-6 md:px-16"
+                                style={{
+                                    opacity: 0,
+                                }}
                             >
-                                <p className="font-text text-text-sm md:text-text-lg text-white drop-shadow-lg leading-relaxed text-left">
-                                    {overlay.text}
-                                </p>
+                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-0 lg:gap-x-[24px]">
+                                    <div
+                                        className={
+                                            isMobile
+                                                ? "col-span-1"
+                                                : isRight
+                                                    ? "lg:col-start-8 lg:col-span-5"
+                                                    : "lg:col-start-1 lg:col-span-5"
+                                        }
+                                    >
+                                        <p className="font-text text-text-sm md:text-text-lg text-white drop-shadow-lg leading-relaxed text-left">
+                                            {overlay.text}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         );
                     })}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import type { PriceCalculatorV2Data, DeliverableV2 } from "@/components/blocks/AIVisualPriceCalculatorV2";
+import type { PriceCalculatorV2Data, DeliverableV2 } from "@/components/blocks/AIVisualPriceCalculator";
 
 // ─── Helpers (duplicated from component to keep admin bundle separate) ───
 
