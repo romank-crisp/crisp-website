@@ -66,25 +66,12 @@ export function HomeHorizontalMasonry({ columns: initialColumns, className }: Ho
         return initialColumns.map((col, colIdx) => ({
             ...col,
             cells: col.cells.map((cell, cellIdx) => {
-                // 3rd row (column index 2), bottom block (index 1) -> Spline Scene
+                // 3rd column (index 2), bottom block (index 1) -> Team Video
                 if (colIdx === 2 && cellIdx === 1) {
                     return {
                         ...cell,
                         content: (
-                            <div className="absolute inset-0 w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing [&>div]:!h-full [&>div]:!w-full [&>div>canvas]:!w-full [&>div>canvas]:!h-full [&>div>canvas]:object-cover">
-                                <Spline scene="/spline/scene.splinecode" />
-                            </div>
-                        )
-                    };
-                }
-
-                // 4col (column index 3), upper block (index 0) -> Team Video
-                if (colIdx === 3 && cellIdx === 0) {
-                    return {
-                        ...cell,
-                        className: cn(cell.className, "bg-white overflow-hidden"),
-                        content: (
-                            <div className="absolute inset-0 w-full h-full">
+                            <div className="absolute inset-0 w-full h-full overflow-hidden rounded-[inherit]">
                                 <video
                                     src="https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/home-hero/team.webm"
                                     autoPlay
@@ -98,10 +85,25 @@ export function HomeHorizontalMasonry({ columns: initialColumns, className }: Ho
                     };
                 }
 
+                // 4th column (index 3), upper block (index 0) -> Spline Scene
+                if (colIdx === 3 && cellIdx === 0) {
+                    return {
+                        ...cell,
+                        height: "50%",
+                        className: cn(cell.className, "bg-white overflow-hidden"),
+                        content: (
+                            <div className="absolute inset-0 w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing [&>div]:!h-full [&>div]:!w-full [&>div>canvas]:!w-full [&>div>canvas]:!h-full [&>div>canvas]:object-cover">
+                                <Spline scene="/spline/scene.splinecode" />
+                            </div>
+                        )
+                    };
+                }
+
                 // 4col (column index 3), bottom block (index 1) -> Lottie pinned to bottom edge
                 if (colIdx === 3 && cellIdx === 1) {
                     return {
                         ...cell,
+                        height: "50%",
                         className: cn(cell.className, "overflow-hidden p-0 !scale-100"),
                         content: (
                             <div className="absolute inset-0 w-full h-full pointer-events-none flex items-end justify-center">

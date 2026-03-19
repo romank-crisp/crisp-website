@@ -69,6 +69,7 @@ const CMS_TREE: TreeGroup[] = [
                 icon: FileText,
                 children: [
                     { id: "aivisuals.json", label: "Hero" },
+                    { id: "aivisuals-text-iteration.json", label: "Text Iteration" },
                     { id: "aivisuals-what-we-offer.json", label: "What We Offer" },
                     { id: "aivisuals-video-scroll.json", label: "Video Scroll" },
                     { id: "aivisuals-timeline.json", label: "Timeline" },

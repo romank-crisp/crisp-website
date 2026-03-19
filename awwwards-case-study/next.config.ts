@@ -3,6 +3,7 @@ import withBundleAnalyzer from '@next/bundle-analyzer';
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  staticPageGenerationTimeout: 180,
   env: {
     NEXT_PUBLIC_ADMIN_PASSWORD: process.env.NEXT_PUBLIC_ADMIN_PASSWORD ?? '',
     NEXT_PUBLIC_ADMIN_VERSION: process.env.NEXT_PUBLIC_ADMIN_VERSION ?? 'v1',

@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import type { Metadata, Viewport } from "next";
 
 
@@ -46,8 +48,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const footerData = await readContent("footer.json");
-  const navigationData = await readContent("navigation.json");
+  const footerData = await readContent("footer.json").catch(() => ({}));
+  const navigationData = await readContent("navigation.json").catch(() => ({}));
 
   return (
     <html lang="en" className={`${staatliches.variable} ${dmSans.variable}`}>

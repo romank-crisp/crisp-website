@@ -12,11 +12,11 @@ if (typeof window !== "undefined") {
 }
 
 interface AIVisualTextIterationProps {
-    texts: string[];
+    texts?: string[];
     className?: string;
 }
 
-export function AIVisualTextIteration({ texts, className }: AIVisualTextIterationProps) {
+export function AIVisualTextIteration({ texts = [], className }: AIVisualTextIterationProps) {
     // Outer section: tall scroll area (CSS controls height, not GSAP)
     const sectionRef = useRef<HTMLDivElement>(null);
     const textRefs = useRef<(HTMLDivElement | null)[]>([]);

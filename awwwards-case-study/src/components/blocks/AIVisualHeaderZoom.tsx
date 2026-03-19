@@ -65,7 +65,12 @@ export function AIVisualHeaderZoom({ data }: AIVisualHeaderZoomProps) {
             }
         });
 
-        const initialScale = 0.6;
+        // Calculate initial scale so center video (50% of grid) matches max-width
+        const viewW = window.innerWidth;
+        const maxContentW = Math.min(1475, viewW - 64); // max-width with px-8 padding
+        // Center block = 4/8 cols = 50% of grid. Grid = 240vw.
+        // We need: scale * 0.5 * 2.4 * viewW = maxContentW
+        const initialScale = maxContentW / (0.5 * 2.4 * viewW);
         gsap.set(gridRef.current, { xPercent: -50, yPercent: -52, scale: initialScale, transformOrigin: "center center" });
 
         activeImages.forEach((img, idx) => {

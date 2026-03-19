@@ -1,4 +1,4 @@
-export const revalidate = 3600; // ISR: regenerate every hour
+export const dynamic = 'force-dynamic';
 
 import { WorksPage } from './works-page';
 import { getAssetUrl } from "@/lib/utils";
@@ -31,9 +31,13 @@ export default async function Page() {
 
     let worksData: WorksData;
     try {
-        worksData = await readContent("works.json");
-        // Ensure default fallback if file is empty or invalid
-        if (!worksData || !Array.isArray(worksData)) {
+        const raw = await readContent("works.json");
+        // GCS may store works as an object with numeric keys {"0": {...}, "1": {...}} instead of an array
+        if (Array.isArray(raw)) {
+            worksData = raw;
+        } else if (raw && typeof raw === "object") {
+            worksData = Object.values(raw);
+        } else {
             worksData = [];
         }
     } catch (error) {

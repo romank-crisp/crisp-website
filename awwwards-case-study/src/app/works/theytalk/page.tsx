@@ -1,4 +1,4 @@
-export const revalidate = 3600; // ISR: regenerate every hour
+export const dynamic = 'force-dynamic';
 
 import { CaseStudyPage } from "@/templates/case-study/CaseStudyPage";
 import { readContent } from "@/lib/content";

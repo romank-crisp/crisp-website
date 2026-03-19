@@ -1,4 +1,4 @@
-export const revalidate = 3600; // ISR: regenerate every hour
+export const dynamic = 'force-dynamic';
 
 import AIVisualContentPage from './ai-visual-content-page';
 import { readContent } from '@/lib/content';
@@ -80,6 +80,14 @@ export default async function Page() {
         ctaData = null;
     }
 
+    // Text iteration data is optional
+    let textIterationData;
+    try {
+        textIterationData = await readContent("aivisuals-text-iteration.json");
+    } catch {
+        textIterationData = null;
+    }
+
     return (
         <AIVisualContentPage
             servicesData={servicesData}
@@ -90,6 +98,7 @@ export default async function Page() {
             madeByTeamData={madeByTeamData}
             whatWeOfferData={whatWeOfferData}
             ctaData={ctaData}
+            textIterationData={textIterationData}
         />
     );
 }
