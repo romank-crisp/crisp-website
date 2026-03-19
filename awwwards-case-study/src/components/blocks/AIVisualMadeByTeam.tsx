@@ -118,7 +118,7 @@ export const AIVisualMadeByTeam = ({ data }: Props) => {
         >
             {/* Heading */}
             <div className="max-w-[1475px] w-full px-6 md:px-16 mb-12 md:mb-[120px]">
-                <h2 className="font-heading text-h2 md:font-mega md:text-mega-h2 uppercase">
+                <h2 className="font-mega text-mega-h2 uppercase">
                     {headingLine1}
                     <br />
                     <span className="text-brand">
@@ -199,7 +199,7 @@ export const AIVisualMadeByTeam = ({ data }: Props) => {
             </div>
 
             {/* Content & List */}
-            <div className="max-w-[1475px] w-full px-6 md:px-16 pt-20 pb-20 md:pt-[120px] md:pb-[120px] grid grid-cols-1 lg:grid-cols-12 gap-y-12 lg:gap-24">
+            <div className="max-w-[1475px] w-full px-6 md:px-16 pt-20 pb-20 md:pt-[120px] md:pb-[120px] grid grid-cols-1 lg:grid-cols-12 gap-y-36 lg:gap-24">
                 <div className="lg:col-span-7 flex flex-col gap-6 md:gap-[48px]">
                     <h4 className="font-heading text-sm font-bold uppercase tracking-wider opacity-40">
                         {leftColHeader}

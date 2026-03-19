@@ -7,6 +7,7 @@ import { getAssetUrl } from "@/lib/utils";
 /* ─── Sections ──────────────────────────────────────────────────── */
 
 const SECTIONS = [
+    { label: "Dashboard", href: "/admin/deploy" },
     { label: "CMS", href: "/admin" },
     { label: "Design System", href: "/admin/design-system" },
     { label: "Patterns", href: "/admin/patterns" },
