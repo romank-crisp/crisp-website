@@ -1,0 +1,13 @@
+{
+  "name": "crisp-contact-function",
+  "version": "1.0.0",
+  "description": "Cloud Function for Crisp website contact form submissions",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "deploy": "gcloud functions deploy contact-form --gen2 --runtime=nodejs22 --trigger-http --allow-unauthenticated --region=europe-west1 --project=crisp-website-485112 --set-secrets=RESEND_API_KEY=RESEND_API_KEY:latest --set-env-vars=CONTACT_EMAIL_TO=hello@crisp-studio.com,CONTACT_EMAIL_FROM=noreply@crisp-studio.com,ALLOWED_ORIGIN=https://crisp-studio.com"
+  },
+  "dependencies": {
+    "@google-cloud/functions-framework": "^5.0.2"
+  }
+}
