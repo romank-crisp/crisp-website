@@ -2,32 +2,32 @@
   "title": "Have questions?\nFind answers.",
   "items": [
     {
-      "question": "Why should we choose you instead of a larger, well-known agency?",
-      "answer": "You work directly with senior designers, not layered account structures. Smaller team. Faster decisions. Higher design involvement from leadership. No junior-heavy production model."
+      "question": "Why choose Crisp over a larger agency?",
+      "answer": "You work directly with founders and senior designers throughout the identity design process. This keeps decisions fast and ensures consistent, high-quality execution."
     },
     {
-      "question": "How do we know you understand our business, not just visuals?",
-      "answer": "Every project starts with structured positioning work before design begins. We define audience, competitive landscape, and communication priorities. Design decisions are linked to business objectives, not trends."
+      "question": "Do you focus on business goals or just design?",
+      "answer": "Crisp Studio starts by studying your business, your audience and what makes you different. Every brand identity decision is built around business goals — positioning, messaging, visual direction. Design follows strategy, not trends."
     },
     {
-      "question": "What makes your branding approach different?",
-      "answer": "We combine structured strategy with AI-accelerated exploration. That means broader concept testing in less time and more refined outcomes. Efficiency in process, depth in execution."
+      "question": "How does your design process work?",
+      "answer": "Discovery first. We define your market, audience and what sets you apart. Then AI-accelerated concept exploration — broader testing in less time. Final stage: manual refinement. Every detail reviewed and polished by the design team. Efficiency in process, depth in execution. You approve direction at each stage."
     },
     {
-      "question": "How do you ensure the brand will work across digital products and websites?",
-      "answer": "We design branding as a system, not a logo. Typography, spacing logic, motion principles, and UI compatibility are considered from day one. The brand is built to scale into Webflow sites, SaaS products, and marketing assets."
+      "question": "How do you ensure the brand works across all platforms?",
+      "answer": "Crisp Studio designs branding as a system, not a logo. Typography, spacing logic, motion principles, and UI compatibility are considered from day one. The brand is built to scale into Webflow sites, SaaS products, and marketing assets."
     },
     {
-      "question": "What level of involvement will we have during the project?",
-      "answer": "Clear checkpoints. You review strategic direction early. You approve concept direction before full system development. No surprises at the end."
+      "question": "What's required from us during the project?",
+      "answer": "Initial brief, approve strategic direction, approve design concepts, final delivery review. Clear decision points, no daily involvement needed."
     },
     {
-      "question": "What happens if we don’t like the first concepts?",
-      "answer": "We present distinct, well-argued directions. Feedback is structured and translated into clear iteration steps. The process is designed to converge, not wander."
+      "question": "What if we don't like the concepts?",
+      "answer": "Crisp Studio shows multiple distinct directions first — completely different approaches. You choose one, then we refine through revisions. It's structured to get to the right answer, not endless options."
     },
     {
-      "question": "Do you have experience with companies like ours?",
-      "answer": "We work with B2B, SaaS, and industrial companies that need clarity, not decoration. Our focus is functional visual systems that support growth, hiring, sales, and product communication."
+      "question": "What industries do you work with?",
+      "answer": "B2B companies in SaaS, life science and education. Startups to enterprise. Our focus is functional visual systems that support business goals, not just aesthetics."
     }
   ]
 }

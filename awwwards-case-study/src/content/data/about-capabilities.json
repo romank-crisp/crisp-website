@@ -1,0 +1,50 @@
+{
+  "title": [
+    "WHY",
+    "IT WORKS"
+  ],
+  "items": [
+    {
+      "id": "visual-design",
+      "label": "Speed",
+      "image": "/img/imgcases/folkeuniversitetet/fu-case-01.png",
+      "description": "We create **brands that make you, you.** From strategy to visual identity to logo to full-scale design system — you got covered."
+    },
+    {
+      "id": "Digital",
+      "label": "Websites",
+      "image": "/img/imgcases/theytalk/tt-case-01.png",
+      "tags": [
+        "User Experience Design",
+        "Digital Marketing",
+        "Performance",
+        "React / Next.js",
+        "E-Commerce",
+        "Headless",
+        "API Integrations",
+        "SEO + AI Optimization",
+        "Interactive Design",
+        "Technical Planning"
+      ],
+      "description": "Websites that **load fast, AI discoverable and rank well**. Fast tech stack, designed and built with conversion in mind."
+    },
+    {
+      "id": "content-design",
+      "label": "Content Studio",
+      "image": "/img/imgcases/folkeuniversitetet/fu-case-02.png",
+      "tags": [
+        "Product Visuals",
+        "Personal Branding",
+        "Storytelling",
+        "Motion Design and Video",
+        "Perfomance copywriting",
+        "AI-driven Visual Content",
+        "eCommerce Visuals",
+        "Product Visualization",
+        "Content Strategy",
+        "Campaign Assets"
+      ],
+      "description": "Day-to-day visual content delivered to **make your brand stand out visually**. You deserve to look better!"
+    }
+  ]
+}

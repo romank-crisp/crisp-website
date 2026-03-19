@@ -1,0 +1,50 @@
+{
+  "0": {
+    "title": "Folkeuniversitetet",
+    "tags": [
+      "Branding",
+      "Communication Materials",
+      "Web Design"
+    ],
+    "image": "/img/imgcases/folkeuniversitetet/fu-case-01.png",
+    "video": "/img/imgcases/folkeuniversitetet/fu-showreel.webm",
+    "poster": "/img/imgcases/folkeuniversitetet/fu-case-01.png",
+    "href": "/works/folkeuniversitetet"
+  },
+  "1": {
+    "title": "Visual Content Creation",
+    "tags": [
+      "AI Visual Content",
+      "Video Production",
+      "3D Design"
+    ],
+    "image": "/img/services/ai-case-study/productvis.webm",
+    "video": "/img/services/ai-case-study/productvis.webm",
+    "poster": "/img/services/ai-case-study/productvis.webm",
+    "href": "/service/ai-visual-content"
+  },
+  "2": {
+    "title": "CentroGreen",
+    "tags": [
+      "Visual Identity",
+      "Web Design",
+      "Animation"
+    ],
+    "image": "/img/imgcases/centrogreen/cg-image-01.jpg",
+    "video": "/img/imgcases/centrogreen/centrogreen-reel.webm",
+    "poster": "/img/imgcases/centrogreen/cg-image-01.jpg",
+    "href": "/works/centrogreen"
+  },
+  "3": {
+    "title": "TheyTalk",
+    "tags": [
+      "Platform",
+      "Web Design",
+      "Development"
+    ],
+    "image": "/img/imgcases/theytalk/theytalk-01.png",
+    "video": "/img/imgcases/theytalk/theytalk-full.webm",
+    "poster": "/img/imgcases/theytalk/theytalk-01.png",
+    "href": "/works/theytalk"
+  }
+}

@@ -8,50 +8,29 @@
   "services": [
     {
       "title": "Branding",
-      "description": "We build visual identity that tells your story and connects with your audience. Brand identity, logo and design systems — every detail considered to make your brand recognizable and ready to scale.",
+      "description": "We create brands that tell your story and connect with your audience emotionally.",
       "labels": [
+        "STRATEGY AND FOUNDATION",
         "BRAND IDENTITY",
-        "LOGO",
-        "DESIGN SYSTEMS",
-        "VISUAL GUIDELINES",
-        "TYPOGRAPHY",
-        "COLOR PALETTE",
-        "BRAND STRATEGY",
-        "ART DIRECTION",
-        "PACKAGING DESIGN",
-        "BRAND POSITIONING"
+        "DESIGN SYSTEMS"
       ]
     },
     {
-      "title": "Web Development",
-      "description": "Websites that load fast, rank well and convert. Designed and built around what your business actually needs. Modern technologies that give you full control and room to grow.",
+      "title": "Websites",
+      "description": "Websites that load fast, rank well and convert. Designed and built around what your business actually needs. ",
       "labels": [
-        "CUSTOM DEVELOPMENT",
-        "WEBFLOW",
-        "PERFORMANCE",
-        "REACT / NEXT.JS",
-        "E-COMMERCE",
-        "HEADLESS CMS",
-        "API INTEGRATIONS",
-        "SEO OPTIMIZATION",
-        "WEB ANIMATIONS",
-        "TECHNICAL PLANNING"
+        "PROMO WEBSITES",
+        "CORPORATE WEBSITES",
+        "CUSTOM DEVELOPMENT"
       ]
     },
     {
-      "title": "Content Creation",
-      "description": "We help you define your voice and structure your content strategy. Product visuals, video, website content and social media. All produced for your business to drive action.",
+      "title": "Visual Content",
+      "description": "We create content for your business to drive action.",
       "labels": [
         "PRODUCT VISUALS",
-        "SOCIAL MEDIA",
-        "STORYTELLING",
-        "VIDEO",
-        "COPYWRITING",
-        "MOTION GRAPHICS",
-        "PHOTOGRAPHY",
-        "3D ILLUSTRATION",
-        "CONTENT STRATEGY",
-        "CAMPAIGN ASSETS"
+        "AI-ASSISTED VIDEOS",
+        "PRESENTATION DECKS"
       ]
     }
   ]

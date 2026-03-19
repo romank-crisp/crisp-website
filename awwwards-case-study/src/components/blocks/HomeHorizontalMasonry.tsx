@@ -65,6 +65,8 @@ export function HomeHorizontalMasonry({ columns: initialColumns, className }: Ho
     const columns = useMemo(() => {
         return initialColumns.map((col, colIdx) => ({
             ...col,
+            // Override col4 width to match col3 (40vw)
+            width: colIdx === 3 ? "40vw" : col.width,
             cells: col.cells.map((cell, cellIdx) => {
                 // 3rd column (index 2), bottom block (index 1) -> Team Video
                 if (colIdx === 2 && cellIdx === 1) {
@@ -89,7 +91,7 @@ export function HomeHorizontalMasonry({ columns: initialColumns, className }: Ho
                 if (colIdx === 3 && cellIdx === 0) {
                     return {
                         ...cell,
-                        height: "50%",
+                        height: "40vw",
                         className: cn(cell.className, "bg-white overflow-hidden"),
                         content: (
                             <div className="absolute inset-0 w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing [&>div]:!h-full [&>div]:!w-full [&>div>canvas]:!w-full [&>div>canvas]:!h-full [&>div>canvas]:object-cover">

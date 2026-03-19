@@ -1,11 +1,15 @@
 {
-    "title": "CentroGreen Case Study",
-    "metaTags": [
-        "<meta name='description' content='Brand identity, Website and Product Visualization' />"
-    ],
-    "openGraph": [
-        "<meta property='og:title' content='CentroGreen Case Study' />",
-        "<meta property='og:description' content='Brand identity, Website and Product Visualization' />"
-    ],
-    "canonical": "https://crisp-studio.com"
+  "title": "<title>Crisp — Design studio for brands that need to move fast</title>",
+  "metaTags": [
+    "<meta name=\"description\" content=\"Design studio for brands that need to move fast. Branding, content, and websites — from idea to market. AI-powered speed. Specialist-level craft.\">",
+    "<meta name=\"robots\" content=\"index, follow\">",
+    "<meta charset=\"UTF-8\">",
+    "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+  ],
+  "openGraph": [
+    "<meta property=\"og:type\" content=\"website\">",
+    "<meta property=\"og:title\" content=\"Crisp — Design studio for brands that need to move fast\">",
+    "<meta property=\"og:description\" content=\"Branding, content, and websites — from idea to market. AI-powered speed with specialist-level craft. Since 2006.\">"
+  ],
+  "canonical": "<link rel=\"canonical\" href=\"https://crisp-studio.com/\">"
 }

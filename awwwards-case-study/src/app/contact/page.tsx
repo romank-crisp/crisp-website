@@ -1,11 +1,11 @@
-export const dynamic = 'force-dynamic';
+
 
 import { parseSeoData } from "@/lib/seo";
 import { SeoData } from "@/types/seo";
-import { readContent } from '@/lib/content';
+import { readContentStatic } from '@/lib/content-static';
 
 export async function generateMetadata() {
-    const seoData = await readContent("seo/seo-contact.json") as SeoData;
+    const seoData = readContentStatic("seo/seo-contact.json") as SeoData;
     return parseSeoData(seoData);
 }
 

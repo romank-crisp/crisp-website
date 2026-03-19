@@ -1,0 +1,106 @@
+{
+  "sectionTitle": "TRANSPARENT\nPRICING",
+  "productLabel": "How many products need visuals?",
+  "defaultPlaceholder": "/img/services/ai-case-study/calc/ai-calc-default.png",
+  "deliverables": [
+    {
+      "id": "product-shots",
+      "label": "Product Shots",
+      "multiplier": 0.25,
+      "media": "/img/services/ai-case-study/calc/ai-calc-productshots.png",
+      "defaultMedia": "/img/services/ai-case-study/calc/ai-calc-default.png",
+      "mediaType": "image",
+      "basePrice": 25,
+      "baseDays": 0.3,
+      "baseAssets": 3
+    },
+    {
+      "id": "campaign-visuals",
+      "label": "Campaign Key Visual",
+      "multiplier": 1.25,
+      "media": "/img/services/ai-case-study/calc/ai-calc-campaing visuals.png",
+      "defaultMedia": "/img/services/ai-case-study/calc/ai-calc-default.png",
+      "mediaType": "image",
+      "basePrice": 100,
+      "baseDays": 0.4,
+      "baseAssets": 2
+    },
+    {
+      "id": "marketing-videos",
+      "label": "Marketing Video",
+      "multiplier": 1.5,
+      "media": "/img/services/ai-case-study/calc/ai-video_1.mp4",
+      "defaultMedia": "/img/services/ai-case-study/calc/ai-calc-default.png",
+      "mediaType": "video",
+      "basePrice": 200,
+      "baseDays": 0.6,
+      "baseAssets": 1
+    },
+    {
+      "id": "campaign-assets",
+      "label": "Campaign Assets",
+      "multiplier": 0.25,
+      "media": "/img/services/ai-case-study/calc/ai-calc-campaignassets.png",
+      "defaultMedia": "/img/services/ai-case-study/calc/ai-calc-default.png",
+      "mediaType": "image",
+      "basePrice": 100,
+      "baseDays": 0.5,
+      "baseAssets": 5
+    }
+  ],
+  "incrementTiers": [
+    {
+      "min": 1,
+      "max": 10,
+      "step": 1
+    },
+    {
+      "min": 11,
+      "max": 50,
+      "step": 5
+    },
+    {
+      "min": 51,
+      "max": 99,
+      "step": 10
+    }
+  ],
+  "maxProducts": 99,
+  "minProducts": 3,
+  "efficiencyTiers": [
+    {
+      "min": 1,
+      "max": 5,
+      "divisor": 1.25
+    },
+    {
+      "min": 6,
+      "max": 10,
+      "divisor": 1.5
+    },
+    {
+      "min": 11,
+      "max": 20,
+      "divisor": 2
+    },
+    {
+      "min": 21,
+      "max": 50,
+      "divisor": 2.5
+    },
+    {
+      "min": 51,
+      "max": 100,
+      "divisor": 3
+    }
+  ],
+  "estimatedCostLabel": "Delivered",
+  "assetsDeliveredLabel": "Assets",
+  "totalCostLabel": "Cost",
+  "ctaLabel": "Get a quote",
+  "ctaCaption": "",
+  "deliveryUnit": "days",
+  "assetsUnit": "assets",
+  "basePricePerProduct": 50,
+  "baseDaysPerProduct": 1
+}

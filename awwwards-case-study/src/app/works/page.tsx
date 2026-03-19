@@ -1,8 +1,8 @@
-export const dynamic = 'force-dynamic';
+
 
 import { WorksPage } from './works-page';
 import { getAssetUrl } from "@/lib/utils";
-import { readContent } from '@/lib/content';
+import { readContentStatic } from '@/lib/content-static';
 import { parseSeoData } from "@/lib/seo";
 import { SeoData } from "@/types/seo";
 import { WorksData, WorksPageContent } from "@/types/work";
@@ -10,7 +10,7 @@ import { WorksData, WorksPageContent } from "@/types/work";
 
 
 export async function generateMetadata() {
-    const seoData = await readContent("seo/seo-works.json").catch(() => null) as SeoData | null;
+    const seoData = readContentStatic("seo/seo-works.json") as SeoData | null;
 
     if (!seoData) {
         return {
@@ -26,22 +26,17 @@ export async function generateMetadata() {
 }
 
 export default async function Page() {
-    const clientsData = await readContent("clients.json").catch(() => []);
-    const worksContent = await readContent("works-content.json").catch(() => ({} as WorksPageContent));
+    const clientsData = readContentStatic("clients.json");
+    const worksContent = readContentStatic("works-content.json") as WorksPageContent;
 
     let worksData: WorksData;
-    try {
-        const raw = await readContent("works.json");
-        // GCS may store works as an object with numeric keys {"0": {...}, "1": {...}} instead of an array
-        if (Array.isArray(raw)) {
-            worksData = raw;
-        } else if (raw && typeof raw === "object") {
-            worksData = Object.values(raw);
-        } else {
-            worksData = [];
-        }
-    } catch (error) {
-        console.warn("Failed to load works.json, using default data.", error);
+    const raw = readContentStatic("works.json");
+    // GCS may store works as an object with numeric keys {"0": {...}, "1": {...}} instead of an array
+    if (Array.isArray(raw)) {
+        worksData = raw;
+    } else if (raw && typeof raw === "object") {
+        worksData = Object.values(raw);
+    } else {
         worksData = [];
     }
 

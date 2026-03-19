@@ -1,0 +1,29 @@
+{
+  "sectionTitle": "We offer Visual Production 2.0",
+  "cards": [
+    {
+      "id": "1",
+      "title": "Campaign Visuals & Product Shots",
+      "description": "No AI slop, we concept, compose and use latest AI stack So all looks real, feels good and stays on-brand",
+      "mediaSrc": "img/services/ai-case-study/ai-product-shots-prod-3.json",
+      "mediaType": "lottie",
+      "layout": "media-left"
+    },
+    {
+      "id": "2",
+      "title": "AI Videos",
+      "description": "Art-directed product videos that moves sales From concept to final cut, delivered campaign-ready.",
+      "mediaSrc": "img/services/ai-case-study/ai-product-shots-prod-2.webm",
+      "mediaType": "video",
+      "layout": "media-right"
+    },
+    {
+      "id": "3",
+      "title": "Campaign asset",
+      "description": "We deliver ready-to-use assets sized and styled omni-channel marketing — social, web, print, and marketplace listings",
+      "mediaSrc": "img/services/ai-case-study/ai-product-shots-prod-1.json",
+      "mediaType": "lottie",
+      "layout": "media-left"
+    }
+  ]
+}

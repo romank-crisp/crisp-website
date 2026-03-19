@@ -1,0 +1,55 @@
+{
+  "hero": {
+    "label": "Visual Content Factory",
+    "title": "AI Campaign Visuals",
+    "description": "We create artdirected AI visuals and videos for campaigns that need to perform",
+    "bentoImages": [
+      {
+        "src": "/img/services/ai-case-study/productvis.webm",
+        "videoSrc": "/img/services/ai-case-study/productvis.webm",
+        "isCenter": true,
+        "gridClass": "col-start-3 col-span-4 row-start-3 row-span-2"
+      },
+      {
+        "src": "/img/services/ai-case-study/visuals-02.jpg",
+        "gridClass": "col-start-1 col-span-2 row-start-1 row-span-2"
+      },
+      {
+        "src": "/img/services/ai-case-study/visuals-03.jpg",
+        "gridClass": "col-start-3 col-span-2 row-start-1 row-span-2"
+      },
+      {
+        "src": "/img/services/ai-case-study/visuals-04.jpg",
+        "gridClass": "col-start-5 col-span-2 row-start-1 row-span-2"
+      },
+      {
+        "src": "/img/services/ai-case-study/visuals-05.jpg",
+        "gridClass": "col-start-7 col-span-2 row-start-1 row-span-2"
+      },
+      {
+        "src": "/img/services/ai-case-study/visuals-06.jpg",
+        "gridClass": "col-start-1 col-span-2 row-start-3 row-span-2"
+      },
+      {
+        "src": "/img/services/ai-case-study/visuals-07.jpg",
+        "gridClass": "col-start-7 col-span-2 row-start-3 row-span-2"
+      },
+      {
+        "src": "/img/services/ai-case-study/visuals-08.jpg",
+        "gridClass": "col-start-1 col-span-2 row-start-5 row-span-2"
+      },
+      {
+        "src": "/img/services/ai-case-study/visuals-09.jpg",
+        "gridClass": "col-start-3 col-span-2 row-start-5 row-span-2"
+      },
+      {
+        "src": "/img/services/ai-case-study/visuals-10.jpg",
+        "gridClass": "col-start-5 col-span-2 row-start-5 row-span-2"
+      },
+      {
+        "src": "/img/services/ai-case-study/visuals-03.jpg",
+        "gridClass": "col-start-7 col-span-2 row-start-5 row-span-2"
+      }
+    ]
+  }
+}
