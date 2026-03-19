@@ -130,21 +130,27 @@ export function AIVisualVideoScroll({ data }: Props) {
 
                 // Destination: desktop 1st/2nd=50vh, desktop 3rd=60vh, mobile=70vh
                 let destination: string;
+                let startPos: string;
+                let endPos: string;
                 if (isMobile) {
                     destination = "70vh";
+                    startPos = "80vh";
+                    endPos = "55vh"; // 50% reduced travel (was 30vh)
                 } else {
                     destination = isLast ? "60vh" : "50vh";
+                    startPos = "80vh";
+                    endPos = "42vh"; // 25% reduced travel (was 30vh)
                 }
 
-                gsap.set(el, { top: "80vh", opacity: 0 });
+                gsap.set(el, { top: startPos, opacity: 0 });
 
                 if (isLast) {
                     // Last block fades in and locks at destination (shorter travel)
                     master.to(el, { opacity: 1, ease: "power2.out", duration: travelDuration * 0.2 }, startFraction);
-                    master.fromTo(el, { top: "80vh" }, { top: destination, ease: "power3.out", duration: travelDuration }, startFraction);
+                    master.fromTo(el, { top: startPos }, { top: destination, ease: "power3.out", duration: travelDuration }, startFraction);
                 } else {
-                    // Other blocks scroll continuously Past the screen (shorter travel, e.g. 80vh -> 30vh)
-                    master.fromTo(el, { top: "80vh" }, { top: "30vh", ease: "none", duration: travelDuration }, startFraction);
+                    // Other blocks scroll continuously past the screen
+                    master.fromTo(el, { top: startPos }, { top: endPos, ease: "none", duration: travelDuration }, startFraction);
                     
                     // 20% fade in
                     master.to(el, { opacity: 1, ease: "none", duration: travelDuration * 0.2 }, startFraction);
@@ -180,7 +186,7 @@ export function AIVisualVideoScroll({ data }: Props) {
     return (
         <section
             ref={containerRef}
-            className="relative bg-white pt-[160px] pb-0"
+            className="relative bg-white pt-[80px] md:pt-[160px] pb-0"
             style={{ height: "500vh" }}
         >
             <div
@@ -190,11 +196,10 @@ export function AIVisualVideoScroll({ data }: Props) {
                 {/* Video wrapper */}
                 <div
                     ref={videoWrapperRef}
-                    className="relative overflow-hidden will-change-transform"
+                    className="relative overflow-hidden will-change-transform rounded-none md:rounded-[16px]"
                     style={{
-                        width: isMobile ? "calc(100% - 48px)" : "100%",
+                        width: "100%",
                         maxWidth: isMobile ? undefined : "1475px",
-                        borderRadius: isMobile ? "12px" : "16px",
                         aspectRatio: isMobile ? undefined : "16/9",
                         height: isMobile ? "100vh" : undefined,
                         margin: "0 auto",
@@ -238,7 +243,7 @@ export function AIVisualVideoScroll({ data }: Props) {
                                                     : "lg:col-start-1 lg:col-span-5"
                                         }
                                     >
-                                        <p className="font-text text-text-sm md:text-text-lg text-white drop-shadow-lg leading-relaxed text-left">
+                                        <p className="font-text text-text md:text-text-lg text-white drop-shadow-lg leading-relaxed text-left">
                                             {overlay.text}
                                         </p>
                                     </div>

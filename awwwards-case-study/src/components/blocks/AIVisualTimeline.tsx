@@ -117,8 +117,8 @@ export function AIVisualTimeline({ data }: AIVisualTimelineProps) {
                         </div>
                     </div>
 
-                    {/* Columns Grid - 12-col on Desktop, Stacked on Mobile */}
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-[96px] lg:gap-y-0 gap-x-0 lg:gap-x-[24px] lg:grid-rows-2 relative z-10 w-full flex-1">
+                    {/* Desktop: 12-col Grid. Mobile: Horizontal Swiper */}
+                    <div className="flex lg:grid lg:grid-cols-12 overflow-x-auto lg:overflow-visible [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory gap-x-4 lg:gap-x-[24px] gap-y-0 lg:grid-rows-2 relative z-10 w-[100vw] lg:w-full flex-1 touch-pan-x -ml-6 lg:ml-0 px-6 lg:px-0">
                         {data.steps.map((step, i) => {
                             // Assign grid span classes based on array index to match diagram:
                             // All blocks should be identical width (span 4):
@@ -138,7 +138,7 @@ export function AIVisualTimeline({ data }: AIVisualTimelineProps) {
                                 <div
                                     key={step.id}
                                     ref={(el) => { columnsRef.current[i] = el; }}
-                                    className={`flex flex-col relative w-full ${gridClass} ${
+                                    className={`flex flex-col relative flex-shrink-0 w-[85vw] snap-center lg:w-full lg:flex-shrink lg:flex-1 ${gridClass} ${
                                         isTop 
                                             ? 'lg:row-start-1 lg:justify-end lg:pb-[96px]' 
                                             : 'lg:row-start-2 lg:justify-start lg:pt-[96px]'
@@ -173,8 +173,6 @@ export function AIVisualTimeline({ data }: AIVisualTimelineProps) {
                                         </>
                                     )}
 
-                                    {/* Mobile/Tablet Connector Line (always downwards block to block) */}
-                                    <div className="block lg:hidden absolute left-[48px] bottom-[-96px] w-[2px] h-[96px] border-l-[2px] border-dashed border-gray-300 z-0" />
                                 </div>
                             );
                         })}

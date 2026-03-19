@@ -154,7 +154,7 @@ export function AIVisualWhatWeOffer({ data }: AIVisualWhatWeOfferProps) {
     if (!data) return null;
 
     return (
-        <section className="relative w-full bg-white pt-[160px] pb-0">
+        <section className="relative w-full bg-white pt-0 pb-0">
             <div className="max-w-[1475px] mx-auto px-6 md:px-16">
                 {/* Section Title */}
                 <h2 className="font-mega text-mega-h2 uppercase text-text mb-48 md:mb-64">

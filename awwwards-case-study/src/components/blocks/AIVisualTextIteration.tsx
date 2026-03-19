@@ -84,7 +84,7 @@ export function AIVisualTextIteration({ texts = [], className }: AIVisualTextIte
             {/* CSS sticky — stays at top for the full 250vh, no GSAP pin needed */}
             <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden">
                 {/* Wrapper keeps heading + text as a vertically centered group */}
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center w-full">
                     {/* Fixed sub-heading above the text animation */}
                     <h4 className="font-heading text-h4 text-brand tracking-wider mb-10 uppercase z-10">
                         THE PROBLEM
@@ -94,9 +94,9 @@ export function AIVisualTextIteration({ texts = [], className }: AIVisualTextIte
                             <div
                                 key={i}
                                 ref={(el) => { textRefs.current[i] = el; }}
-                                className="absolute inset-0 w-full flex items-start justify-center text-center will-change-transform"
+                                className="absolute inset-0 w-full flex items-start justify-center text-center will-change-transform px-6 md:px-0"
                             >
-                                <h1 className="font-heading text-h1 leading-[1.1] mx-auto text-text text-center">
+                                <h1 className="font-heading text-h1 md:text-[72px] leading-[1.1] mx-auto text-text text-center">
                                     <TextFormatter text={text} />
                                 </h1>
                             </div>

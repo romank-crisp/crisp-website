@@ -113,8 +113,8 @@ export function AIVisualHeaderZoom({ data }: AIVisualHeaderZoomProps) {
                                 __html: (data?.title || "Product<br />Visuals<br />That Convert").replace(/We Create<br\s*\/>/gi, "")
                             }}
                         />
-                        <div className="max-w-[480px]">
-                            <p className="font-text text-text-lg text-black leading-relaxed">
+                        <div className="w-full lg:max-w-[480px]">
+                            <p className="font-text text-text-lg text-black leading-[1.4]">
                                 {data?.description || "Static and motion — boost products visual intensity and connect your customers to the brands"}
                             </p>
                         </div>
@@ -122,14 +122,10 @@ export function AIVisualHeaderZoom({ data }: AIVisualHeaderZoomProps) {
                 </div>
             </div>
 
-            {/* Mobile: Horizontal infinite scroll gallery — 2 rows, swipeable */}
+            {/* Mobile: Horizontal infinite scroll gallery — 1 row, swipeable */}
             {isMobile && (() => {
                 const flatImages = activeImages.filter(img => !img.isCenter);
-                const half = Math.ceil(flatImages.length / 2);
-                const row1 = flatImages.slice(0, half);
-                const row2 = flatImages.slice(half);
-                const row1Loop = [...row1, ...row1, ...row1, ...row1];
-                const row2Loop = [...row2, ...row2, ...row2, ...row2];
+                const rowLoop = [...flatImages, ...flatImages, ...flatImages, ...flatImages];
 
                 // Pause auto-scroll on touch, resume on release
                 const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
@@ -142,14 +138,13 @@ export function AIVisualHeaderZoom({ data }: AIVisualHeaderZoomProps) {
                 };
 
                 return (
-                    <div className="w-full overflow-hidden" style={{ height: "calc(30vh + 30vh + 12px)" }}>
+                    <div className="w-full overflow-hidden" style={{ height: "36vh" }}>
                         {/* Row 1 — scrolls left */}
                         <div
-                            className="flex overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden touch-pan-x"
-                            style={{ marginBottom: "12px" }}
+                            className="flex overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden touch-pan-x h-full"
                         >
                             <div
-                                className="flex gap-[12px]"
+                                className="flex gap-[12px] h-full"
                                 style={{
                                     animation: "scrollLeft 60s linear infinite",
                                     width: "max-content",
@@ -157,11 +152,11 @@ export function AIVisualHeaderZoom({ data }: AIVisualHeaderZoomProps) {
                                 onTouchStart={handleTouchStart}
                                 onTouchEnd={handleTouchEnd}
                             >
-                                {row1Loop.map((img, idx) => (
+                                {rowLoop.map((img, idx) => (
                                     <div
                                         key={`r1-${idx}`}
-                                        className="relative flex-shrink-0 rounded-[16px] overflow-hidden bg-gray-100 cursor-pointer"
-                                        style={{ width: "30vh", height: "30vh" }}
+                                        className="relative flex-shrink-0 rounded-[16px] overflow-hidden bg-gray-100 cursor-pointer h-full"
+                                        style={{ width: "36vh" }}
                                         onClick={() => setPreviewSrc(getAssetUrl(img.src))}
                                     >
                                         {img.videoSrc ? (
@@ -177,42 +172,9 @@ export function AIVisualHeaderZoom({ data }: AIVisualHeaderZoomProps) {
                                                 alt={`Visual ${idx}`}
                                                 fill
                                                 className="object-cover rounded-[16px]"
-                                                sizes="30vh"
+                                                sizes="36vh"
                                             />
                                         )}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Row 2 — offset 25%, scrolls right */}
-                        <div
-                            className="flex overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden touch-pan-x"
-                        >
-                            <div
-                                className="flex gap-[12px]"
-                                style={{
-                                    animation: "scrollRight 70s linear infinite",
-                                    width: "max-content",
-                                    transform: "translateX(-25%)",
-                                }}
-                                onTouchStart={handleTouchStart}
-                                onTouchEnd={handleTouchEnd}
-                            >
-                                {row2Loop.map((img, idx) => (
-                                    <div
-                                        key={`r2-${idx}`}
-                                        className="relative flex-shrink-0 rounded-[16px] overflow-hidden bg-gray-100 cursor-pointer"
-                                        style={{ width: "30vh", height: "30vh" }}
-                                        onClick={() => setPreviewSrc(getAssetUrl(img.src))}
-                                    >
-                                        <Image
-                                            src={getAssetUrl(img.src)}
-                                            alt={`Visual ${idx}`}
-                                            fill
-                                            className="object-cover rounded-[16px]"
-                                            sizes="30vh"
-                                        />
                                     </div>
                                 ))}
                             </div>
@@ -221,11 +183,7 @@ export function AIVisualHeaderZoom({ data }: AIVisualHeaderZoomProps) {
                         <style jsx>{`
                             @keyframes scrollLeft {
                                 0% { transform: translateX(0); }
-                                100% { transform: translateX(-50%); }
-                            }
-                            @keyframes scrollRight {
-                                0% { transform: translateX(-25%); }
-                                100% { transform: translateX(25%); }
+                                100% { transform: translateX(-25%); }
                             }
                         `}</style>
                     </div>
