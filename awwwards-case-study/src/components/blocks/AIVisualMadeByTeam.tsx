@@ -9,10 +9,16 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 import { ArrowRight } from "lucide-react";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 import { getAssetUrl } from "@/lib/utils";
 import { CaseStudyTextReveal } from "@/components/blocks/CaseStudyTextReveal";
 import { TextFormatter } from "@/components/ui/TextFormatter";
+
+function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs));
+}
 
 export interface MadeByTeamMember {
     name: string;
@@ -199,7 +205,7 @@ export const AIVisualMadeByTeam = ({ data }: Props) => {
             </div>
 
             {/* Content & List */}
-            <div className="max-w-[1475px] w-full px-6 md:px-16 pt-20 pb-20 md:pt-[120px] md:pb-[120px] grid grid-cols-1 lg:grid-cols-12 gap-y-36 lg:gap-24">
+            <div className="max-w-[1475px] w-full px-6 md:px-16 pt-20 pb-20 md:pt-[120px] md:pb-[120px] grid grid-cols-1 lg:grid-cols-12 gap-y-24 lg:gap-24">
                 <div className="lg:col-span-7 flex flex-col gap-6 md:gap-[48px]">
                     <h4 className="font-heading text-sm font-bold uppercase tracking-wider opacity-40">
                         {leftColHeader}
@@ -214,12 +220,27 @@ export const AIVisualMadeByTeam = ({ data }: Props) => {
                         {rightColHeader}
                     </h4>
                     <ul className="flex flex-col gap-4 md:gap-6 text-text mt-[6px]">
-                        {listItems.map((item, index) => (
-                            <li key={index} className="flex items-center gap-4">
-                                <ArrowRight className="text-brand w-24 h-24 flex-shrink-0" />
-                                <h3 className="font-heading text-h4 md:text-h3"><TextFormatter text={item} /></h3>
-                            </li>
-                        ))}
+                        {listItems.map((item, index) => {
+                            const isArtDirection = item.toLowerCase().includes("art-direction");
+                            const isFeelCool = item.toLowerCase().includes("feel cool");
+                            
+                            return (
+                                <li key={index} className={cn(
+                                    "flex items-center gap-4",
+                                    isFeelCool && "pb-6 md:pb-8" // add +16px approx padding after (standard gap is 4/6, so 24/32 total)
+                                )}>
+                                    <ArrowRight className="text-brand w-24 h-24 flex-shrink-0" />
+                                    <h3 className={cn(
+                                        "font-heading",
+                                        isArtDirection 
+                                            ? "text-[32px] md:text-[48px] leading-tight" 
+                                            : "text-h4 md:text-h3"
+                                    )}>
+                                        <TextFormatter text={item} />
+                                    </h3>
+                                </li>
+                            );
+                        })}
                     </ul>
                 </div>
             </div>
