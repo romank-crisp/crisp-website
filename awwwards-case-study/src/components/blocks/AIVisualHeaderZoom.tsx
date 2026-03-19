@@ -101,7 +101,7 @@ export function AIVisualHeaderZoom({ data }: AIVisualHeaderZoomProps) {
     return (
         <section ref={containerRef} className="relative w-full bg-white">
             {/* Top Text Content */}
-            <div className="relative z-10 w-full pt-[15vh] pb-16 bg-white">
+            <div className="relative z-10 w-full pt-[15vh] pb-[32px] md:pb-16 bg-white">
                 <div className="max-w-[1475px] mx-auto px-6 md:px-16 w-full flex flex-col">
                     <p className="font-heading font-bold text-xs uppercase tracking-[0.2em] text-black mb-8">
                         {data?.label || "Visual Content Factory"}
