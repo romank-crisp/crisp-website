@@ -89,7 +89,7 @@ export function AIVisualTextIteration({ texts = [], className }: AIVisualTextIte
                     <h4 className="font-heading text-h4 text-brand tracking-wider mb-10 uppercase z-10">
                         THE PROBLEM
                     </h4>
-                    <div className="relative w-[50vw] mx-auto px-6 md:px-16" style={{ minHeight: 160 }}>
+                    <div className="relative w-full px-6 md:w-[50vw] md:px-16 mx-auto" style={{ minHeight: 160 }}>
                         {texts.map((text, i) => (
                             <div
                                 key={i}

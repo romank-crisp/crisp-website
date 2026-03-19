@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-TARGET_DIR=${1:-"public/img/services"}
+TARGET_DIR=${1:-"public/img"}
 
 # Extract the part after "public/" for the GCS destination
 if [[ "$TARGET_DIR" == *"/public/"* ]]; then
