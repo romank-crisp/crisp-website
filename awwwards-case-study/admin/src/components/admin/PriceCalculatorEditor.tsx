@@ -1,35 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-
-export interface DeliverableV2 {
-    id: string;
-    label: string;
-    basePrice: number;
-    baseDays: number;
-    baseAssets?: number;
-    media: string;
-    defaultMedia: string;
-    mediaType?: "image" | "video";
-}
-
-export interface PriceCalculatorV2Data {
-    sectionTitle: string;
-    productLabel: string;
-    deliverables: DeliverableV2[];
-    incrementTiers: { min: number; max: number; step: number }[];
-    maxProducts: number;
-    minProducts: number;
-    efficiencyTiers: { min: number; max: number; divisor: number }[];
-    defaultPlaceholder: string;
-    estimatedCostLabel: string;
-    assetsDeliveredLabel: string;
-    totalCostLabel: string;
-    ctaLabel: string;
-    ctaCaption: string;
-    deliveryUnit: string;
-    assetsUnit: string;
-}
+import type { PriceCalculatorV2Data, DeliverableV2 } from "@/components/blocks/AIVisualPriceCalculator";
 
 // ─── Helpers (duplicated from component to keep admin bundle separate) ───
 

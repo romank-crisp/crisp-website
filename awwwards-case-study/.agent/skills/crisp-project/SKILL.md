@@ -1,6 +1,6 @@
 ---
 name: crisp-project
-description: Consolidated project knowledge for the Crisp Website — architecture, conventions, GCS data, admin panel, deployment, copywriting, and testing. Single source of truth for all AI agents and developers.
+description: Consolidated project knowledge for the Crisp Website — headless static architecture, JSON-first CMS, decoupled admin panel, deployment, copywriting, and testing. Single source of truth for all AI agents and developers.
 ---
 
 # Crisp Website — Project Knowledge
@@ -8,113 +8,114 @@ description: Consolidated project knowledge for the Crisp Website — architectu
 ### 🔴 CRITICAL COMMANDMENT
 **NEVER overwrite production GCS data with generated/placeholder content. NEVER use seed scripts to overwrite the LIVE JSON.**
 
+## Architecture: Headless Static
+
+The Crisp website uses a **decoupled headless architecture** with three independent services:
+
+| Service | Technology | Hosting |
+|---------|-----------|---------|
+| **Public Site** | Next.js `output: 'export'` (static HTML) | GCS static hosting |
+| **Admin Panel** | Next.js `output: 'standalone'` | Cloud Run |
+| **Contact API** | Cloud Function (Gen2 HTTP) | Cloud Functions |
+
+**Build-time content loading**: The public site reads JSON from local filesystem at build time via `readContentStatic()`. Content is synced from GCS before build via `pull-content.sh`.
+
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Framework | Next.js (App Router) |
+| Framework | Next.js 16 (App Router) |
 | Language | TypeScript (strict) |
 | Styling | Tailwind CSS |
 | Animations | GSAP, Framer Motion, Lottie |
 | Data | Google Cloud Storage (JSON) |
-| Deployment | Cloud Run via Docker |
-| Domain | `new.crisp-studio.com` |
+| Public Hosting | GCS static hosting (staging + production buckets) |
+| Admin Hosting | Cloud Run |
+| Contact API | Cloud Function (Gen2) |
+| Email | Resend API |
 | GCS Bucket | `crisp-website-485112_cloudbuild` |
 | GCP Project | `crisp-website-485112` |
+| Region | `europe-west1` |
 
 ---
 
 ## 🔴 Critical Rules
 
 1. **ALL content in GCS JSON** — zero hardcoded text, images, or data in components.
-2. **ALWAYS update `AdminSidebar.tsx`** when creating new JSON files.
-3. **NEVER overwrite production GCS data** with generated/placeholder content. Read first with `readContent()`, ask the user for content if missing.
+2. **ALWAYS update admin CMS tree** (`admin/src/app/admin/page.tsx` → `CMS_TREE`) when creating new JSON files.
+3. **NEVER overwrite production GCS data** with generated/placeholder content. Read first with `readContentStatic()`, ask the user for content if missing.
 4. **NEVER push to `main` without a passing build.**
 5. **JSON first, code second** — design the data structure before writing React.
-6. Admin panel save confirmation dialog is intentional — do not remove it.
+6. **Use `readContentStatic()`** on public pages — NOT `readContent()` (that's admin-only now).
 
 ---
 
 ## 📁 Architecture
 
 ```
-src/
-├── app/
-│   ├── actions/content.ts          ← GCS read/write (DO NOT MODIFY)
-│   ├── actions/ai-editor.ts        ← AI-assisted JSON editing
-│   ├── admin/page.tsx              ← Admin interface
-│   └── [page]/
-│       ├── page.tsx                ← Route entry (thin wrapper)
-│       └── [page]-page.tsx         ← Page server component
-├── components/
-│   ├── admin/
-│   │   ├── AdminSidebar.tsx        ← ⚠️ Always update when adding JSON
-│   │   └── JsonEditor.tsx
-│   ├── blocks/                     ← Content block components
-│   │   ├── Home*.tsx               ← Home page blocks
-│   │   ├── About*.tsx              ← About page blocks
-│   │   ├── CaseStudy*.tsx          ← Case study blocks
-│   │   ├── Shared*.tsx             ← Multi-page reusable blocks
-│   │   ├── Works*.tsx              ← Works page blocks
-│   │   └── [ProjectName]*.tsx      ← Project-specific blocks
-│   ├── design-system/              ← Internal design reference
-│   ├── forms/                      ← Contact forms
-│   ├── layouts/                    ← Global layout, navbar, footer
-│   ├── seo/                        ← Schema.org components
-│   └── ui/                         ← Primitives (Button, Tag, etc.)
-├── config/brands.ts
-├── content/                        ← Git backup of GCS JSON
-├── context/                        ← React contexts
-├── hooks/
-├── lib/
-│   ├── content.ts                  ← Content helpers
-│   ├── email.ts                    ← Email sending
-│   ├── seo.ts                      ← SEO utilities
-│   └── utils.ts                    ← getAssetUrl() and helpers
-├── templates/case-study/           ← Case study page template
-└── types/                          ← TypeScript interfaces
+crisp-website/awwwards-case-study/
+├── src/                            # Public site (static export)
+│   ├── app/                        # Next.js App Router pages
+│   │   └── [page]/page.tsx         # All use readContentStatic()
+│   ├── components/
+│   │   ├── blocks/                 # Content block components
+│   │   ├── forms/ContactForm.tsx   # POSTs to NEXT_PUBLIC_CONTACT_API_URL
+│   │   ├── layouts/                # Navbar, footer
+│   │   └── ui/                     # Primitives
+│   ├── content/data/               # Local mirror of GCS JSON
+│   └── lib/
+│       ├── content-static.ts       # ⭐ Build-time filesystem reader
+│       └── content.ts              # Runtime reader (admin only)
+│
+├── admin/                          # Standalone admin panel
+│   ├── src/app/admin/              # CMS, deploy dashboard
+│   ├── src/app/api/deploy/         # Build history + trigger
+│   └── Dockerfile
+│
+├── functions/contact/              # Cloud Function: contact form
+│   └── index.js
+│
+├── deploy-all.sh                   # Deploy: staging/production × site/admin/function
+├── setup-hosting.sh                # One-time: create GCS buckets
+├── pull-content.sh                 # Sync GCS JSON → local
+└── DEPLOYMENT.md                   # Full deployment guide
 ```
 
 ### Component Architecture Rules
 
-- **Server Components by default.** Only use `"use client"` when hooks, browser APIs, or interactivity are required.
-- **Data flows down.** Fetch at the highest level in Server Components, pass as props.
-- **Block components are prefixed** with their page name (`Home*`, `About*`, `CaseStudy*`) or `Shared*` for multi-page blocks.
-- **Single responsibility** — keep components focused, extract complex logic into custom hooks.
-- **No deep prop drilling** — use React Context when components are highly disconnected.
+- **Server Components by default.** Only use `"use client"` when hooks/interactivity are required.
+- **Data flows down.** `readContentStatic()` at page level, pass as props.
+- **Block components are prefixed** with their page name (`Home*`, `About*`, `CaseStudy*`) or `Shared*`.
+- **Single responsibility** — keep components focused.
 
 ---
 
 ## 📡 Data Fetching
 
-### Content JSON (`data/`) — server-side only
+### Public Site (build-time)
 
 ```typescript
-import { readContent } from "@/app/actions/content";
+import { readContentStatic } from "@/lib/content-static";
 
-// Single file
-const data = await readContent("home-hero.json") as HomeHeroData;
-
-// Multiple files in parallel
-const [hero, stats] = await Promise.all([
-  readContent("home-hero.json"),
-  readContent("home-stats.json"),
-]);
+// Runs at build time only — reads from src/content/data/
+const heroData = readContentStatic("home-hero.json");
 ```
 
-### Media Assets (`img/`) — client-side via public URL
+### Admin Panel (runtime)
 
-Always use `getAssetUrl()` before referencing any media path:
+```typescript
+import { readContent, updateContent } from "@/app/actions/content";
+
+// Runtime read/write to GCS
+const data = await readContent("home-hero.json");
+await updateContent("home-hero.json", updatedData);
+```
+
+### Media Assets
 
 ```typescript
 import { getAssetUrl } from "@/lib/utils";
-
-// Images/video — direct in JSX
 <video src={getAssetUrl(data.videoSrc)} />
-
-// Lottie — fetch in useEffect
-const url = getAssetUrl(src);
-fetch(url).then(res => res.json()).then(setData);
 ```
 
 Store asset paths in JSON as **full GCS URLs** (`https://storage.googleapis.com/...`).
@@ -124,26 +125,43 @@ Store asset paths in JSON as **full GCS URLs** (`https://storage.googleapis.com/
 ## 🔁 New Block Workflow
 
 1. Design JSON structure
-2. Create JSON file in GCS (`data/filename.json`)
-3. Create TypeScript interface (`src/types/`)
-4. Create React component (`src/components/blocks/`)
-5. Fetch with `readContent()` in page
-6. ⚠️ Update `AdminSidebar.tsx`
-7. Test in `/admin`
-8. Verify on live site
-9. Commit to git
+2. Create JSON file in GCS (via admin or upload)
+3. Pull locally: `bash pull-content.sh`
+4. Create TypeScript interface (`src/types/`)
+5. Create React component (`src/components/blocks/`)
+6. Fetch with `readContentStatic()` in page
+7. ⚠️ Update admin CMS tree in `admin/src/app/admin/page.tsx`
+8. Test: `npm run build`, verify in admin
+9. Publish: deploy dashboard or `./deploy-all.sh staging site`
 
-Full workflow detail in `.agent/workflows/create-new-block.md`.
+---
+
+## 🚀 Deployment
+
+```bash
+# Deploy everything to staging
+./deploy-all.sh staging all
+
+# Deploy static site to production
+./deploy-all.sh production site
+
+# Deploy admin panel
+./deploy-all.sh production admin
+
+# Deploy contact function
+./deploy-all.sh production function
+```
+
+Admin deploy dashboard at `/admin/deploy` has publish button, build history, and services status.
 
 ---
 
 ## 🎨 Styling
 
 - **Tailwind CSS** utility classes only (custom tokens in `tailwind.config.ts`).
-- `font-heading` for headings, `font-body` for body text.
+- `font-heading` for headings (`Staatliches`), `font-body` for body (`DM Sans`).
 - Mobile-first responsive: `sm:`, `md:`, `lg:` breakpoints.
 - Animations: GSAP (scroll-triggered), Framer Motion (component-level), Lottie (rich animations).
-- Never use inline styles unless required for dynamic values.
 
 ---
 
@@ -152,15 +170,12 @@ Full workflow detail in `.agent/workflows/create-new-block.md`.
 Crisp Studio is a premium digital design & development studio. Voice is:
 
 - **Direct** — short sentences, no filler.
-- **Pragmatic** — workflows, constraints, results, not abstractions.
-- **Technical, but human** — comfortable with AI/UX language, explained simply.
+- **Pragmatic** — workflows, constraints, results.
+- **Technical, but human** — comfortable with AI/UX language.
 - **Collaborative** — partner vibe, not vendor.
 
-**Do**: Use concrete nouns ("Figma system", "Webflow build"), numbers ("10+ years"), active verbs ("We build", "We craft").
-
-**Don't**: "innovative", "cutting-edge", "client-oriented", "solutions", "synergy". No buzzword stacking, no exclamation marks in headlines, no passive voice.
-
-### Copy lengths
+**Do**: Concrete nouns, numbers, active verbs.
+**Don't**: "innovative", "cutting-edge", "solutions", "synergy".
 
 | Element | Max |
 |---------|-----|
@@ -171,47 +186,15 @@ Crisp Studio is a premium digital design & development studio. Voice is:
 
 ---
 
-## 🐳 Deployment
-
-```bash
-# Build & push Docker image
-docker buildx build --platform linux/amd64 \
-  -t gcr.io/crisp-website-485112/crisp-website:$(git rev-parse --short HEAD) \
-  -t gcr.io/crisp-website-485112/crisp-website:latest \
-  --push .
-
-# Deploy to Cloud Run
-gcloud run deploy crisp-website \
-  --image gcr.io/crisp-website-485112/crisp-website:latest \
-  --platform managed --region europe-west1 --allow-unauthenticated
-
-# Verify
-curl -I https://new.crisp-studio.com
-
-# Tag release
-git tag -a v$(date +%Y%m%d%H%M) -m "deploy: $(git log -1 --pretty=%s)"
-git push origin --tags
-```
-
-### Git Convention
-
-Conventional Commits: `feat|fix|chore|refactor|docs|style|deploy(scope): description`
-
-Branching: `main` (protected) ← `develop` ← `feature/`, `fix/`, `chore/`
-
----
-
 ## 🧪 Verification Checklist
 
 ```
-[ ] npm run build — no errors
-[ ] npm run lint — no warnings
+[ ] npm run build — no errors (all 12 pages generated)
 [ ] No hardcoded content in JSX
-[ ] TypeScript types defined and used
-[ ] AdminSidebar.tsx updated (if new JSON)
+[ ] TypeScript types defined
+[ ] Admin CMS tree updated (if new JSON)
 [ ] Responsive: 375px, 768px, 1440px
 [ ] No console errors
-[ ] Admin panel: JSON loads, edits, saves
 [ ] All images/videos load correctly
 ```
 
@@ -221,22 +204,21 @@ Branching: `main` (protected) ← `develop` ← `feature/`, `fix/`, `chore/`
 
 | Problem | Fix |
 |---------|-----|
-| Content not in admin | Update `AdminSidebar.tsx` |
+| Content not in admin | Update `CMS_TREE` in `admin/src/app/admin/page.tsx` |
+| Build fails: file not found | Run `bash pull-content.sh` first |
 | Lottie fails in production | Wrap path with `getAssetUrl()` |
 | Image broken in prod | Store full GCS URL in JSON |
-| CORS error on fetch | Use `getAssetUrl()` before `fetch()` |
-| `readContent()` fails client-side | Move to server component |
-| Site down | Check `gcloud run services describe crisp-website --region europe-west1` |
+| Contact form fails | Check `NEXT_PUBLIC_CONTACT_API_URL` env |
 | GCS data corrupted | Restore from `src/content/data/` (git backup) |
 
 ---
 
 ## 📚 Related Files
 
-- Admin panel: `src/components/admin/AdminSidebar.tsx`
-- Content actions: `src/app/actions/content.ts`
-- JSON data backup: `src/content/data/`
-- Asset helper: `src/lib/utils.ts` (`getAssetUrl()`)
-- Block workflow: `.agent/workflows/create-new-block.md`
-- Dockerfile: `Dockerfile`
+- Content reader: `src/lib/content-static.ts`
+- Admin CMS tree: `admin/src/app/admin/page.tsx` → `CMS_TREE`
+- Deploy dashboard: `admin/src/app/admin/deploy/page.tsx`
+- Content sync: `pull-content.sh`
+- Deploy script: `deploy-all.sh`
 - Env vars: `.env.example`
+- Deploy guide: `DEPLOYMENT.md`
