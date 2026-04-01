@@ -35,10 +35,6 @@ export function WorksPreloader() {
     useEffect(() => {
         if (!isLoading) {
             // Re-enable scrolling
-            document.documentElement.style.overflow = '';
-            document.documentElement.style.position = '';
-            document.documentElement.style.width = '';
-            document.documentElement.style.height = '';
             document.body.style.overflow = '';
             // Start lenis after preloader exit animation finishes
             setTimeout(() => {
@@ -49,11 +45,7 @@ export function WorksPreloader() {
             return;
         }
 
-        // Lock scroll: position fixed on <html> prevents all native scrolling
-        document.documentElement.style.overflow = 'hidden';
-        document.documentElement.style.position = 'fixed';
-        document.documentElement.style.width = '100%';
-        document.documentElement.style.height = '100%';
+        // Lock native scroll behind preloader
         document.body.style.overflow = 'hidden';
 
         // Lenis may not be initialised yet — poll until it is, then stop it
@@ -66,10 +58,6 @@ export function WorksPreloader() {
 
         return () => {
             clearInterval(poll);
-            document.documentElement.style.overflow = '';
-            document.documentElement.style.position = '';
-            document.documentElement.style.width = '';
-            document.documentElement.style.height = '';
             document.body.style.overflow = '';
             if ((window as any).lenis) {
                 (window as any).lenis.start();

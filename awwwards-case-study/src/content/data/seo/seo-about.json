@@ -1,15 +1,18 @@
 {
-  "title": "<title>About Crisp — Digital studio that delivers craft, not concepts</title>",
+  "title": "<title>About Crisp — Branding, Web Design & Content | Europe </title>",
   "metaTags": [
-    "<meta name=\"description\" content=\"Founded in 2007. We build brands, launch great websites, and keep the story going through content across channels. Expertise. Experience. Efficiency.\">",
+    "<meta name=\"description\" content=\"Design studio building brands, websites and content for SaaS, life science and education companies. 200+ projects delivered. Since 2006.\">",
     "<meta name=\"robots\" content=\"index, follow\">"
   ],
   "openGraph": [
     "<meta property=\"og:type\" content=\"website\">",
-    "<meta property=\"og:title\" content=\"About Crisp — Digital studio that delivers craft, not concepts\">",
-    "<meta property=\"og:description\" content=\"Founded in 2007. We build brands, launch great websites, and keep the story going through content across channels. Expertise. Experience. Efficiency.\">",
+    "<meta property=\"og:title\" content=\"About Crisp – Branding, Web Design & Content | Europe\">",
+    "<meta property=\"og:description\" content=\"Design studio building brands, websites and content for SaaS, life science and education companies. 200+ projects delivered. Since 2006.\">",
     "<meta property=\"og:url\" content=\"https://crisp-studio.com/about-us/\">",
-    "<meta property=\"og:image\" content=\"https://crisp-studio.com/about-us/\">"
+    "<meta property=\"og:image\" content=\"https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/imgcases/folkeuniversitetet/fu-case-01.png\">",
+    "<meta property=\"og:image:width\" content=\"1200\">",
+    "<meta property=\"og:image:height\" content=\"630\">",
+    "<meta property=\"og:site_name\" content=\"Crisp Studio\">"
   ],
-  "canonical": "<link rel=\"canonical\" href=\"https://crisp-studio.com/about-us/\">"
+  "canonical": "<link rel=\"canonical\" href=\"https://crisp-studio.com/about/\">"
 }

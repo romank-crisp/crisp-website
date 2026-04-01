@@ -1,21 +1,21 @@
-export const dynamic = 'force-dynamic';
+
 
 import { CaseStudyPage } from "@/templates/case-study/CaseStudyPage";
-import { readContent } from "@/lib/content";
+import { readContentStatic } from "@/lib/content-static";
 import { parseSeoData } from "@/lib/seo";
 import { SeoData } from "@/types/seo";
 
 export async function generateMetadata() {
-    const seoData = await readContent("seo/seo-theytalk.json") as SeoData;
+    const seoData = readContentStatic("seo/seo-theytalk.json") as SeoData;
     return parseSeoData(seoData);
 }
 
 export default async function Page() {
-    const [general, details, stats] = await Promise.all([
-        readContent("case-studies/theytalk-general.json"),
-        readContent("case-studies/theytalk-case-details.json"),
-        readContent("case-studies/theytalk-case-stats.json"),
-    ]);
+    const [general, details, stats] = [
+        readContentStatic("case-studies/theytalk-general.json"),
+        readContentStatic("case-studies/theytalk-case-details.json"),
+        readContentStatic("case-studies/theytalk-case-stats.json"),
+    ];
 
     const content = {
         ...general,

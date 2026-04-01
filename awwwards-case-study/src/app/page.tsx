@@ -1,13 +1,13 @@
-export const dynamic = 'force-dynamic';
+
 
 import Home from "./home-page";
-import { readContent } from "@/lib/content";
+import { readContentStatic } from "@/lib/content-static";
 import { parseSeoData } from "@/lib/seo";
 import { SeoData } from "@/types/seo";
 import { FAQSchema } from "@/components/seo/FAQSchema";
 
 export async function generateMetadata() {
-    const seoData = await readContent("seo/seo-home.json") as SeoData;
+    const seoData = readContentStatic("seo/seo-home.json") as SeoData;
     return parseSeoData(seoData);
 }
 
@@ -21,16 +21,16 @@ export default async function Page() {
         testimonialsData,
         quoteData,
         faqData
-    ] = await Promise.all([
-        readContent("home-hero.json"),
-        readContent("home-services.json"),
-        readContent("home-partner.json"),
-        readContent("home-clients.json"),
-        readContent("home-stats.json"),
-        readContent("home-testimonials.json"),
-        readContent("home-quote.json"),
-        readContent("home-faq.json")
-    ]);
+    ] = [
+        readContentStatic("home-hero.json"),
+        readContentStatic("home-services.json"),
+        readContentStatic("home-partner.json"),
+        readContentStatic("home-clients.json"),
+        readContentStatic("home-stats.json"),
+        readContentStatic("home-testimonials.json"),
+        readContentStatic("home-quote.json"),
+        readContentStatic("home-faq.json")
+    ];
 
     return (
         <>

@@ -1,0 +1,188 @@
+{
+  "slug": "folkeuniversitetet",
+  "meta": {
+    "title": "Folkeuniversitetet - Case Study",
+    "description": "Empowering education through digital transformation"
+  },
+  "hero": {
+    "title": "Folkeuniversitetet",
+    "subtitle": "Brand and platform redesign for a national education provider",
+    "videoPath": "/img/imgcases/folkeuniversitetet/fu-showreel.webm",
+    "posterPath": "/img/imgcases/folkeuniversitetet/fu-case-01.png",
+    "tags": [
+      "Digital Strategy",
+      "Brand Identity",
+      "Platform Design"
+    ]
+  },
+  "blocks": [
+    {
+      "type": "text-reveal",
+      "id": "intro-text-1",
+      "props": {
+        "text": "Folkeuniversitetet is one of Norway’s largest education providers. We redesigned their brand and digital platform, creating a unified system for web, product and communication.",
+        "className": "font-text text-text-lg w-full md:w-[60%] text-left text-text/90"
+      }
+    },
+    {
+      "type": "image-grid-hover",
+      "id": "fu-logo-showcase",
+      "props": {
+        "heroSrc": "/img/imgcases/folkeuniversitetet/fu-logo-main.png",
+        "gridSrcs": [
+          "/img/imgcases/folkeuniversitetet/ff-logo-01.png",
+          "/img/imgcases/folkeuniversitetet/ff-logo-02.png",
+          "/img/imgcases/folkeuniversitetet/ff-logo-03.png",
+          "/img/imgcases/folkeuniversitetet/ff-logo-04.png"
+        ],
+        "alt": "Folkeuniversitetet Logo System"
+      }
+    },
+    {
+      "type": "lottie",
+      "id": "fu-typo-1",
+      "props": {
+        "animationPath": "/img/imgcases/folkeuniversitetet/fu-typo.json",
+        "loop": true,
+        "aspectRatio": "aspect-[16/9]"
+      }
+    },
+    {
+      "type": "folkeuniversitet-design-system",
+      "id": "fu-design-system",
+      "props": {}
+    },
+    {
+      "type": "image-scroll",
+      "id": "fu-visual-01",
+      "props": {
+        "src": "/img/imgcases/folkeuniversitetet/fu-case-01.png",
+        "alt": "Folkeuniversitetet Brand Overview",
+        "aspectRatio": "aspect-[16/9]"
+      }
+    },
+    {
+      "type": "text-reveal",
+      "id": "intro-text-2",
+      "props": {
+        "text": "We created a custom display font to anchor the visual identity. AI helped explore early directions. Final letterforms were refined and integrated into the brand system.",
+        "className": "font-text text-text-lg w-full md:w-[60%] text-left text-text/90"
+      }
+    },
+    {
+      "type": "image-scroll",
+      "id": "fu-visual-06",
+      "props": {
+        "src": "/img/imgcases/folkeuniversitetet/fu-case-06.png",
+        "videoSrc": "/img/imgcases/folkeuniversitetet/fu-aifont.webm",
+        "alt": "Folkeuniversitetet AI Font generation",
+        "aspectRatio": "aspect-[16/9]"
+      }
+    },
+    {
+      "type": "image-scroll",
+      "id": "fu-visual-04",
+      "props": {
+        "src": "/img/imgcases/folkeuniversitetet/fu-case-03.png",
+        "alt": "Folkeuniversitetet Platform UI",
+        "aspectRatio": "aspect-[16/9]"
+      }
+    },
+    {
+      "type": "lottie",
+      "id": "fu-typo-2",
+      "props": {
+        "animationPath": "/img/imgcases/folkeuniversitetet/fu-font.json",
+        "loop": true,
+        "aspectRatio": "aspect-[16/9]"
+      }
+    },
+    {
+      "type": "image-scroll",
+      "id": "fu-visual-04-2",
+      "props": {
+        "src": "/img/imgcases/folkeuniversitetet/fu-case-04.png",
+        "alt": "Folkeuniversitetet Platform UI",
+        "aspectRatio": "aspect-[16/9]"
+      }
+    },
+    {
+      "type": "image-scroll",
+      "id": "fu-visual-05",
+      "props": {
+        "src": "/img/imgcases/folkeuniversitetet/fu-case-05.png",
+        "alt": "Folkeuniversitetet Mobile Experience",
+        "aspectRatio": "aspect-[16/9]"
+      }
+    },
+    {
+      "type": "grid-2-col",
+      "id": "fu-grid-v2",
+      "props": {
+        "left": {
+          "src": "/img/imgcases/folkeuniversitetet/fu-case-07.png",
+          "alt": "Folkeuniversitetet Brand Application 07"
+        },
+        "right": {
+          "src": "/img/imgcases/folkeuniversitetet/fu-case-09.png",
+          "alt": "Folkeuniversitetet Brand Application 09"
+        }
+      }
+    },
+    {
+      "type": "image-scroll",
+      "id": "fu-visual-08",
+      "props": {
+        "src": "/img/imgcases/folkeuniversitetet/fu-case-08.png",
+        "alt": "Folkeuniversitetet Campaign Visual",
+        "aspectRatio": "aspect-[16/9]"
+      }
+    },
+    {
+      "type": "grid-2-col",
+      "id": "fu-grid-v3",
+      "props": {
+        "left": {
+          "src": "/img/imgcases/folkeuniversitetet/fu-case-10.png",
+          "alt": "Folkeuniversitetet UI Detail 11"
+        },
+        "right": {
+          "src": "/img/imgcases/folkeuniversitetet/fu-case-06.png",
+          "alt": "Folkeuniversitetet UI Detail 12"
+        }
+      }
+    },
+    {
+      "type": "text-reveal",
+      "id": "intro-text-3",
+      "props": {
+        "text": "Folkeuniversitetet’s owl remained the core symbol of the identity. We refined its form and integrated it into the new visual system.",
+        "className": "font-text text-text-lg w-full md:w-[60%] text-left text-text/90"
+      }
+    },
+    {
+      "type": "image-scroll",
+      "id": "fu-visual-13",
+      "props": {
+        "src": "/img/imgcases/folkeuniversitetet/fu-case-12.png",
+        "alt": "Folkeuniversitetet Final Showcase",
+        "aspectRatio": "aspect-[16/9]"
+      }
+    },
+    {
+      "type": "image-scroll",
+      "id": "fu-visual-13-2",
+      "props": {
+        "src": "/img/imgcases/folkeuniversitetet/fu-case-13.png",
+        "alt": "Folkeuniversitetet Final Showcase",
+        "aspectRatio": "aspect-[16/9]"
+      }
+    }
+  ],
+  "nextCase": {
+    "title": "TheyTalk",
+    "subtitle": "Influencer Marketing Platform",
+    "link": "/works/theytalk",
+    "videoPath": "/img/imgcases/theytalk/theytalk-full.webm"
+  }
+}

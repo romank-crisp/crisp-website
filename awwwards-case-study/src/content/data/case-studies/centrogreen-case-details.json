@@ -1,0 +1,89 @@
+{
+  "intro": "CentroGreen is a new air purification brand in the UAE.",
+  "sections": [
+    {
+      "title": "The Problem: Unknown Brand, High-Stakes Category",
+      "type": "text",
+      "content": "Indoor air quality is a real concern in the UAE, and the category is crowded with familiar names and low-cost alternatives. CentroGreen arrived with excellent technology and almost zero recognition. It needed to look credible, premium and health-focused in a space where most devices look the same and trust is hard to earn."
+    },
+    {
+      "title": "The Challenge: System, Not Just the Box",
+      "type": "text",
+      "content": "Our task was to position the brand as a connected ecosystem, combining purification and monitoring without overwhelming users with technical details. At the same time, we had to launch fast, under budget pressure, in a market getting louder every month."
+    },
+    {
+      "title": "What We Did",
+      "type": "deliverables",
+      "items": [
+        {
+          "title": "Logo and trademark",
+          "text": "We explored multiple logo directions and landed on a mark that combines a hawk-inspired eye with key letterforms, connecting advanced vision and local cultural references."
+        },
+        {
+          "title": "Brand Identity",
+          "text": "We designed the visual identity to communicate trust, innovation, premium quality and accessibility, with a tone that feels precise rather than clinical."
+        },
+        {
+          "title": "Promo website",
+          "text": "We built a marketing site whose main role is simple: tell the product story, explain the system, introduce the key products and guide people towards purchase."
+        },
+        {
+          "title": "Product shots (visualization)",
+          "text": "We replaced weak photography with 3D renders and interactive views, giving the brand a central visual asset that works across website, one-pagers and social content."
+        },
+        {
+          "title": "Supportive promomats",
+          "text": "We structured the platform around detailed pages for the five main devices, keeping accessories and secondary products for a second phase to avoid clutter."
+        },
+        {
+          "title": "Design system",
+          "text": "We documented the identity and components in a Figma-based design system, making it easy to scale new pages and formats while staying consistent."
+        }
+      ]
+    },
+    {
+      "title": "How We Used AI (And How We Did Not)",
+      "type": "text",
+      "content": "AI supported research, copy drafting, visual exploration, design system workflows and parts of the website code generation. We used structured prompts to get useful first drafts, then edited and refined everything by hand. Art direction, logo, key visuals, messaging and UX decisions were owned by the design team. AI helped with speed, not with defining the brand."
+    },
+    {
+      "title": "The Result",
+      "type": "text",
+      "content": "CentroGreen now enters the UAE market with a focused story, a recognisable identity and a digital presence that makes its technology understandable and desirable. Early signals show strong traffic and engagement since launch. The brand proves that even a new player can compete in a crowded category with the right positioning and execution."
+    }
+  ],
+  "sidebar": [
+    {
+      "label": "Year",
+      "value": "2025"
+    },
+    {
+      "label": "CLIENT / LOCATION",
+      "value": "CentroGreen (UAE)"
+    },
+    {
+      "label": "INDUSTRY",
+      "value": [
+        "eCommerce ",
+        " Manufacturing "
+      ]
+    },
+    {
+      "label": "DELIVERABLES",
+      "value": [
+        "Brand Identity",
+        "Website ",
+        "3D Product Visualization"
+      ]
+    },
+    {
+      "label": "AI-ASSISTED WORKFLOWS",
+      "isRed": true,
+      "value": [
+        "Research",
+        "Messaging and Tone of Voice",
+        "Product Visuals "
+      ]
+    }
+  ]
+}

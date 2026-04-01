@@ -2,53 +2,53 @@
   "clients": [
     {
       "name": "Lingu",
-      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-15-lingu.svg",
-      "url": null
+      "src": "/img/client-logos/client-logo-15-lingu.svg",
+      "url": "https://lingu.no"
     },
     {
       "name": "Centrogreen",
-      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-09-centrogreen.svg",
-      "url": null
+      "src": "/img/client-logos/client-logo-09-centrogreen.svg",
+      "url": "https://centrogreen.com"
     },
     {
       "name": "Folkeuniversitetet",
-      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-14-folkeuniversitetet.svg",
-      "url": null
+      "src": "/img/client-logos/client-logo-14-folkeuniversitetet.svg",
+      "url": "https://www.folkeuniversitetet.no"
     },
     {
       "name": "Moply",
-      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-01-moply.svg",
+      "src": "/img/client-logos/client-logo-01-moply.svg",
       "url": null
     },
     {
       "name": "Reono",
-      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-02-reono.svg",
-      "url": null
+      "src": "/img/client-logos/client-logo-02-reono.svg",
+      "url": "https://reono.ua"
     },
     {
       "name": "Swiss Professionals",
-      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-03-swissprofessionals-small.svg",
-      "url": null
+      "src": "/img/client-logos/client-logo-03-swissprofessionals-small.svg",
+      "url": "https://swissprofessionals.com"
     },
     {
       "name": "SparkSales",
-      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-04-sparksales.svg",
-      "url": null
+      "src": "/img/client-logos/client-logo-04-sparksales.svg",
+      "url": "https://sparksales.online/"
     },
     {
       "name": "Fresh",
-      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-08-fresh.svg",
+      "src": "/img/client-logos/client-logo-08-fresh.svg",
       "url": null
     },
     {
       "name": "Entrilia",
-      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-12-entrilia.svg",
-      "url": null
+      "src": "/img/client-logos/client-logo-12-entrilia.svg",
+      "url": "https://www.entrilia.com"
     },
     {
       "name": "LastMile",
-      "src": "https://storage.googleapis.com/crisp-website-485112_cloudbuild/img/client-logos/client-logo-13-lastmile.svg",
-      "url": null
+      "src": "/img/client-logos/client-logo-13-lastmile.svg",
+      "url": "https://lastmile.no"
     }
   ]
 }

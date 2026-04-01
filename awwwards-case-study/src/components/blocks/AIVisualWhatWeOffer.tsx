@@ -115,7 +115,7 @@ function WhatWeOfferCardItem({ card, index }: { card: WhatWeOfferCard; index: nu
 
     const text = (
         <div className="flex flex-col justify-center gap-16">
-            <h3 className="font-heading text-h1 text-brand">
+            <h3 className="font-heading text-h2 md:text-h1 text-brand">
                 {card.title}
             </h3>
             <p className="font-text text-text-md text-text/70">
@@ -127,7 +127,7 @@ function WhatWeOfferCardItem({ card, index }: { card: WhatWeOfferCard; index: nu
     return (
         <div
             ref={cardRef}
-            className="grid grid-cols-1 md:grid-cols-11 items-center"
+            className="grid grid-cols-1 md:grid-cols-11 items-center gap-24 md:gap-0"
         >
             {isMediaLeft ? (
                 <>
@@ -154,7 +154,7 @@ export function AIVisualWhatWeOffer({ data }: AIVisualWhatWeOfferProps) {
     if (!data) return null;
 
     return (
-        <section className="relative w-full bg-white pt-[160px] pb-0">
+        <section className="relative w-full bg-white pt-0 pb-0">
             <div className="max-w-[1475px] mx-auto px-6 md:px-16">
                 {/* Section Title */}
                 <h2 className="font-mega text-mega-h2 uppercase text-text mb-48 md:mb-64">

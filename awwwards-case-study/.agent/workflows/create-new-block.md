@@ -188,17 +188,17 @@ export function FeaturesGrid({ data }: FeaturesGridProps) {
 
 ## Step 5: Use in Page Component
 
-**File**: `src/app/[page-name]/[page-name]-page.tsx` or `src/app/home-page.tsx`
+**File**: `src/app/[page-name]/page.tsx`
 
 ```typescript
-// src/app/home-page.tsx
-import { readContent } from "@/app/actions/content";
+// src/app/page.tsx
+import { readContentStatic } from "@/lib/content-static";
 import { FeaturesGrid } from "@/components/blocks/FeaturesGrid";
 import { FeaturesData } from "@/types/features";
 
 export default async function HomePage() {
-  // Fetch data from GCS
-  const featuresData = await readContent("home-features.json") as FeaturesData;
+  // Read from local JSON (synced from GCS before build)
+  const featuresData = readContentStatic("home-features.json") as FeaturesData;
   
   return (
     <main>
@@ -213,16 +213,16 @@ export default async function HomePage() {
 ```
 
 **Key Points**:
-- Use `readContent()` server action
+- Use `readContentStatic()` (NOT `readContent()` — that's admin-only now)
+- Runs at build time, reads from `src/content/data/`
+- Pull content first: `bash pull-content.sh`
 - Type cast with `as YourType`
-- Handle async/await properly
-- Place in correct position on page
 
 ---
 
-## Step 6: 🚨 Update Admin Sidebar
+## Step 6: 🚨 Update Admin CMS Tree
 
-**File**: `src/components/admin/AdminSidebar.tsx`
+**File**: `admin/src/app/admin/page.tsx`
 
 ### Determine Correct Group:
 
@@ -235,9 +235,9 @@ export default async function HomePage() {
 ### Add Entry:
 
 ```typescript
-// src/components/admin/AdminSidebar.tsx
+// admin/src/app/admin/page.tsx
 
-const MENU_GROUPS = [
+const CMS_TREE: TreeGroup[] = [
   {
     title: "Pages",
     items: [
@@ -246,8 +246,8 @@ const MENU_GROUPS = [
         label: "Home Page",
         icon: FileText,
         children: [
-          { id: "home-hero", label: "Hero Section" },
-          { id: "home-features", label: "Features Grid" }, // ← ADD THIS
+          { id: "home-hero.json", label: "Hero Section" },
+          { id: "home-features.json", label: "Features Grid" }, // ← ADD THIS
         ]
       }
     ]
@@ -257,17 +257,17 @@ const MENU_GROUPS = [
 ```
 
 **Rules**:
-- `id` matches JSON filename (without `.json`)
+- `id` matches JSON filename (include `.json`)
 - `label` is human-readable
-- Import icon from `lucide-react` if needed
+- The admin panel is in the `admin/` directory (not `src/`)
 
 ---
 
 ## Step 7: Test in Admin Interface
 
-1. **Navigate to Admin**:
+1. **Navigate to Admin** (admin runs on port 3001):
    ```
-   http://localhost:3000/admin
+   http://localhost:3001/admin
    ```
 
 2. **Find Your Entry**:
@@ -291,25 +291,31 @@ const MENU_GROUPS = [
 
 ---
 
-## Step 8: Verify on Live Site
+## Step 8: Verify Static Build
 
-1. **Navigate to Page**:
-   ```
-   http://localhost:3000
+1. **Pull latest content and build**:
+   ```bash
+   bash pull-content.sh
+   npm run build
    ```
 
-2. **Check Display**:
+2. **Check Build Output**:
+   - [ ] Build completes without errors
+   - [ ] All pages generated (check `out/` directory)
+
+3. **Serve and verify locally**:
+   ```bash
+   npx serve out
+   ```
    - [ ] Section appears in correct position
    - [ ] All text displays correctly
    - [ ] Images load properly
-   - [ ] Styling looks good
    - [ ] Responsive on mobile
 
-3. **Test Content Updates**:
-   - Edit content in `/admin`
-   - Save changes
-   - Refresh live page
-   - Verify changes appear
+4. **Deploy to staging**:
+   ```bash
+   ./deploy-all.sh staging site
+   ```
 
 ---
 
@@ -346,8 +352,8 @@ Use this checklist for every new block:
 [ ] Step 2: Created JSON file in GCS (data/filename.json)
 [ ] Step 3: Created TypeScript types (src/types/filename.ts)
 [ ] Step 4: Created React component (src/components/blocks/ComponentName.tsx)
-[ ] Step 5: Used component in page with readContent()
-[ ] Step 6: Updated AdminSidebar.tsx
+[ ] Step 5: Used component in page with readContentStatic()
+[ ] Step 6: Updated admin CMS tree
 [ ] Step 7: Tested in /admin interface
 [ ] Step 8: Verified on live site
 [ ] Step 9: Committed changes to git
@@ -431,9 +437,9 @@ export function CTASection({ data }: { data: CTAData }) {
 - Look for console errors
 
 ### Changes don't appear on site
-- Check cache revalidation in content.ts
-- Try hard refresh (Cmd+Shift+R)
-- Verify JSON was saved in GCS
+- Run `bash pull-content.sh` to sync latest JSON
+- Run `npm run build` and check output
+- Deploy: `./deploy-all.sh staging site`
 
 ---
 

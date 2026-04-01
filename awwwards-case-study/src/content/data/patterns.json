@@ -1,294 +1,302 @@
 [
-    {
-        "name": "SharedStatsBlock",
-        "label": "Stats Block",
-        "tags": [
-            "Numbers"
-        ],
-        "previewHeight": 600
-    },
-    {
-        "name": "SharedCenteredQuote",
-        "label": "Centered Quote",
-        "tags": [
-            "Text"
-        ],
-        "previewHeight": 600
-    },
-    {
-        "name": "SharedClientLogos",
-        "label": "Client Logos",
-        "tags": [
-            "Gallery"
-        ],
-        "previewHeight": 500
-    },
-    {
-        "name": "SharedTestimonials",
-        "label": "Testimonials",
-        "tags": [
-            "Text"
-        ],
-        "previewHeight": 700
-    },
-    {
-        "name": "SharedFAQ",
-        "label": "FAQ Accordion",
-        "tags": [
-            "Text"
-        ],
-        "previewHeight": 900
-    },
-    {
-        "name": "SharedVideoScrollingCTA",
-        "label": "Video Scrolling CTA",
-        "tags": [
-            "Sections"
-        ],
-        "previewHeight": 800
-    },
-    {
-        "name": "SharedScrollRevealImage",
-        "label": "Scroll Reveal Image",
-        "tags": [
-            "Image"
-        ],
-        "previewHeight": 700
-    },
-    {
-        "name": "SharedServicesHero",
-        "label": "Services Hero",
-        "tags": [
-            "Header"
-        ],
-        "previewHeight": 1000
-    },
-    {
-        "name": "SharedContactForm",
-        "label": "Contact Form",
-        "tags": [
-            "Forms"
-        ],
-        "previewHeight": 900
-    },
-    {
-        "name": "SharedContentSplit",
-        "label": "Content Split",
-        "tags": [],
-        "previewHeight": 700
-    },
-    {
-        "name": "HomeWhereWeCanHelp",
-        "label": "Where We Can Help",
-        "tags": [
-            "Sections"
-        ],
-        "previewHeight": 1200
-    },
-    {
-        "name": "HomePartnerStatement",
-        "label": "Partner Statement",
-        "tags": [
-            "Text"
-        ],
-        "previewHeight": 500
-    },
-    {
-        "name": "HomeAnimatedText",
-        "label": "Animated Text",
-        "tags": [],
-        "previewHeight": 500
-    },
-    {
-        "name": "HomeHorizontalMasonry",
-        "label": "Horizontal Masonry",
-        "tags": [],
-        "previewHeight": 900
-    },
-    {
-        "name": "WorksInfiniteScrollPane",
-        "label": "Infinite Scroll Pane",
-        "tags": [],
-        "previewHeight": 800
-    },
-    {
-        "name": "AboutPlaneHero",
-        "label": "Plane Hero",
-        "tags": [
-            "Header"
-        ],
-        "previewHeight": 1000
-    },
-    {
-        "name": "AboutServicesList",
-        "label": "Services List",
-        "tags": [
-            "Sections"
-        ],
-        "previewHeight": 900
-    },
-    {
-        "name": "AboutLocationsMap",
-        "label": "Locations Map",
-        "tags": [
-            "Sections"
-        ],
-        "previewHeight": 800
-    },
-    {
-        "name": "AboutTeamAccordion",
-        "label": "Team Accordion",
-        "tags": [
-            "Sections"
-        ],
-        "previewHeight": 1000
-    },
-    {
-        "name": "AboutTeamGallery",
-        "label": "Team Gallery",
-        "tags": [
-            "Gallery"
-        ],
-        "previewHeight": 600
-    },
-    {
-        "name": "CaseStudyTextReveal",
-        "label": "Text Reveal",
-        "tags": [
-            "Text"
-        ],
-        "previewHeight": 500
-    },
-    {
-        "name": "CaseStudyHeroVideo",
-        "label": "Hero Video",
-        "tags": [
-            "Header"
-        ],
-        "previewHeight": 900
-    },
-    {
-        "name": "CaseStudyDetails",
-        "label": "Details",
-        "tags": [
-            "Text"
-        ],
-        "previewHeight": 600
-    },
-    {
-        "name": "CaseStudyImageGridHover",
-        "label": "Image Grid Hover",
-        "tags": [
-            "Gallery"
-        ],
-        "previewHeight": 700
-    },
-    {
-        "name": "CaseStudyLogoAnimation",
-        "label": "Logo Animation",
-        "tags": [
-            "Image"
-        ],
-        "previewHeight": 700
-    },
-    {
-        "name": "CaseStudyLottieBlock",
-        "label": "Lottie Animation",
-        "tags": [],
-        "previewHeight": 600
-    },
-    {
-        "name": "CaseStudyNextCaseBlock",
-        "label": "Next Case CTA",
-        "tags": [],
-        "previewHeight": 700
-    },
-    {
-        "name": "CaseStudyTextInsert",
-        "label": "Text Insert",
-        "tags": [],
-        "previewHeight": 500
-    },
-    {
-        "name": "CentrogreenDesignCode",
-        "label": "Design Code",
-        "tags": [
-            "Custom"
-        ],
-        "previewHeight": 900
-    },
-    {
-        "name": "TheyTalkDesignSystem",
-        "label": "Design System",
-        "tags": [
-            "Custom"
-        ],
-        "previewHeight": 900
-    },
-    {
-        "name": "TheyTalkInfluencerBlock",
-        "label": "Influencer Block",
-        "tags": [
-            "Custom"
-        ],
-        "previewHeight": 800
-    },
-    {
-        "name": "FolkeuniversitetDesignSystem",
-        "label": "Design System",
-        "tags": [
-            "Custom"
-        ],
-        "previewHeight": 900
-    },
-    {
-        "name": "WorksSteps",
-        "label": "Works Steps",
-        "tags": [
-            "Sections"
-        ],
-        "previewHeight": 800
-    },
-    {
-        "name": "AIVisualHeaderZoom",
-        "label": "Header Zoom",
-        "tags": [],
-        "previewHeight": 900
-    },
-    {
-        "name": "AIVisualImageComparison",
-        "label": "Image Comparison",
-        "tags": [],
-        "previewHeight": 700
-    },
-    {
-        "name": "AIVisualMadeByTeam",
-        "label": "Made By Team",
-        "tags": [],
-        "previewHeight": 800
-    },
-    {
-        "name": "AIVisualPriceCalculator",
-        "label": "Price Calculator",
-        "tags": [],
-        "previewHeight": 1000
-    },
-    {
-        "name": "AIVisualVideoScroll",
-        "label": "Video Scroll",
-        "tags": [],
-        "previewHeight": 900
-    },
-    {
-        "name": "AIVisualTextIteration",
-        "label": "Text Iteration",
-        "tags": [],
-        "previewHeight": 700
-    },
-    {
-        "name": "AIVisualTimeline",
-        "label": "Timeline",
-        "tags": [],
-        "previewHeight": 900
-    }
+  {
+    "name": "SharedStatsBlock",
+    "label": "Stats Block",
+    "tags": [
+      "Numbers"
+    ],
+    "previewHeight": 600
+  },
+  {
+    "name": "SharedCenteredQuote",
+    "label": "Centered Quote",
+    "tags": [
+      "Text"
+    ],
+    "previewHeight": 600
+  },
+  {
+    "name": "SharedClientLogos",
+    "label": "Client Logos",
+    "tags": [
+      "Gallery"
+    ],
+    "previewHeight": 500
+  },
+  {
+    "name": "SharedTestimonials",
+    "label": "Testimonials",
+    "tags": [
+      "Text"
+    ],
+    "previewHeight": 700
+  },
+  {
+    "name": "SharedFAQ",
+    "label": "FAQ Accordion",
+    "tags": [
+      "Text"
+    ],
+    "previewHeight": 900
+  },
+  {
+    "name": "SharedVideoScrollingCTA",
+    "label": "Video Scrolling CTA",
+    "tags": [
+      "Sections"
+    ],
+    "previewHeight": 800
+  },
+  {
+    "name": "SharedScrollRevealImage",
+    "label": "Scroll Reveal Image",
+    "tags": [
+      "Image"
+    ],
+    "previewHeight": 700
+  },
+  {
+    "name": "SharedServicesHero",
+    "label": "Services Hero",
+    "tags": [
+      "Header"
+    ],
+    "previewHeight": 1000
+  },
+  {
+    "name": "SharedContactForm",
+    "label": "Contact Form",
+    "tags": [
+      "Forms"
+    ],
+    "previewHeight": 900
+  },
+  {
+    "name": "SharedContentSplit",
+    "label": "Content Split",
+    "tags": [],
+    "previewHeight": 700
+  },
+  {
+    "name": "HomeWhereWeCanHelp",
+    "label": "Where We Can Help",
+    "tags": [
+      "Sections"
+    ],
+    "previewHeight": 1200
+  },
+  {
+    "name": "HomePartnerStatement",
+    "label": "Partner Statement",
+    "tags": [
+      "Text"
+    ],
+    "previewHeight": 500
+  },
+  {
+    "name": "HomeAnimatedText",
+    "label": "Animated Text",
+    "tags": [],
+    "previewHeight": 500
+  },
+  {
+    "name": "HomeHorizontalMasonry",
+    "label": "Horizontal Masonry",
+    "tags": [],
+    "previewHeight": 900
+  },
+  {
+    "name": "HomeInfiniteScrollPane",
+    "label": "Infinite Scroll Pane",
+    "tags": [],
+    "previewHeight": 800
+  },
+  {
+    "name": "AboutPlaneHero",
+    "label": "Plane Hero",
+    "tags": [
+      "Header"
+    ],
+    "previewHeight": 1000
+  },
+  {
+    "name": "AboutServicesList",
+    "label": "Services List",
+    "tags": [
+      "Sections"
+    ],
+    "previewHeight": 900
+  },
+  {
+    "name": "AboutLocationsMap",
+    "label": "Locations Map",
+    "tags": [
+      "Sections"
+    ],
+    "previewHeight": 800
+  },
+  {
+    "name": "AboutTeamAccordion",
+    "label": "Team Accordion",
+    "tags": [
+      "Sections"
+    ],
+    "previewHeight": 1000
+  },
+  {
+    "name": "AboutTeamGallery",
+    "label": "Team Gallery",
+    "tags": [
+      "Gallery"
+    ],
+    "previewHeight": 600
+  },
+  {
+    "name": "CaseStudyTextReveal",
+    "label": "Text Reveal",
+    "tags": [
+      "Text"
+    ],
+    "previewHeight": 500
+  },
+  {
+    "name": "CaseStudyHeroVideo",
+    "label": "Hero Video",
+    "tags": [
+      "Header"
+    ],
+    "previewHeight": 900
+  },
+  {
+    "name": "CaseStudyDetails",
+    "label": "Details",
+    "tags": [
+      "Text"
+    ],
+    "previewHeight": 600
+  },
+  {
+    "name": "CaseStudyImageGridHover",
+    "label": "Image Grid Hover",
+    "tags": [
+      "Gallery"
+    ],
+    "previewHeight": 700
+  },
+  {
+    "name": "CaseStudyLogoAnimation",
+    "label": "Logo Animation",
+    "tags": [
+      "Image"
+    ],
+    "previewHeight": 700
+  },
+  {
+    "name": "CaseStudyLottieBlock",
+    "label": "Lottie Animation",
+    "tags": [],
+    "previewHeight": 600
+  },
+  {
+    "name": "CaseStudyNextCaseBlock",
+    "label": "Next Case CTA",
+    "tags": [],
+    "previewHeight": 700
+  },
+  {
+    "name": "CaseStudyTextInsert",
+    "label": "Text Insert",
+    "tags": [],
+    "previewHeight": 500
+  },
+  {
+    "name": "CentrogreenDesignCode",
+    "label": "Design Code",
+    "tags": [
+      "Custom"
+    ],
+    "previewHeight": 900
+  },
+  {
+    "name": "TheyTalkDesignSystem",
+    "label": "Design System",
+    "tags": [
+      "Custom"
+    ],
+    "previewHeight": 900
+  },
+  {
+    "name": "TheyTalkInfluencerBlock",
+    "label": "Influencer Block",
+    "tags": [
+      "Custom"
+    ],
+    "previewHeight": 800
+  },
+  {
+    "name": "FolkeuniversitetDesignSystem",
+    "label": "Design System",
+    "tags": [
+      "Custom"
+    ],
+    "previewHeight": 900
+  },
+  {
+    "name": "WorksSteps",
+    "label": "Works Steps",
+    "tags": [
+      "Sections"
+    ],
+    "previewHeight": 800
+  },
+  {
+    "name": "AIVisualHeaderZoom",
+    "label": "Header Zoom",
+    "tags": [
+      "Header"
+    ],
+    "previewHeight": 900
+  },
+  {
+    "name": "AIVisualImageComparison",
+    "label": "Image Comparison",
+    "tags": [],
+    "previewHeight": 700
+  },
+  {
+    "name": "AIVisualMadeByTeam",
+    "label": "Team Horizontal Gallery",
+    "tags": [
+      "Image"
+    ],
+    "previewHeight": 800
+  },
+  {
+    "name": "AIVisualPriceCalculator",
+    "label": "Price Calculator",
+    "tags": [],
+    "previewHeight": 1000
+  },
+  {
+    "name": "AIVisualProductInteractive",
+    "label": "Product Interactive",
+    "tags": [
+      "Video"
+    ],
+    "previewHeight": 900
+  },
+  {
+    "name": "AIVisualTextIteration",
+    "label": "Text Iteration",
+    "tags": [],
+    "previewHeight": 700
+  },
+  {
+    "name": "AIVisualTimeline",
+    "label": "Timeline",
+    "tags": [
+      "Sections"
+    ],
+    "previewHeight": 900
+  }
 ]

@@ -1,0 +1,50 @@
+{
+  "headingLine1": "Leveraged by AI.",
+  "headingLine2": "Created by Designers",
+  "description": "We combine the expertise of experienced designers with advanced AI tools to create high-quality visuals—guided by human creativity, refined through design thinking, and delivered ready for real campaigns.",
+  "team": [
+    {
+      "name": "Roman Kovbasyuk",
+      "position": "Founder, Head of Design",
+      "src": "/img/teampic/portraits/Roma.jpg"
+    },
+    {
+      "name": "Alina Romashko",
+      "position": "Web & Visual Designer",
+      "src": "/img/teampic/portraits/Alina.jpg"
+    },
+    {
+      "name": "Vlad Baranov",
+      "position": "Visual Designer",
+      "src": "/img/teampic/portraits/Vlad.jpg"
+    },
+    {
+      "name": "Stepan Stryzhak",
+      "position": "Visual Designer",
+      "src": "/img/teampic/portraits/Stepan.jpg"
+    },
+    {
+      "name": "Daria Sobal",
+      "position": "Visual Designer",
+      "src": "/img/teampic/portraits/Daria.jpg"
+    },
+    {
+      "name": "Anastasiia Zibla",
+      "position": "Project and Client Success",
+      "src": "/img/teampic/portraits/Anastasiia Zibla.jpg"
+    },
+    {
+      "name": "Danil Shepilov",
+      "position": "Visual Designer",
+      "src": "/img/teampic/portraits/Danyl.jpg"
+    }
+  ],
+  "listItems": [
+    "Art-direction and Concepts",
+    "AI Model Tooling and Chaining",
+    "Color grading",
+    "***We make it feel cool!***"
+  ],
+  "leftColHeader": "HUMAN TALENT × AI-CENTRIC WORKFLOWS",
+  "rightColHeader": "HOW WE MAKE IT HAPPEN"
+}

@@ -17,7 +17,15 @@ export interface ServicesData {
         title?: string;
         description?: string;
         image?: string;
+        bentoImages?: CloudImage[];
     };
+}
+
+export interface CloudImage {
+    src: string;
+    videoSrc?: string;
+    gridClass: string;
+    isCenter?: boolean;
 }
 
 export interface TimelineImage {
@@ -40,4 +48,4 @@ export interface TimelineData {
 }
 
 // Re-export price calculator data type
-export type { PriceCalculatorV2Data as PriceCalculatorData } from "@/components/blocks/AIVisualPriceCalculatorV2";
+export type { PriceCalculatorV2Data as PriceCalculatorData } from "@/components/blocks/AIVisualPriceCalculator";

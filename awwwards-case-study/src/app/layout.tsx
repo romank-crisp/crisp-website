@@ -1,6 +1,7 @@
+
+
 import type { Metadata, Viewport } from "next";
 
-export const dynamic = 'force-dynamic';
 
 import Script from "next/script";
 import { Staatliches, DM_Sans } from "next/font/google";
@@ -39,7 +40,7 @@ export const viewport: Viewport = {
 };
 
 import { GlobalLayout } from "@/components/layouts/GlobalLayout";
-import { readContent } from "@/lib/content";
+import { readContentStatic } from "@/lib/content-static";
 import { OrganizationSchema } from "@/components/seo/OrganizationSchema";
 
 export default async function RootLayout({
@@ -47,8 +48,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const footerData = await readContent("footer.json");
-  const navigationData = await readContent("navigation.json");
+  const footerData = readContentStatic("footer.json");
+  const navigationData = readContentStatic("navigation.json");
 
   return (
     <html lang="en" className={`${staatliches.variable} ${dmSans.variable}`}>

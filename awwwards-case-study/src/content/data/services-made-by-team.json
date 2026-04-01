@@ -1,37 +1,45 @@
 {
-    "headingLine1": "Leveraged by AI.",
-    "headingLine2": "Created by experts",
-    "description": "You send us guidelines and all the brand assets, and product photos you have. Our team of designers, art directors and AI specialists craft every visual — combining creative expertise with AI-powered tools to deliver consistent, high-quality content at scale.",
-    "team": [
-        {
-            "name": "Roman Kovbasyuk",
-            "position": "Founder, Head of Design",
-            "src": "/img/teampic/portraits/Roma.jpg"
-        },
-        {
-            "name": "Alina Romashko",
-            "position": "Web & Visual Designer",
-            "src": "/img/teampic/portraits/Alina.jpg"
-        },
-        {
-            "name": "Vlad Baranov",
-            "position": "Visual Designer",
-            "src": "/img/teampic/portraits/Vlad.jpg"
-        },
-        {
-            "name": "Daria Sobal",
-            "position": "Visual Designer",
-            "src": "/img/teampic/portraits/Daria.jpg"
-        },
-        {
-            "name": "Anastasiia Zibla",
-            "position": "Project and Client Success",
-            "src": "/img/teampic/portraits/Anastasiia Zibla.jpg"
-        },
-        {
-            "name": "Danil Shepilov",
-            "position": "Visual Designer",
-            "src": "/img/teampic/portraits/Danyl.jpg"
-        }
-    ]
+  "headingLine1": "Leveraged by AI.",
+  "headingLine2": "Created by experts",
+  "description": "We combine the expertise of experienced designers with advanced AI tools to create high-quality visuals—guided by human creativity, refined through design thinking, and delivered ready for real campaigns.",
+  "team": [
+    {
+      "name": "Roman Kovbasyuk",
+      "position": "Founder, Head of Design",
+      "src": "/img/teampic/portraits/Roma.jpg"
+    },
+    {
+      "name": "Alina Romashko",
+      "position": "Web & Visual Designer",
+      "src": "/img/teampic/portraits/Alina.jpg"
+    },
+    {
+      "name": "Vlad Baranov",
+      "position": "Visual Designer",
+      "src": "/img/teampic/portraits/Vlad.jpg"
+    },
+    {
+      "name": "Daria Sobal",
+      "position": "Visual Designer",
+      "src": "/img/teampic/portraits/Daria.jpg"
+    },
+    {
+      "name": "Anastasiia Zibla",
+      "position": "Project and Client Success",
+      "src": "/img/teampic/portraits/Anastasiia Zibla.jpg"
+    },
+    {
+      "name": "Danil Shepilov",
+      "position": "Visual Designer",
+      "src": "/img/teampic/portraits/Danyl.jpg"
+    }
+  ],
+  "listItems": [
+    "Art-direction and concepts",
+    "AI Model Tooling and chaining",
+    "Color grading",
+    "***We make it feel real***"
+  ],
+  "leftColHeader": "HUMAN TALENT × AI-CENTRIC WORKFLOWS",
+  "rightColHeader": "HOW WE MAKE IT HAPPEN"
 }

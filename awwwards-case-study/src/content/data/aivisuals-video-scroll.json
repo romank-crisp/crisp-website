@@ -4,19 +4,19 @@
     "overlays": [
         {
             "id": "overlay-1",
-            "text": "Step 1: We present your product in an interactive video format, allowing viewers to explore it from every angle.",
+            "text": "Interactive product presentation from every angle.",
             "timeSec": 1,
             "position": "top-center"
         },
         {
             "id": "overlay-2",
-            "text": "Step 2: We craft an Apple-level presentation that can be embedded directly on your website or landing page.",
+            "text": "Apple-level presentation ready to embed.",
             "timeSec": 3,
             "position": "bottom-left"
         },
         {
             "id": "overlay-3",
-            "text": "Step 3: We deliver the interactive video and embed code. You plug it in, and your customers start exploring.",
+            "text": "Simple embed code. Plug in and play.",
             "timeSec": 5,
             "position": "bottom-right"
         }

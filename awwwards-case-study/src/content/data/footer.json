@@ -20,11 +20,11 @@
       "links": [
         {
           "label": "LINKED IN",
-          "path": "https://linkedin.com"
+          "path": "https://www.linkedin.com/company/crispstudiorocks/"
         },
         {
           "label": "DRIBBLE",
-          "path": "https://dribbble.com"
+          "path": "https://dribbble.com/crisp"
         }
       ]
     },
@@ -32,7 +32,7 @@
       "links": [
         {
           "label": "PRIVACY POLICY",
-          "path": "/privacy"
+          "path": "/privacy-policy"
         },
         {
           "label": "DESIGN SYSTEM",
@@ -44,15 +44,15 @@
       "links": [
         {
           "label": "CALL US",
-          "path": "tel:+123456789"
+          "path": "tel:+41794540545"
         },
         {
           "label": "BOOK A MEETING",
-          "path": "/contact"
+          "path": "https://calendly.com/roman-crisp-studio/30-minute-meeting-clone"
         },
         {
           "label": "WRITE US",
-          "path": "mailto:hello@crisp.studio"
+          "path": "mailto:hi@crisp.studio"
         }
       ]
     }

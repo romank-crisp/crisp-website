@@ -1,0 +1,51 @@
+{
+  "sectionTitle": "TOP-TIER VISUALS<br/> span class='text-brand'>IN JUST 5 DAYS</span>",
+  "steps": [
+    {
+      "id": "step-1",
+      "day": "Day 1",
+      "title": "Briefing & Assets In-Take",
+      "description": "You share brand guidelines and product photos. We align on the creative direction and confirm deliverables.",
+      "list": [
+        "You provide product photos (even iPhone quality) and brand guidelines (if exists).",
+        "We align on the *creative direction* and references.",
+        "We confirm *visual tone and deliverables*."
+      ],
+      "images": []
+    },
+    {
+      "id": "step-2",
+      "day": "Day 2",
+      "title": "Concepts and Stilshots Creation",
+      "description": "We take your product photos, build a visual concept around your brand, and art-direct every shot until lighting, composition, and mood are campaign-ready.",
+      "list": [
+        "We create product stillshots in desired studio setting",
+        "We create several key visuals (artistics concepts with the product)"
+      ],
+      "images": []
+    },
+    {
+      "id": "step-3",
+      "day": "Day 3–4",
+      "title": "Videos & Motion Content",
+      "description": "Approved stills become directed video content — graded, paced, and campaign-ready",
+      "list": [
+        "Use created stills to generate videos",
+        "Optimize for *social, web, and paid channels*."
+      ],
+      "images": []
+    },
+    {
+      "id": "step-4",
+      "day": "Day 5",
+      "title": "Campaign Assets & Handover",
+      "description": "Every visual adapted and sized for social, web, print, and marketplace.",
+      "list": [
+        "Deliver product shots, videos, and key visuals.",
+        "Provide platform-ready formats and sizes.",
+        "Everything is *production-ready for launch*."
+      ],
+      "images": []
+    }
+  ]
+}

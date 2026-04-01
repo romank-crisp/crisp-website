@@ -1,0 +1,25 @@
+{
+    "title": "Common questions\nabout the process",
+    "items": [
+        {
+            "question": "AI platforms generate product shots for a fraction of the cost. Why pay more?",
+            "answer": "Automated tools produce generic output. They don't understand your brand's visual language, lighting style, or campaign context. We combine multiple AI models with custom workflows tailored to each project and art-direct every image — you get results that match your brand system, not stock-quality AI filler."
+        },
+        {
+            "question": "What if we don't like the images?",
+            "answer": "We deliver a fixed scope based on the agreed brief. If the direction is approved at the concept stage (Day 2), final output stays within that corridor. Need more iterations or a new direction? We scope and quote additional rounds separately."
+        },
+        {
+            "question": "Can we skip some steps or only order part of the package?",
+            "answer": "Yes. You can order stills only, video only, or campaign assets only. The 5-day timeline adjusts accordingly. Minimum order is 5 images."
+        },
+        {
+            "question": "What is the minimum order? And is there a maximum?",
+            "answer": "Minimum is 5 product images. No hard maximum — we scale the team and timeline to match volume. For batches above 50 images, we propose a custom production plan."
+        },
+        {
+            "question": "Who owns the copyright? Are there legal risks with AI-generated visuals?",
+            "answer": "You own all delivered assets. We use AI as a production tool under human creative direction — similar to how studios use Photoshop or 3D rendering. All outputs are original compositions, not derivatives of existing copyrighted work."
+        }
+    ]
+}

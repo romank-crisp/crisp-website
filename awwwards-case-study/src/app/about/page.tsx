@@ -1,21 +1,21 @@
-export const dynamic = 'force-dynamic';
+
 
 import AboutPage from './about-page';
-import { readContent } from '@/lib/content';
+import { readContentStatic } from '@/lib/content-static';
 import { parseSeoData } from "@/lib/seo";
 import { SeoData } from "@/types/seo";
 
 export async function generateMetadata() {
-    const seoData = await readContent("seo/seo-about.json") as SeoData;
+    const seoData = readContentStatic("seo/seo-about.json") as SeoData;
     return parseSeoData(seoData);
 }
 
 export default async function Page() {
-    const aboutData = await readContent("about.json");
-    const clientsData = await readContent("clients.json");
-    const locationsData = await readContent("locations.json");
-    const servicesData = await readContent("about-capabilities.json");
-    const teamData = await readContent("team.json");
+    const aboutData = readContentStatic("about.json");
+    const clientsData = readContentStatic("clients.json");
+    const locationsData = readContentStatic("locations.json");
+    const servicesData = readContentStatic("about-capabilities.json");
+    const teamData = readContentStatic("team.json");
 
     return (
         <AboutPage

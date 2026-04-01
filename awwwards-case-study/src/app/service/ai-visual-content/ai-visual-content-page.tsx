@@ -1,11 +1,12 @@
 "use client";
 
 import { AIVisualHeaderZoom } from "@/components/blocks/AIVisualHeaderZoom";
+import { AIVisualTextIteration } from "@/components/blocks/AIVisualTextIteration";
 import { SharedFAQ } from "@/components/blocks/SharedFAQ";
 import { AIVisualImageComparison } from "@/components/blocks/AIVisualImageComparison";
 import { AIVisualVideoScroll, VideoScrollData } from "@/components/blocks/AIVisualVideoScroll";
 import { AIVisualTimeline } from "@/components/blocks/AIVisualTimeline";
-import { AIVisualPriceCalculatorV2, PriceCalculatorV2Data } from "@/components/blocks/AIVisualPriceCalculatorV2";
+import { AIVisualPriceCalculator, PriceCalculatorV2Data } from "@/components/blocks/AIVisualPriceCalculator";
 import { AIVisualMadeByTeam, MadeByTeamData } from "@/components/blocks/AIVisualMadeByTeam";
 import { AIVisualWhatWeOffer } from "@/components/blocks/AIVisualWhatWeOffer";
 import { ServicesData, TimelineData } from "@/content/services";
@@ -23,9 +24,10 @@ interface Props {
     madeByTeamData?: MadeByTeamData;
     whatWeOfferData?: WhatWeOfferData;
     ctaData?: ServicesCTAData;
+    textIterationData?: { texts: string[] };
 }
 
-export default function AIVisualContentPage({ servicesData, faqData, videoScrollData, timelineData, priceCalculatorData, madeByTeamData, whatWeOfferData, ctaData }: Props) {
+export default function AIVisualContentPage({ servicesData, faqData, videoScrollData, timelineData, priceCalculatorData, madeByTeamData, whatWeOfferData, ctaData, textIterationData }: Props) {
     if (!servicesData || !faqData) {
         return (
             <main className="min-h-screen bg-white" />
@@ -36,6 +38,8 @@ export default function AIVisualContentPage({ servicesData, faqData, videoScroll
         <main className="min-h-screen bg-white">
 
             <AIVisualHeaderZoom data={servicesData.hero} />
+
+            <AIVisualTextIteration texts={textIterationData?.texts} />
 
             <AIVisualWhatWeOffer data={whatWeOfferData} />
 
@@ -49,7 +53,7 @@ export default function AIVisualContentPage({ servicesData, faqData, videoScroll
             <AIVisualMadeByTeam data={madeByTeamData} />
 
 
-            <AIVisualPriceCalculatorV2 data={priceCalculatorData} />
+            <AIVisualPriceCalculator data={priceCalculatorData} />
 
 
 

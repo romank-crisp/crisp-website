@@ -1,392 +1,242 @@
-# Crisp Website - Awwwards Case Study Rebuild
+# Crisp Website — Headless Static Architecture
 
-A high-performance, design-driven website built with Next.js, TypeScript, and Tailwind CSS. This project focuses on premium aesthetics, smooth animations (GSAP), and a **JSON-first content architecture** stored in Google Cloud Storage with an AI-powered admin interface.
+A high-performance portfolio website built with Next.js, TypeScript, and Tailwind CSS. The public site is **statically exported** at build time and deployed to **GCS static hosting**. Content is managed via a **decoupled admin panel** running on Cloud Run.
 
 ---
 
-## 🎯 Core Philosophy: JSON-First, No Hardcoded Content
+## Architecture
 
-**CRITICAL FOR AI AGENTS**: This project follows a strict **JSON-first architecture**. All content MUST be stored in Google Cloud Storage (GCS) as JSON files. NO hardcoded text, images, or data should exist in React components.
+```
+                ┌──────────────────────────────────────────────────────────┐
+                │              Crisp Headless Infrastructure               │
+                ├──────────────┬──────────────────┬────────────────────────┤
+                │ Public Site  │ Admin Panel      │ Contact Form           │
+                │ GCS Static   │ Cloud Run        │ Cloud Function         │
+                │ Hosting      │ (Next.js)        │ (Gen2 HTTP)            │
+                ├──────────────┼──────────────────┼────────────────────────┤
+                │ Staging      │ crisp-admin-stg  │ contact-form-staging   │
+                │ Production   │ crisp-admin      │ contact-form           │
+                └──────────────┴──────────────────┴────────────────────────┘
 
-### ✅ DO:
-- Store ALL content (text, images, links, metadata) in GCS JSON files
-- Create reusable, prop-driven components that consume JSON data
-- Automatically update the admin interface when adding new content files
-- Use TypeScript interfaces to define JSON structure
+Content Flow:
+  Admin CMS → Save JSON to GCS → Publish → Cloud Build → Static HTML → GCS Bucket
+```
 
-### ❌ DON'T:
-- Hardcode text strings directly in JSX
-- Hardcode image paths or URLs in components
-- Create components with embedded content
-- Skip updating the admin sidebar when adding new JSON files
+### Three Decoupled Services
+
+| Service | Technology | Purpose |
+|---------|-----------|---------|
+| **Public Site** | Next.js `output: 'export'` → GCS static hosting | 12 pre-rendered pages, served as plain HTML/CSS/JS |
+| **Admin Panel** | Next.js `output: 'standalone'` → Cloud Run | CMS, media gallery, AI editor, deploy dashboard |
+| **Contact API** | Cloud Function (Gen2) | Form validation, spam protection, email via Resend |
+
+---
+
+## 🔴 Critical Rules for AI Agents
+
+1. **ALL content in GCS JSON** — zero hardcoded text, images, or data in components.
+2. **NEVER overwrite production GCS data** with generated/placeholder content. Read first with `readContentStatic()`, ask the user for content if missing.
+3. **NEVER push to `main` without a passing build.**
+4. **JSON first, code second** — design the data structure before writing React.
+5. **Always update admin CMS tree** when creating new JSON files.
 
 ---
 
 ## 📁 Project Structure
 
 ```bash
-src/
-├── app/
-│   ├── actions/
-│   │   └── content.ts           # GCS read/write server actions
-│   ├── admin/
-│   │   └── page.tsx             # Admin interface
-│   ├── works/                   # Case study routes
-│   ├── about/                   # About page
-│   └── page.tsx                 # Homepage (exports home-page.tsx)
-├── components/
-│   ├── admin/
-│   │   ├── AdminSidebar.tsx     # Admin navigation (UPDATE THIS!)
-│   │   └── JsonEditor.tsx       # JSON/AI editor
-│   ├── ui/                      # Atomic UI components
-│   ├── blocks/                  # Content blocks (data-driven)
-│   └── layouts/                 # Global layouts
-└── types/                       # TypeScript definitions
-
-Google Cloud Storage (GCS):
-└── data/                        # All content lives here
-    ├── about.json
-    ├── locations.json
-    ├── services.json
-    ├── clients.json
-    ├── team.json
-    ├── navigation.json
-    ├── footer.json
-    └── case-studies/
-        ├── centrogreen-general.json
-        ├── centrogreen-case-details.json
-        └── ...
+crisp-website/awwwards-case-study/
+├── src/                            # Public site source
+│   ├── app/                        # Next.js App Router pages
+│   │   ├── page.tsx                # Home (→ readContentStatic)
+│   │   ├── about/page.tsx
+│   │   ├── contact/page.tsx
+│   │   ├── services/page.tsx
+│   │   ├── works/page.tsx
+│   │   ├── works/centrogreen/page.tsx
+│   │   ├── works/folkeuniversitetet/page.tsx
+│   │   ├── works/theytalk/page.tsx
+│   │   ├── service/ai-visual-content/page.tsx
+│   │   ├── privacy-policy/page.tsx
+│   │   └── layout.tsx              # Root layout (also uses readContentStatic)
+│   ├── components/
+│   │   ├── blocks/                 # Content block components (data-driven)
+│   │   ├── forms/ContactForm.tsx   # POSTs to NEXT_PUBLIC_CONTACT_API_URL
+│   │   ├── layouts/                # Navbar, footer, global layouts
+│   │   ├── seo/                    # Schema.org components
+│   │   └── ui/                     # Primitives (Button, Input, Tag, etc.)
+│   ├── content/data/               # Local mirror of GCS JSON (synced by pull-content.sh)
+│   ├── lib/
+│   │   ├── content-static.ts       # ⭐ Build-time filesystem content reader
+│   │   ├── content.ts              # Legacy runtime reader (admin only)
+│   │   ├── email.ts                # Resend email helper
+│   │   ├── seo.ts                  # SEO utilities
+│   │   └── utils.ts                # getAssetUrl() and helpers
+│   ├── types/                      # TypeScript interfaces
+│   └── config/brands.ts            # Brand/client logos config
+│
+├── admin/                          # Standalone admin panel (separate Next.js app)
+│   ├── src/app/
+│   │   ├── admin/                  # CMS, media, patterns, design system
+│   │   ├── admin/deploy/page.tsx   # ⭐ Deploy dashboard
+│   │   ├── api/deploy/             # Build history + trigger APIs
+│   │   └── api/contact/            # Contact route (admin-local testing)
+│   ├── Dockerfile                  # For Cloud Run deployment
+│   ├── next.config.ts              # output: 'standalone'
+│   └── package.json                # Trimmed dependencies (no GSAP etc.)
+│
+├── functions/
+│   └── contact/                    # Cloud Function for contact form
+│       ├── index.js                # HTTP handler (validation, honeypot, Resend)
+│       └── package.json            # @google-cloud/functions-framework
+│
+├── out/                            # Static build output (gitignored)
+├── public/                         # Static assets (images, fonts, sitemap)
+│   ├── sitemap.xml                 # Static sitemap
+│   └── robots.txt                  # Static robots.txt
+│
+├── deploy-all.sh                   # Master deploy: staging/production × site/admin/function
+├── setup-hosting.sh                # One-time: create GCS static hosting buckets
+├── pull-content.sh                 # Sync GCS JSON → local src/content/data/
+├── pull-image.sh                   # Download images from GCS
+├── push-image.sh                   # Upload images to GCS
+├── next.config.ts                  # output: 'export', images: unoptimized
+├── DEPLOYMENT.md                   # Deployment guide
+└── .env.example                    # Environment variables reference
 ```
 
 ---
 
-## 🏗️ Content Architecture
+## 📡 Data Fetching
 
-### Storage Layer: Google Cloud Storage
+### Public Site: Build-Time Static Reads
 
-**Bucket**: `crisp-website-485112_cloudbuild`  
-**Path**: All JSON files stored under `data/` prefix
-
-#### Server Actions (`src/app/actions/content.ts`)
+All public pages use `readContentStatic()` which reads JSON from the local filesystem during `next build`. The JSON files are synced from GCS before build via `pull-content.sh`.
 
 ```typescript
-// Read content from GCS
-export async function readContent(filename: string)
+import { readContentStatic } from "@/lib/content-static";
 
-// Write content to GCS and revalidate cache
-export async function updateContent(filename: string, data: any)
-```
-
-### Content Flow
-
-```
-┌─────────────────┐
-│  GCS JSON Files │ ← Single Source of Truth
-└────────┬────────┘
-         │
-    ┌────┴────┐
-    │         │
-    ▼         ▼
-┌────────┐ ┌───────┐
-│ Pages  │ │ Admin │
-│(Read)  │ │(R/W)  │
-└────────┘ └───────┘
-```
-
----
-
-## 🤖 AI AGENT INSTRUCTIONS: Creating New Blocks & Content
-
-### Step-by-Step Workflow
-
-#### 1️⃣ **Create the JSON File in GCS**
-
-**ALWAYS START HERE!** Before writing any code, define the content structure.
-
-**Example**: Creating a new "Testimonials" block for the homepage
-
-```json
-// GCS: data/home-testimonials.json
-{
-  "sectionTitle": "What Our Clients Say",
-  "testimonials": [
-    {
-      "id": "1",
-      "quote": "Crisp transformed our digital presence.",
-      "author": "Jane Doe",
-      "company": "TechCorp",
-      "image": "/img/testimonials/jane.jpg"
-    }
-  ]
-}
-```
-
-**How to create**:
-- Use the admin interface at `/admin` to create new JSON files
-- Or manually upload to GCS bucket under `data/` prefix
-- Follow existing naming conventions (kebab-case)
-
-#### 2️⃣ **Define TypeScript Interface**
-
-Create type definitions for the JSON structure:
-
-```typescript
-// src/types/testimonials.ts
-export interface Testimonial {
-  id: string;
-  quote: string;
-  author: string;
-  company: string;
-  image: string;
-}
-
-export interface TestimonialsData {
-  sectionTitle: string;
-  testimonials: Testimonial[];
-}
-```
-
-#### 3️⃣ **Create the React Component**
-
-Build a **data-driven component** that accepts props from JSON:
-
-```typescript
-// src/components/blocks/Testimonials.tsx
-import { TestimonialsData } from "@/types/testimonials";
-
-interface TestimonialsProps {
-  data: TestimonialsData;
-}
-
-export function Testimonials({ data }: TestimonialsProps) {
-  return (
-    <section>
-      <h2>{data.sectionTitle}</h2>
-      {data.testimonials.map((testimonial) => (
-        <div key={testimonial.id}>
-          <p>{testimonial.quote}</p>
-          <cite>{testimonial.author}, {testimonial.company}</cite>
-        </div>
-      ))}
-    </section>
-  );
-}
-```
-
-**Key Principles**:
-- ✅ Component receives ALL data via props
-- ✅ No hardcoded strings or values
-- ✅ Fully reusable across pages
-- ✅ Type-safe with TypeScript
-
-#### 4️⃣ **Fetch Data in Page Component**
-
-Use the `readContent` server action:
-
-```typescript
-// src/app/home-page.tsx
-import { readContent } from "@/app/actions/content";
-import { Testimonials } from "@/components/blocks/Testimonials";
-
-export default async function HomePage() {
-  const testimonialsData = await readContent("home-testimonials.json");
-  
-  return (
-    <main>
-      <Testimonials data={testimonialsData} />
-    </main>
-  );
-}
-```
-
-#### 5️⃣ **🚨 CRITICAL: Update Admin Sidebar**
-
-**YOU MUST DO THIS!** Add the new JSON file to the admin interface.
-
-**File**: `src/components/admin/AdminSidebar.tsx`
-
-```typescript
-const MENU_GROUPS = [
-  {
-    title: "Pages",
-    items: [
-      {
-        id: "home-group",
-        label: "Home Page",
-        icon: FileText,
-        children: [
-          { id: "home-hero", label: "Hero Section" },
-          { id: "home-testimonials", label: "Testimonials" }, // ← ADD THIS
-        ]
-      }
-    ]
-  }
+// In any page component (runs at build time only)
+const heroData = readContentStatic("home-hero.json");
+const [about, team] = [
+  readContentStatic("about.json"),
+  readContentStatic("team.json"),
 ];
 ```
 
-**Naming Convention**:
-- `id`: Matches the JSON filename (without `.json`)
-- `label`: Human-readable name for admin UI
-- Group related files under expandable sections
+### Admin Panel: Runtime GCS Reads/Writes
 
-#### 6️⃣ **Test in Admin Interface**
-
-1. Navigate to `/admin`
-2. Find your new item in the sidebar
-3. Verify JSON loads correctly
-4. Test editing and saving
-5. Check live preview link works
-
----
-
-## 📋 Common Patterns
-
-### Pattern 1: Page-Level Content
-
-**Use Case**: Entire page content (About, Services, etc.)
+The admin panel still uses runtime `readContent()` / `updateContent()` server actions that read/write directly to GCS.
 
 ```typescript
-// Page component
-const aboutData = await readContent("about.json");
-return <AboutPage data={aboutData} />;
+import { readContent, updateContent } from "@/app/actions/content";
+
+const data = await readContent("home-hero.json");
+await updateContent("home-hero.json", updatedData);
 ```
 
-**Admin Sidebar**:
-```typescript
-{ id: "about", label: "About Page", icon: FileText }
-```
+### Media Assets
 
-### Pattern 2: Block-Level Content
-
-**Use Case**: Reusable blocks across multiple pages
+Always use `getAssetUrl()` before referencing any media path:
 
 ```typescript
-// Multiple pages can use the same block
-const clientsData = await readContent("clients.json");
-return <ClientsGrid data={clientsData} />;
-```
+import { getAssetUrl } from "@/lib/utils";
 
-**Admin Sidebar**:
-```typescript
-{
-  title: "Shared Blocks",
-  items: [
-    { id: "clients", label: "Clients Grid" }
-  ]
-}
-```
-
-### Pattern 3: Case Study Content
-
-**Use Case**: Multi-file content for complex pages
-
-```typescript
-// Load multiple related files
-const [general, details, stats] = await Promise.all([
-  readContent("case-studies/project-general.json"),
-  readContent("case-studies/project-details.json"),
-  readContent("case-studies/project-stats.json"),
-]);
-```
-
-**Admin Sidebar**:
-```typescript
-{
-  id: "case-studies/project",
-  label: "Project Name",
-  icon: FileText,
-  children: [
-    { id: "case-studies/project-general.json", label: "General" },
-    { id: "case-studies/project-details.json", label: "Details" },
-    { id: "case-studies/project-stats.json", label: "Stats" },
-  ]
-}
+<video src={getAssetUrl(data.videoSrc)} />
 ```
 
 ---
 
-## 🔧 Admin Interface
+## 🔁 New Block Workflow
 
-### Features
-
-- **JSON Editor**: Syntax-highlighted code editor with validation
-- **AI Editor**: Natural language content updates using Google Generative AI
-- **Live Preview**: Direct links to view changes on the live site
-- **Auto-save**: Cmd+S to save, Cmd+Enter for AI prompts
-- **Toast Notifications**: Visual feedback for save status
-
-### Admin Sidebar Structure
-
-The sidebar is organized into logical groups:
-
-1. **Pages**: Individual page content (About, Services, etc.)
-2. **Case Studies**: Project-specific content (grouped by project)
-3. **Shared**: Global elements (Navigation, Footer, reusable blocks)
-
-**When adding new content**, determine which group it belongs to and update accordingly.
+1. **Design JSON structure** — define what data you need
+2. **Create JSON file in GCS** — use admin panel or upload directly
+3. **Pull locally** — run `bash pull-content.sh`
+4. **Create TypeScript interface** — in `src/types/`
+5. **Create React component** — in `src/components/blocks/`, props-driven
+6. **Fetch with `readContentStatic()`** — in the page server component
+7. **Update admin CMS tree** — in `admin/src/app/admin/page.tsx` (`CMS_TREE`)
+8. **Test** — `npm run build` must pass, verify in `/admin`
+9. **Publish** — use deploy dashboard or `./deploy-all.sh staging site`
 
 ---
 
-## 🚀 Quick Start Checklist for AI Agents
+## 🚀 Deployment
 
-When creating a new block or page section:
+### Quick Reference
 
-- [ ] **1. Design JSON structure** - Define what data you need
-- [ ] **2. Create JSON file in GCS** - Use admin or upload directly
-- [ ] **3. Create TypeScript types** - Define interfaces
-- [ ] **4. Build React component** - Props-driven, no hardcoded content
-- [ ] **5. Fetch data in page** - Use `readContent()` server action
-- [ ] **6. Update AdminSidebar.tsx** - Add to `MENU_GROUPS` array
-- [ ] **7. Test in admin** - Verify editing works
-- [ ] **8. Verify live site** - Check content displays correctly
+```bash
+# Deploy everything to staging
+./deploy-all.sh staging all
+
+# Deploy static site to production
+./deploy-all.sh production site
+
+# Deploy admin to production
+./deploy-all.sh production admin
+
+# Deploy contact function
+./deploy-all.sh production function
+```
+
+### From Admin Panel
+
+The admin has a **Deploy Dashboard** at `/admin/deploy` with:
+- **Staging/Production** environment toggle
+- **Publish** button → triggers Cloud Build
+- **Build history** table with auto-polling
+- **Services status** cards with links
+
+### Content Workflow
+
+```
+Admin saves JSON → GCS updated → Publish → Cloud Build → Static HTML → GCS Bucket
+```
+
+Typical latency: **2–4 minutes** from publish to live.
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for full deployment guide.
+
+---
+
+## 🔧 Environment Variables
+
+```bash
+# GCS bucket for content storage
+GCS_BUCKET=your_gcs_bucket_name
+
+# Admin password (HTTP Basic Auth on /admin)
+ADMIN_PASSWORD=your_admin_password
+
+# Gemini AI API key (admin AI editor)
+GOOGLE_GENERATIVE_AI_API_KEY=your_key
+
+# Resend email API key (contact form)
+RESEND_API_KEY=your_key
+
+# Contact form Cloud Function URL (public site)
+NEXT_PUBLIC_CONTACT_API_URL=https://europe-west1-PROJECT.cloudfunctions.net/contact-form
+```
 
 ---
 
 ## 🎨 Styling & Animations
 
-- **Tailwind CSS**: Utility-first styling with custom tokens in `tailwind.config.ts`
-- **GSAP**: Complex animations (SmoothScroll, TextReveals, ScrollTriggers)
-- **Fonts**: `Staatliches` (Headings) and `DM Sans` (Body)
+| Layer | Technology |
+|-------|-----------|
+| CSS | Tailwind CSS (custom tokens in `tailwind.config.ts`) |
+| Fonts | `Staatliches` (headings), `DM Sans` (body) |
+| Scroll animations | GSAP + ScrollTrigger |
+| Component animations | Framer Motion |
+| Rich animations | Lottie |
 
 ---
 
-## 📝 File Naming Conventions
+## 📋 Key Principles
 
-### JSON Files (GCS)
-- Use **kebab-case**: `home-testimonials.json`
-- Prefix with page/section: `about-team.json`, `home-hero.json`
-- Group related files: `case-studies/project-name-section.json`
-
-### React Components
-- **Page files**: `[feature]-page.tsx` (e.g., `about-page.tsx`)
-- **Blocks**: `PascalCase.tsx` (e.g., `Testimonials.tsx`)
-- **Routing**: `page.tsx` (Next.js convention, re-exports only)
-
-### TypeScript Types
-- Match the content domain: `testimonials.ts`, `case-study.ts`
-- Export interfaces with descriptive names
-
----
-
-## 🔐 Environment Variables
-
-```bash
-GOOGLE_GENERATIVE_AI_API_KEY=your_api_key_here
-```
-
-Google Cloud credentials are configured via Application Default Credentials (ADC).
-
----
-
-## 🎯 Key Principles Summary
-
-1. **JSON-First**: All content in GCS, zero hardcoded data
-2. **Type-Safe**: TypeScript interfaces for all JSON structures
-3. **Component-Driven**: Reusable, prop-based React components
-4. **Admin-Friendly**: Every JSON file accessible in admin UI
-5. **AI-Enhanced**: Natural language content editing
-6. **Cache-Aware**: Automatic revalidation on content updates
-
----
-
-**For AI Agents**: Always follow the 7-step checklist above. Never skip updating the AdminSidebar. Always prioritize JSON structure design before writing component code.
+1. **JSON-First** — all content in GCS JSON, zero hardcoded data
+2. **Static by Default** — public site is pre-rendered HTML, no server runtime
+3. **Decoupled** — admin, public site, and API are independent services
+4. **Type-Safe** — TypeScript interfaces for all JSON structures
+5. **Build-Time Content** — `readContentStatic()` reads from local filesystem at build time
+6. **Deploy via Dashboard** — admin panel has a publish button for staging/production

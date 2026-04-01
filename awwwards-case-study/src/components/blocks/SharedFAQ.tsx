@@ -102,7 +102,7 @@ export const SharedFAQ = ({ data, forceLightMode = false }: { data: HomeFAQData,
     return (
         <section
             ref={sectionRef}
-            className="pt-[160px] pb-[120px] bg-white relative z-10 transition-colors duration-500"
+            className="pt-12 md:pt-[160px] pb-16 md:pb-[120px] bg-white relative z-10 transition-colors duration-500"
         >
             <div className="w-[1475px] max-w-full mx-auto flex flex-col md:flex-row gap-64 md:gap-48 px-16 md:px-64">
 
@@ -130,7 +130,7 @@ export const SharedFAQ = ({ data, forceLightMode = false }: { data: HomeFAQData,
                                         onClick={() => toggleAccordion(index)}
                                         aria-expanded={isOpen}
                                         aria-controls={panelId}
-                                        className="w-full py-32 md:py-48 flex items-start justify-between gap-16 transition-all duration-300 focus:outline-none group text-left hover:pl-16"
+                                        className="w-full py-[16px] md:py-[48px] flex items-start justify-between gap-16 transition-all duration-300 focus:outline-none group text-left hover:pl-16"
                                     >
                                         <span className="font-text text-text-md md:text-text-lg transition-all duration-300 group-hover:text-brand">
                                             {item.question}
@@ -156,7 +156,7 @@ export const SharedFAQ = ({ data, forceLightMode = false }: { data: HomeFAQData,
                                         className="overflow-hidden"
                                         style={{ height: 0 }}
                                     >
-                                        <div className="pb-32 md:pb-64">
+                                        <div className="pb-[16px] md:pb-[64px]">
                                             <p className="font-text text-text-sm md:text-text-md leading-relaxed opacity-70 w-full">
                                                 {item.answer}
                                             </p>

@@ -1,0 +1,12 @@
+{
+  "title": "<title>Services — Crisp Design Studio</title>",
+  "metaTags": [
+    "<meta name=\"description\" content=\"Branding, content design, and website development services from Crisp digital studio.\">",
+    "<meta name=\"robots\" content=\"index, follow\">"
+  ],
+  "openGraph": [
+    "<meta property=\"og:title\" content=\"Services — Crisp Design Studio\">",
+    "<meta property=\"og:description\" content=\"Branding, content design, and website development services.\">"
+  ],
+  "canonical": "<link rel=\"canonical\" href=\"https://crisp-studio.com/services\">"
+}

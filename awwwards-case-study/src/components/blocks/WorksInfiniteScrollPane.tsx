@@ -169,11 +169,12 @@ function MobileScrollCell({ item }: { item: InfiniteScrollItem }) {
 
     if (item.type === "text" && item.text) {
         return (
-            <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-end pb-16">
-                <p className="text-white text-3xl font-normal text-center leading-relaxed font-heading mb-12">
+            <div className="absolute inset-0 p-8 flex flex-col items-center justify-between">
+                <div />
+                <p className="text-white text-3xl font-normal text-center leading-relaxed font-heading">
                     {item.text}
                 </p>
-                <div className="flex justify-center pointer-events-auto pb-8">
+                <div className="flex justify-center pointer-events-auto">
                     <Button
                         href="/service/ai-visual-content"
                         variant="filled"
@@ -450,19 +451,7 @@ function DesktopInfiniteScrollPane({ items, id }: InfiniteScrollPaneProps) {
                 preloadMedia(item.src, item);
             }
         } else if (item.type === "text" && item.text) {
-            // Draw centered text
-            ctx.fillStyle = "#ffffff";
-            ctx.font = `400 ${27 * pixelRatio}px 'DM Sans', sans-serif`;
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            const padding = 32 * pixelRatio;
-            const lines = wrapText(ctx, item.text, rw - padding * 2);
-            const lineHeight = 39 * pixelRatio;
-            const totalHeight = lines.length * lineHeight;
-            const startY = ry + (rh - totalHeight) / 2 + lineHeight / 2;
-            lines.forEach((line, i) => {
-                ctx.fillText(line, rx + rw / 2, startY + i * lineHeight);
-            });
+            // Text cells — only draw background; text + button rendered as DOM overlay
         }
 
         // Draw label badge (bottom-right) — only for image items
@@ -777,11 +766,14 @@ function DesktopInfiniteScrollPane({ items, id }: InfiniteScrollPaneProps) {
                     {textItems.map((cell, i) => (
                         <div
                             key={i}
-                            className="absolute top-0 left-0 pointer-events-none flex flex-col justify-end p-8 md:p-12 pb-16"
+                            className="absolute top-0 left-0 pointer-events-none flex flex-col items-center justify-evenly px-16 py-8"
                             style={{ display: "none" }}
                         >
+                            <p className="text-white text-[27px] font-normal text-center leading-[39px] pointer-events-none" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                                {cell.item.text}
+                            </p>
                             <div
-                                className="flex justify-center pointer-events-auto h-full items-end pb-8"
+                                className="flex justify-center pointer-events-auto"
                                 onPointerDown={(e) => e.stopPropagation()}
                                 onPointerEnter={() => { isHoveringButton.current = true; }}
                                 onPointerLeave={() => { isHoveringButton.current = false; }}

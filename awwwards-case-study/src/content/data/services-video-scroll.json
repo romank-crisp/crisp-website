@@ -1,24 +1,24 @@
 {
-    "sectionTitle": "Your product. Every angle. One video.",
-    "videoSrc": "/img/services/ai-case-study/services-ai-interactive.mp4",
-    "overlays": [
-        {
-            "id": "overlay-1",
-            "text": "We turn your product into interactive 3D video — viewers explore it from every angle",
-            "timeSec": 1,
-            "position": "top-center"
-        },
-        {
-            "id": "overlay-2",
-            "text": "Apple-level presentations. Embedded directly on your website or campaign landing page",
-            "timeSec": 3,
-            "position": "bottom-left"
-        },
-        {
-            "id": "overlay-3",
-            "text": "We deliver the video and the embed code. You plug it in — we handle the rest if needed",
-            "timeSec": 5,
-            "position": "bottom-right"
-        }
-    ]
+  "sectionTitle": "Your product. From Every angle.",
+  "videoSrc": "/img/services/ai-case-study/services-ai-interactive.mp4",
+  "overlays": [
+    {
+      "id": "overlay-1",
+      "text": "Turn your product into interactive video — to viewers explore it from every angle",
+      "timeSec": 1,
+      "position": "top-center"
+    },
+    {
+      "id": "overlay-2",
+      "text": "Bring your product features to life instantly with immersive visual storytelling",
+      "timeSec": 3,
+      "position": "bottom-left"
+    },
+    {
+      "id": "overlay-3",
+      "text": "Engage users with Apple-level interactions on your website or landing page",
+      "timeSec": 5,
+      "position": "bottom-right"
+    }
+  ]
 }

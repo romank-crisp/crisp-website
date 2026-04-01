@@ -1,0 +1,39 @@
+{
+  "headerWords": [
+    "Your",
+    "partner",
+    "for",
+    "launching",
+    "ideas"
+  ],
+  "headerSuffix": {
+    "since": "since",
+    "year": "2006"
+  },
+  "blocks": [
+    {
+      "id": "who-we-are",
+      "title": "Who We Are",
+      "content": "We Design Agency that builds brands, launches websites and create engaging visual content",
+      "column": "left"
+    },
+    {
+      "id": "industry-footprint",
+      "title": "Industry Footprint",
+      "content": "We know startups, we speak enterprise. ",
+      "column": "right"
+    },
+    {
+      "id": "experience",
+      "title": "Experience",
+      "content": "100+ projects delivered. Specialists in each craft, working as one crew to deliver launch-ready results",
+      "column": "left"
+    },
+    {
+      "id": "locations",
+      "title": "Approach",
+      "content": "Structured process. Clear direction. Identity systems built for real-world use.",
+      "column": "right"
+    }
+  ]
+}

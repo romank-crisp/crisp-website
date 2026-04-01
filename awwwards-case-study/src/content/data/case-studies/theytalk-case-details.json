@@ -1,0 +1,85 @@
+{
+  "intro": "Influencer marketing is booming, but most teams still run it like a messy side project. Too many profiles, too little signal, and a lot of money wasted on “reach” that does not convert.",
+  "sections": [
+    {
+      "title": "The Problem: Influencer Chaos",
+      "type": "text",
+      "content": "The industry is growing fast, but for many companies it is still chaotic, time-consuming, and hard to measure. TheyTalk needed a brand and product presence that clearly explained the value of AI-driven matching, built trust with investors and partners, and felt native to the social media world influencers live in."
+    },
+    {
+      "title": "The Challenge: Big Ambition, Start-Up Reality",
+      "type": "text",
+      "content": "The founders wanted a strong identity and a demo-ready platform to pitch investors. Tight budget. Tighter deadline. We had to create something that works for two very different audiences at once: influencers who live in a visual, social space, and business decision-makers who care about ROI."
+    },
+    {
+      "title": "What We Did",
+      "type": "deliverables",
+      "items": [
+        {
+          "title": "Logo & visual identity",
+          "text": "We created a new logo and visual system using a high-contrast green–black palette and confident layouts that instantly read as tech-forward, creative, and social."
+        },
+        {
+          "title": "Bold visual direction",
+          "text": "We positioned TheyTalk as an AI layer that turns influencer marketing from guesswork into a focused, performance-driven channel."
+        },
+        {
+          "title": "Visual communication system",
+          "text": "We combined logo, color, type and graphic elements into a compact visual platform that can stretch across product UI, web presence, pitch decks, and social content."
+        },
+        {
+          "title": "UX/UI design for platform",
+          "text": "We designed UX and UI for the key platform pages. Defined the initial user flow together with the founders. Brought the new look and feel directly into the product."
+        },
+        {
+          "title": "Usable brand guidelines",
+          "text": "We handed over mini-guidelines and a clear structure for typography, color and component usage, so the start-up team can grow the system without breaking it."
+        }
+      ]
+    },
+    {
+      "title": "How We Used AI (And How We Did Not)",
+      "type": "text",
+      "content": "AI helped with research, visual exploration and generating supporting media assets, especially for speed and volume.The actual identity, art direction and UX decisions came from the design team. AI acted as a production helper, not a creative director."
+    },
+    {
+      "title": "The Result",
+      "type": "text",
+      "content": "TheyTalk now has a bold visual identity and a set of platform screens that tell the story in seconds. This is influencer marketing with a brain. The logo and design system give the founders a recognisable face for the product in investor rooms and early sales conversations. The project proves that even under start-up constraints, you can build a brand that works."
+    }
+  ],
+  "sidebar": [
+    {
+      "label": "Year",
+      "value": "2024"
+    },
+    {
+      "label": "CLIENT / LOCATION",
+      "value": "TheyTalk (London / Global)"
+    },
+    {
+      "label": "INDUSTRY",
+      "value": [
+        "AdTech",
+        "Influencer Marketing"
+      ]
+    },
+    {
+      "label": "DELIVERABLES",
+      "value": [
+        "Brand Identity",
+        "UX/UI Concept",
+        "Brand Visual Language"
+      ]
+    },
+    {
+      "label": "AI-ASSISTED WORKFLOWS",
+      "isRed": true,
+      "value": [
+        "Research & Asset Production",
+        "Visual Exploration",
+        "Brand Media"
+      ]
+    }
+  ]
+}
